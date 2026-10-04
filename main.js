@@ -75,138 +75,187 @@ addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimat
 addEventListener('resize', onScroll);
 onScroll();
 
-// ---- Intro: Ledger the mascot follows the cursor and reacts ----
+// ---- Entrance: the studio builds itself as you scroll; Ledger keeps you company ----
 (() => {
-  const stage = $('#mascot'), fig = $('#m-figure'), img = $('#m-img'), bubble = $('#m-bubble'), hit = $('#m-hit');
-  if (!stage) return;
-  const LINES = {
-    happy: 'Hi! I’m Ledger, your studio companion.',
-    idea: 'Click me and I’ll show you what changes.',
-    pointing: 'Thirty days free, with every feature open.',
-    thinking: 'Still deciding? Scroll down and I’ll walk you through it.',
-    confused: 'Hey, where did you go?',
-    celebrating: 'Let’s go!',
-  };
-  const ALT = {
-    happy: 'waving hello', idea: 'with an idea', pointing: 'pointing at the buttons',
-    thinking: 'thinking', confused: 'looking puzzled', celebrating: 'celebrating',
-  };
-  Object.keys(LINES).forEach(p => { new Image().src = `assets/mascot/${p}.webp`; });
-  let pose = 'happy', swapT;
-  function setPose(p) {
-    if (p === pose) return;
-    pose = p;
-    clearTimeout(swapT);
-    img.classList.add('swap');
-    swapT = setTimeout(() => {
-      img.src = `assets/mascot/${p}.webp`; img.alt = `Ledger, the Studio Ledger mascot, ${ALT[p]}`;
-      img.classList.remove('swap');
-    }, 200);
-    bubble.textContent = LINES[p];
-    bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
+  const root = $('#entrance');
+  if (!root) return;
+  const canvas = $('#en-canvas'), ctx = canvas.getContext('2d'), poster = $('#en-poster');
+  const intro = $('#en-intro'), slides = $$('.s-slide', root), rail = $('#story-rail'), dots = $$('button', rail);
+  const code = $('#s-code'), title = $('#s-title'), coord = $('#s-coord'), fill = $('#story-fill');
+  const stage = $('#mascot'), fig = $('#m-figure'), mimg = $('#m-img'), bubble = $('#m-bubble'), hit = $('#m-hit');
+
+  // Scroll progress → video time. Each beat builds one part of the studio; the intro holds the empty shell.
+  const FRAMES = 100, LENGTH = 10;
+  const PHASES = [            // [ends at progress, video time reached (s)]
+    [0.10, 0],                // intro: empty shell
+    [0.30, 2.2],              // 01 desks and lamps arrive
+    [0.50, 4.6],              // 02 drawings go up
+    [0.68, 6.6],              // 03 models, samples, mezzanine
+    [0.86, 8.6],              // 04 the team arrives
+    [1.00, LENGTH],           // finale: dusk, lights on
+  ];
+  const BEATS = PHASES.length - 2;
+  function locate(p) {
+    let a = 0, t0 = 0;
+    for (let k = 0; k < PHASES.length; k++) {
+      const [b, t1] = PHASES[k];
+      if (p <= b || k === PHASES.length - 1) {
+        const q = b > a ? Math.max(0, Math.min(1, (p - a) / (b - a))) : 1;
+        return { phase: k, q, time: t0 + (t1 - t0) * q };
+      }
+      a = b; t0 = t1;
+    }
   }
 
-  // Tilt toward the cursor; drawing layers drift at their own depths
-  const layers = $$('.m-layer', stage).map(el => [el, +el.dataset.depth]);
+  // Frames: portrait screens get the centre-cropped phone set
+  const set = innerWidth / innerHeight < 0.75 ? 'm' : 'd';
+  const imgs = new Array(FRAMES);
+  let target = 0, shown = -1;
+  const order = [];
+  for (const step of [FRAMES, 10, 5, 2, 1]) for (let i = 0; i < FRAMES; i += step) if (!order.includes(i)) order.push(i);
+  let next = 0;
+  function loadMore() {
+    if (next >= order.length) return;
+    const i = order[next++], im = new Image();
+    im.decoding = 'async';
+    im.onload = () => { imgs[i] = im; if (shown < 0 || Math.abs(i - target) < Math.abs(shown - target)) draw(); loadMore(); };
+    im.onerror = loadMore;
+    im.src = `assets/entrance/${set}/${String(i).padStart(3, '0')}.webp`;
+  }
+  for (let k = 0; k < 6; k++) loadMore();
+
+  function size() {
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    canvas.width = Math.round(canvas.clientWidth * dpr);
+    canvas.height = Math.round(canvas.clientHeight * dpr);
+    shown = -1; draw();
+  }
+  function draw() {
+    let best = -1;
+    for (let d = 0; d < FRAMES; d++) {
+      if (imgs[target - d]) { best = target - d; break; }
+      if (imgs[target + d]) { best = target + d; break; }
+    }
+    if (best < 0 || best === shown) return;
+    const im = imgs[best], cw = canvas.width, ch = canvas.height;
+    const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight);
+    const w = im.naturalWidth * s, h = im.naturalHeight * s;
+    ctx.drawImage(im, (cw - w) / 2, (ch - h) / 2, w, h);
+    shown = best;
+    poster.classList.add('hide');
+  }
+
+  // Ledger: tilts toward the cursor; in the intro his pose follows what you point at
+  const LINES = {
+    happy: 'Hi! I’m Ledger. Scroll, and I’ll build your studio.',
+    idea: 'Click me and we’ll start building.',
+    pointing: 'Thirty days free, with every feature open.',
+    thinking: 'Still deciding? Scroll down and watch the studio come together.',
+    confused: 'Hey, where did you go?',
+    celebrating: 'Let’s build it!',
+    final: 'That’s your studio, built. Have a look inside.',
+  };
+  const ALT = {
+    happy: 'waving hello', idea: 'with an idea', pointing: 'pointing', thinking: 'thinking', confused: 'looking puzzled',
+    celebrating: 'celebrating', running: 'rushing between tasks', focused: 'working calmly at a laptop',
+    tired: 'asleep on a stack of drawings', approved: 'giving a thumbs up', checking: 'checking a drawing',
+  };
+  Object.keys(ALT).forEach(p => { new Image().src = `assets/mascot/${p}.webp`; });
+  let pose = 'happy', swapT, mode = 'intro', busy = false;
+  function setPose(p, line) {
+    if (p !== pose) {
+      pose = p;
+      clearTimeout(swapT);
+      mimg.classList.add('swap');
+      swapT = setTimeout(() => {
+        mimg.src = `assets/mascot/${p}.webp`; mimg.alt = `Ledger, the Studio Ledger mascot, ${ALT[p] || p}`;
+        mimg.classList.remove('swap');
+      }, 200);
+    }
+    if (line && bubble.textContent !== line) {
+      bubble.textContent = line;
+      bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
+    }
+  }
   let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
-  function frame() {
+  function tilt() {
     cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
     fig.style.setProperty('--ry', `${(cx * 16).toFixed(2)}deg`);
     fig.style.setProperty('--rx', `${(-cy * 8).toFixed(2)}deg`);
-    layers.forEach(([el, d]) => { el.style.transform = `translate3d(${(-cx * d).toFixed(1)}px, ${(-cy * d).toFixed(1)}px, 0)`; });
-    raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.002 ? requestAnimationFrame(frame) : 0;
+    raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.002 ? requestAnimationFrame(tilt) : 0;
   }
-  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
-
-  const hover = matchMedia('(hover: hover)').matches;
-  let idle, busy = false;
-  const rest = () => { clearTimeout(idle); idle = setTimeout(() => { if (!busy) setPose('thinking'); }, 6500); };
-
-  if (hover) {
+  const kick = () => { if (!raf && !calm) raf = requestAnimationFrame(tilt); };
+  let idle;
+  const rest = () => { clearTimeout(idle); idle = setTimeout(() => { if (mode === 'intro' && !busy) setPose('thinking', LINES.thinking); }, 6500); };
+  if (matchMedia('(hover: hover)').matches) {
     addEventListener('pointermove', e => {
-      if (busy || scrollY > innerHeight) return;
       const r = stage.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
       tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (innerWidth / 2)));
       ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (innerHeight / 2)));
-      if (!calm) kick();
-      const t = e.target;
-      setPose(t.closest && t.closest('#m-hit') ? 'idea' : t.closest && t.closest('#intro-cta') ? 'pointing' : 'happy');
+      kick();
+      if (mode !== 'intro' || busy) return;
+      const t = e.target && e.target.closest ? e.target : null;
+      const p = t && t.closest('#m-hit') ? 'idea' : t && t.closest('#intro-cta') ? 'pointing' : 'happy';
+      setPose(p, LINES[p]);
       rest();
     }, { passive: true });
-    document.documentElement.addEventListener('mouseleave', () => { if (!busy) setPose('confused'); tx = ty = 0; kick(); });
+    document.documentElement.addEventListener('mouseleave', () => { if (mode === 'intro' && !busy) setPose('confused', LINES.confused); tx = ty = 0; kick(); });
     rest();
   } else {
-    // Touch: Ledger cycles a few friendly poses until tapped
     const cycle = ['happy', 'idea', 'pointing'];
     let k = 0;
-    setInterval(() => { if (!busy && scrollY < innerHeight) setPose(cycle[++k % cycle.length]); }, 4200);
+    setInterval(() => { if (mode === 'intro' && !busy) { const p = cycle[++k % cycle.length]; setPose(p, LINES[p]); } }, 4200);
   }
 
-  hit.addEventListener('click', () => {
-    busy = true; setPose('celebrating');
-    setTimeout(() => {
-      $('#story').scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
-      setTimeout(() => { busy = false; setPose('happy'); }, 1500);
-    }, 900);
-  });
-})();
-
-// ---- Story: full-bleed renders, struggle then solution, pinned while scrolling ----
-(() => {
-  const story = $('#story');
-  if (!story) return;
-  const imgs = $$('.s-img', story), slides = $$('.s-slide', story), rail = $('#story-rail'), dots = $$('button', rail);
-  const mascot = $('#s-mascot'), fill = $('#story-fill');
-  const code = $('#s-code'), title = $('#s-title'), coord = $('#s-coord');
-  const N = slides.length;
-  slides.forEach(s => { [s.dataset.struggle, s.dataset.solved].forEach(p => { new Image().src = `assets/mascot/${p}.webp`; }); });
-  let lastI = -1, lastSolved = null, poseT;
-  const ease = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-
+  // Scroll → frame, captions, Ledger's pose, rail and sheet bar
+  let last = '';
   function update() {
-    const r = story.getBoundingClientRect(), total = story.offsetHeight - innerHeight;
+    const r = root.getBoundingClientRect(), total = root.offsetHeight - innerHeight;
     if (r.bottom < 0 || r.top > innerHeight) return;
-    const t = Math.max(0, Math.min(1, -r.top / total)), x = t * N;
-    const i = Math.min(N - 1, Math.floor(x)), p = Math.min(1, x - i);
-    const solved = p > (i === N - 1 ? 0.25 : 0.42);
+    const p = Math.max(0, Math.min(1, -r.top / total));
+    const { phase, q, time } = locate(p);
+    target = Math.min(FRAMES - 1, Math.round(time / LENGTH * (FRAMES - 1)));
+    draw();
 
-    // each render pushes in slowly, then dissolves into the next one
-    imgs.forEach((im, k) => {
-      let o = 0, s = 1;
-      if (k === i) { o = 1; s = 1 + 0.12 * p; }
-      else if (k === i + 1) { o = ease(0.8, 1, p); s = 1; }
-      im.style.opacity = o;
-      im.style.transform = calm ? '' : `scale(${s.toFixed(4)})`;
-    });
-    if (i !== lastI) {
-      slides.forEach((s, k) => s.classList.toggle('on', k === i));
-      dots.forEach((d, k) => { d.classList.toggle('on', k === i); d.classList.toggle('done', k < i); });
-      code.textContent = `A-${String(i + 1).padStart(3, '0')}`;
+    const beat = phase - 1, final = phase === PHASES.length - 1;
+    const solved = beat >= 0 && !final && q > 0.5;
+    const state = `${phase}|${solved}`;
+    if (state !== last) {
+      last = state;
+      mode = phase === 0 ? 'intro' : final ? 'final' : 'beat';
+      intro.classList.toggle('gone', phase > 0);
+      root.classList.toggle('at-intro', phase === 0);
+      slides.forEach((s, k) => s.classList.toggle('on', final ? k === slides.length - 1 : k === beat));
+      if (beat >= 0 && !final) slides[beat].classList.toggle('solved', solved);
+      dots.forEach((d, k) => { d.classList.toggle('on', k === beat && !final); d.classList.toggle('done', final || k < beat); });
+      stage.classList.toggle('quiet', mode === 'beat');
+      if (mode === 'beat') setPose(solved ? slides[beat].dataset.solved : slides[beat].dataset.struggle);
+      else if (mode === 'final') setPose('pointing', LINES.final);
+      else if (!busy) setPose('happy', LINES.happy);
+      code.textContent = `A-${String(phase).padStart(3, '0')}`;
+      title.textContent = phase === 0 ? 'Existing conditions · empty shell'
+        : final ? 'Proposed · complete' : solved ? 'Proposed · with Studio Ledger' : 'Existing conditions';
     }
-    slides[i].classList.toggle('solved', solved);
-    if (i !== lastI || solved !== lastSolved) {
-      title.textContent = solved ? 'Proposed · with Studio Ledger' : 'Existing conditions';
-      const want = `assets/mascot/${solved ? slides[i].dataset.solved : slides[i].dataset.struggle}.webp`;
-      if (!mascot.src.endsWith(want)) {
-        clearTimeout(poseT);
-        mascot.classList.add('swap');
-        poseT = setTimeout(() => { mascot.src = want; mascot.classList.remove('swap'); }, 260);
-      }
-      lastI = i; lastSolved = solved;
-    }
-    rail.style.setProperty('--rp', ((i + p) / (N - 1)).toFixed(3));
-    fill.style.width = `${(t * 100).toFixed(2)}%`;
-    coord.textContent = `X ${(t * 48).toFixed(2).padStart(5, '0')} · Y ${(p * 12).toFixed(2).padStart(5, '0')}`;
+    rail.style.setProperty('--rp', Math.max(0, Math.min(1, (p - PHASES[0][0]) / (PHASES[BEATS][0] - PHASES[0][0]))).toFixed(3));
+    fill.style.width = `${(p * 100).toFixed(2)}%`;
+    coord.textContent = `X ${(p * 48).toFixed(2).padStart(5, '0')} · Y ${(time * 1.2).toFixed(2).padStart(5, '0')}`;
   }
   let ticking = false;
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; update(); }); } }, { passive: true });
-  addEventListener('resize', update);
-  update();
+  addEventListener('resize', () => { size(); update(); });
+  size(); update();
 
-  dots.forEach((d, k) => d.addEventListener('click', () => {
-    const total = story.offsetHeight - innerHeight;
-    scrollTo({ top: story.offsetTop + (k + 0.08) / N * total, behavior: calm ? 'auto' : 'smooth' });
-  }));
+  const goTo = p => scrollTo({ top: root.offsetTop + p * (root.offsetHeight - innerHeight), behavior: calm ? 'auto' : 'smooth' });
+  dots.forEach((d, k) => d.addEventListener('click', () => goTo(PHASES[k][0] + 0.02)));
+  // Clicking Ledger moves the build on to its next stage
+  hit.addEventListener('click', () => {
+    const total = root.offsetHeight - innerHeight, p = Math.max(0, Math.min(1, -root.getBoundingClientRect().top / total));
+    const nextEnd = PHASES.find(([b]) => b > p + 0.001);
+    if (!nextEnd || nextEnd[0] >= 1) { $('#workspace').scrollIntoView({ behavior: calm ? 'auto' : 'smooth' }); return; }
+    if (mode === 'intro') { busy = true; setPose('celebrating', LINES.celebrating); setTimeout(() => { busy = false; }, 1600); }
+    goTo(nextEnd[0] + 0.02);
+  });
 })();
 
 // ---- Workspace: live dashboard that hands A-104 to AI review ----

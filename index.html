@@ -49,128 +49,88 @@
 
 <main id="main">
 
-<!-- ============ INTRO ============ -->
-<section class="intro" id="intro">
-  <div class="ruler" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>J</span><span>K</span></div>
-  <div class="wrap intro-in">
-    <div class="intro-copy">
+<!-- ============ ENTRANCE: the studio builds itself as you scroll ============ -->
+<section class="entrance" id="entrance" aria-label="Studio Ledger introduction: scroll to build your studio">
+  <div class="en-stage">
+    <img class="en-poster" id="en-poster" src="assets/entrance/d/000.webp" alt="" width="1280" height="720" fetchpriority="high">
+    <canvas class="en-canvas" id="en-canvas" aria-hidden="true"></canvas>
+    <div class="en-shade" aria-hidden="true"></div>
+    <div class="story-bar" aria-hidden="true"><span id="s-code">A-000</span><span class="hide-s" id="s-title">Existing conditions · empty shell</span><span class="hide-s mono" id="s-coord">X 00.00 · Y 00.00</span></div>
+
+    <div class="en-intro" id="en-intro">
       <p class="eyebrow">Architecture practice OS</p>
       <h1>Studio <span>Ledger</span></h1>
       <p class="intro-tag">The operating system for architecture studios.</p>
-      <p class="intro-brief">Projects, drawings, people, standards, time and finance in one workspace, with every drawing reviewed by AI against your studio’s own standards before it reaches the principal.</p>
+      <p class="intro-brief">Projects, drawings, people, standards, time and finance in one workspace, with every drawing reviewed by AI against your studio’s own standards.</p>
       <div class="intro-cta" id="intro-cta">
         <a class="btn lg" data-download href="#start">Start 30-day free trial <span aria-hidden="true">→</span></a>
         <a class="btn ghost lg" data-demo href="#">Book a demo</a>
       </div>
-      <p class="fine">Windows 10 &amp; 11 · no card · your data stays in your studio</p>
+      <p class="en-cue"><i aria-hidden="true"></i>Scroll to build your studio</p>
     </div>
-    <div class="mascot" id="mascot">
-      <svg class="m-layer" data-depth="10" viewBox="0 0 500 500" aria-hidden="true">
-        <circle cx="250" cy="250" r="210" class="m-ring"/>
-        <circle cx="250" cy="250" r="150" class="m-ring dash"/>
-        <path class="m-grid" d="M40 250H460M250 40V460M102 102L398 398M398 102L102 398"/>
-      </svg>
-      <svg class="m-layer" data-depth="22" viewBox="0 0 500 500" aria-hidden="true">
-        <path class="m-plan" d="M70 300V120H190M70 190H150M70 380H200V330L270 300M330 120H430V260"/>
-        <path class="m-dim" d="M70 92H430M70 86v12M190 86v12M330 86v12M430 86v12"/>
-        <text x="130" y="80">4 200</text><text x="260" y="80">5 600</text><text x="380" y="80">3 000</text>
-        <g class="m-bub"><circle cx="455" cy="200" r="13"/><text x="455" y="204">B</text></g>
-        <g class="m-bub"><circle cx="40" cy="250" r="13"/><text x="40" y="254">2</text></g>
-      </svg>
-      <svg class="m-layer" data-depth="36" viewBox="0 0 500 500" aria-hidden="true">
-        <g class="m-north"><circle cx="420" cy="410" r="20"/><path d="M420 388l8 30-8-7-8 7z"/></g>
-        <g class="m-detail"><circle cx="78" cy="420" r="22"/><path d="M56 420h44"/><text x="78" y="415">03</text><text x="78" y="434">A-301</text></g>
-      </svg>
-      <div class="m-figure" id="m-figure">
-        <span class="m-shadow" aria-hidden="true"></span>
-        <img id="m-img" src="assets/mascot/happy.webp" alt="Ledger, the Studio Ledger mascot, waving hello" width="282" height="440">
-        <button class="m-hit" id="m-hit" type="button" aria-label="Say hello to Ledger and see the story"></button>
-      </div>
-      <p class="m-bubble" id="m-bubble" aria-live="polite">Hi! I’m Ledger, your studio companion.</p>
-    </div>
-  </div>
-  <a class="scroll-cue" href="#story"><span>Scroll · see what changes</span><i aria-hidden="true"></i></a>
-</section>
 
-<!-- ============ STORY: struggles and solutions over full-bleed renders ============ -->
-<section class="story" id="story" style="--n:6" aria-label="What architecture studios struggle with, and how Studio Ledger solves it">
-  <div class="story-stage">
-    <div class="story-imgs" aria-hidden="true">
-      <img class="s-img on" src="assets/renders/drawings.webp" alt="" width="1536" height="1024">
-      <img class="s-img" src="assets/renders/standards.webp" alt="" loading="lazy" width="1536" height="1024">
-      <img class="s-img" src="assets/renders/tasks.webp" alt="" loading="lazy" width="1536" height="1024">
-      <img class="s-img" src="assets/renders/team.webp" alt="" loading="lazy" width="1536" height="1024">
-      <img class="s-img" src="assets/renders/finances.webp" alt="" loading="lazy" width="1536" height="1024">
-      <img class="s-img" src="assets/renders/projects.webp" alt="" loading="lazy" width="1536" height="1024">
-    </div>
-    <div class="story-shade" aria-hidden="true"></div>
-    <div class="story-bar" aria-hidden="true"><span id="s-code">A-001</span><span class="hide-s" id="s-title">Existing conditions</span><span class="hide-s mono" id="s-coord">X 00.00 · Y 00.00</span></div>
     <ol class="story-rail" id="story-rail">
-      <li><button type="button" data-i="0"><b>01</b><span>Drawing review</span></button></li>
-      <li><button type="button" data-i="1"><b>02</b><span>Studio standards</span></button></li>
-      <li><button type="button" data-i="2"><b>03</b><span>Projects and tasks</span></button></li>
-      <li><button type="button" data-i="3"><b>04</b><span>People</span></button></li>
-      <li><button type="button" data-i="4"><b>05</b><span>Fees and finance</span></button></li>
-      <li><button type="button" data-i="5"><b>06</b><span>The practice</span></button></li>
+      <li><button type="button" data-i="0"><b>01</b><span>Projects and tasks</span></button></li>
+      <li><button type="button" data-i="1"><b>02</b><span>Drawing review</span></button></li>
+      <li><button type="button" data-i="2"><b>03</b><span>Studio standards</span></button></li>
+      <li><button type="button" data-i="3"><b>04</b><span>People and fees</span></button></li>
     </ol>
     <div class="story-slides">
-      <article class="s-slide on" data-i="0" data-struggle="tired" data-solved="approved">
-        <p class="s-num"><b>01</b> / 06 · Drawing review</p>
-        <p class="s-kicker">The struggle</p>
-        <h2 class="s-problem">Every sheet is still checked by eye, usually the principal’s, the night before an issue.</h2>
-        <div class="s-solution">
-          <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>Studio Ledger checks each PDF against your standards the moment it’s submitted. AI marks exactly where the problems are, so seniors only review sheets that already meet the basics.</p>
-        </div>
-      </article>
-      <article class="s-slide" data-i="1" data-struggle="confused" data-solved="checking">
-        <p class="s-num"><b>02</b> / 06 · Studio standards</p>
-        <p class="s-kicker">The struggle</p>
-        <h2 class="s-problem">Your drawing standards live in one person’s head, and leave with them.</h2>
-        <div class="s-solution">
-          <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>Write them once: title blocks, scales, line weights, naming and principles. Every sheet from every architect is held to the same rules, and juniors see exactly which ones they miss.</p>
-        </div>
-      </article>
-      <article class="s-slide" data-i="2" data-struggle="running" data-solved="focused">
-        <p class="s-num"><b>03</b> / 06 · Projects and tasks</p>
+      <article class="s-slide" data-i="0" data-struggle="running" data-solved="focused">
+        <p class="s-num"><b>01</b> / 04 · Projects and tasks</p>
         <p class="s-kicker">The struggle</p>
         <h2 class="s-problem">The work is scattered across WhatsApp, Excel, email and the shared drive.</h2>
         <div class="s-solution">
           <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>Projects, drawings, tasks and deadlines sit in one ledger. Everyone can see what’s due, who has it and where each sheet is in review.</p>
+          <p>Projects, tasks and deadlines live in one ledger. Everyone can see what’s due, who has it and where each sheet is in review.</p>
         </div>
       </article>
-      <article class="s-slide" data-i="3" data-struggle="thinking" data-solved="happy">
-        <p class="s-num"><b>04</b> / 06 · People</p>
+      <article class="s-slide" data-i="1" data-struggle="tired" data-solved="approved">
+        <p class="s-num"><b>02</b> / 04 · Drawing review</p>
         <p class="s-kicker">The struggle</p>
-        <h2 class="s-problem">You find out someone is overloaded when they hand in their notice.</h2>
+        <h2 class="s-problem">Every sheet is still checked by eye, usually the principal’s, the night before an issue.</h2>
         <div class="s-solution">
           <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>Attendance, leave, timesheets and a 30-second weekly check-in show who’s in, who’s stretched and who needs mentoring, long before it becomes a resignation.</p>
+          <p>Every drawing is checked against your standards the moment it’s submitted, and AI marks exactly where the problems are.</p>
         </div>
       </article>
-      <article class="s-slide" data-i="4" data-struggle="carrying" data-solved="celebrating">
-        <p class="s-num"><b>05</b> / 06 · Fees and finance</p>
+      <article class="s-slide" data-i="2" data-struggle="confused" data-solved="checking">
+        <p class="s-num"><b>03</b> / 04 · Studio standards</p>
         <p class="s-kicker">The struggle</p>
-        <h2 class="s-problem">A phase finishes, and the invoice goes out weeks later.</h2>
+        <h2 class="s-problem">Your drawing standards live in one person’s head, and leave with them.</h2>
         <div class="s-solution">
           <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>When a phase is complete, Studio Ledger tells you it’s ready to invoice, tracks what’s overdue and shows what every project really costs in hours.</p>
+          <p>Write them once: title blocks, scales, line weights, naming and principles. Every sheet is held to them, and juniors see which ones they miss.</p>
         </div>
       </article>
-      <article class="s-slide" data-i="5" data-struggle="pointing" data-solved="pointing">
-        <p class="s-num"><b>06</b> / 06 · The practice</p>
+      <article class="s-slide" data-i="3" data-struggle="thinking" data-solved="celebrating">
+        <p class="s-num"><b>04</b> / 04 · People and fees</p>
         <p class="s-kicker">The struggle</p>
-        <h2 class="s-problem">Running an architecture practice on spreadsheets.</h2>
+        <h2 class="s-problem">You find out someone is overloaded when they resign, and invoices go out weeks late.</h2>
         <div class="s-solution">
           <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>Run it like a practice instead: one ledger for the work, the people and the business.</p>
-          <a class="btn" href="#workspace">See the workspace <span aria-hidden="true">↓</span></a>
+          <p>See who’s in, who’s stretched and who needs mentoring, and know the day a phase is ready to invoice.</p>
+        </div>
+      </article>
+      <article class="s-slide en-final" data-i="4">
+        <p class="s-num"><b>✓</b> Proposed · complete</p>
+        <h2 class="en-final-h">Your studio,<br><span>built.</span></h2>
+        <p class="en-final-p">Run it like a practice: one ledger for the work, the people and the business.</p>
+        <div class="intro-cta">
+          <a class="btn lg" href="#workspace">See the workspace <span aria-hidden="true">↓</span></a>
+          <a class="btn ghost lg" data-download href="#start">Start free trial</a>
         </div>
       </article>
     </div>
-    <div class="s-mascot" aria-hidden="true"><img id="s-mascot" src="assets/mascot/tired.webp" alt="" width="368" height="440"></div>
+
+    <div class="mascot en-mascot" id="mascot">
+      <div class="m-figure" id="m-figure">
+        <span class="m-shadow" aria-hidden="true"></span>
+        <img id="m-img" src="assets/mascot/happy.webp" alt="Ledger, the Studio Ledger mascot, waving hello" width="282" height="440">
+        <button class="m-hit" id="m-hit" type="button" aria-label="Say hello to Ledger and start building the studio"></button>
+      </div>
+      <p class="m-bubble" id="m-bubble" aria-live="polite">Hi! I’m Ledger. Scroll, and I’ll build your studio.</p>
+    </div>
     <div class="story-progress" aria-hidden="true"><i id="story-fill"></i></div>
   </div>
 </section>
