@@ -4,23 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Studio Ledger — The operating system for architecture studios</title>
-<meta name="description" content="Studio Ledger runs an architecture studio from one Windows app: every drawing checked against your standards, senior and principal review, attendance, leave, timesheets, fees and reports. 30-day free trial.">
+<meta name="description" content="Studio Ledger connects projects, drawings, people, standards, time and finance for architecture practices, and reviews every drawing against your studio's standards with AI. 30-day free trial.">
 <meta name="theme-color" content="#0f1513">
 <link rel="icon" type="image/png" href="assets/icon.png">
 <link rel="apple-touch-icon" href="assets/icon.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Studio Ledger — The operating system for architecture studios">
-<meta property="og:description" content="Drawings checked against your studio standards before they reach the principal. Attendance, leave, timesheets, fees and reports in the same app.">
-<link rel="canonical" href="https://studioledger.in/">
-<meta property="og:url" content="https://studioledger.in/">
-<meta property="og:image" content="https://studioledger.in/assets/og.jpg">
+<meta property="og:description" content="Projects, drawings, people, standards, time and finance in one workspace built for architecture practices. Every drawing reviewed by AI against your studio's standards.">
+<link rel="canonical" href="https://krixhnarr.github.io/studio-ledger-website/">
+<meta property="og:url" content="https://krixhnarr.github.io/studio-ledger-website/">
+<meta property="og:image" content="https://krixhnarr.github.io/studio-ledger-website/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap">
 <link rel="stylesheet" href="styles.css">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Studio Ledger","operatingSystem":"Windows 10, Windows 11","applicationCategory":"BusinessApplication","description":"Practice management for architecture studios: drawing standards review, approvals, attendance, leave, timesheets, fees and reports.","offers":[{"@type":"Offer","name":"Solo","price":"0","priceCurrency":"INR"},{"@type":"Offer","name":"Studio","price":"2999","priceCurrency":"INR"},{"@type":"Offer","name":"Practice","price":"6999","priceCurrency":"INR"},{"@type":"Offer","name":"Firm","price":"12999","priceCurrency":"INR"}]}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Studio Ledger","operatingSystem":"Windows 10, Windows 11","applicationCategory":"BusinessApplication","description":"Practice management for architecture studios: AI drawing review against studio standards, approvals, drawing register, attendance, leave, timesheets, fees and reports.","offers":[{"@type":"Offer","name":"Solo","price":"0","priceCurrency":"INR"},{"@type":"Offer","name":"Studio","price":"2999","priceCurrency":"INR"},{"@type":"Offer","name":"Practice","price":"6999","priceCurrency":"INR"},{"@type":"Offer","name":"Firm","price":"12999","priceCurrency":"INR"}]}
 </script>
 </head>
 <body>
@@ -33,11 +33,10 @@
       <span><b>Studio Ledger</b><small>Architecture practice OS</small></span>
     </a>
     <nav class="links" id="links" aria-label="Main">
-      <a href="#review">Drawing review</a>
-      <a href="#product">Product</a>
-      <a href="#features">Features</a>
+      <a href="#review">AI review</a>
+      <a href="#system">Product</a>
+      <a href="#journey">How it works</a>
       <a href="#pricing">Pricing</a>
-      <a href="#refer">Referral</a>
       <a href="#faq">FAQ</a>
     </nav>
     <div class="nav-cta">
@@ -50,300 +49,461 @@
 
 <main id="main">
 
-<!-- HERO -->
+<!-- ============ HERO ============ -->
 <section class="hero">
+  <div class="ruler" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>J</span><span>K</span></div>
   <div class="wrap">
-    <p class="eyebrow">Architecture practice management · Windows</p>
-    <h1>The operating system<br><span class="dim">for architecture</span><br>studios.</h1>
+    <p class="eyebrow">Practice management for architecture studios</p>
+    <h1>The operating system<br><span class="dim">for architecture</span> studios.</h1>
     <div class="hero-row">
-      <p class="lede">Every drawing checked against your studio's own standards before it reaches the senior architect and then the principal. Attendance, leave, timesheets, fees and reports in the same app, kept in your own studio folder.</p>
+      <div class="lede">
+        <span class="datum" aria-hidden="true"><svg viewBox="0 0 12 10"><path d="M0 0h12L6 10z"/></svg>±0.00</span>
+        <p>Projects, drawings, people, standards, time and finance in one workspace. <b>Every drawing reviewed by AI against your studio's own standards</b> before it reaches the principal.</p>
+      </div>
       <div class="hero-cta">
-        <a class="btn lg" data-download href="#start">Download free trial <span aria-hidden="true">→</span></a>
-        <a class="btn ghost lg" href="#tour">Watch the 6-min tour</a>
-        <p class="fine">30 days of every feature · no card · Windows 10 &amp; 11</p>
+        <a class="btn lg" data-download href="#start">Start 30-day free trial <span aria-hidden="true">→</span></a>
+        <a class="btn ghost lg" data-demo href="#">Book a demo</a>
+        <p class="fine">Windows 10 &amp; 11 · no card · your data stays in your studio</p>
       </div>
     </div>
-    <figure class="sheet hero-shot">
-      <div class="sheet-bar"><span>01 / Master control</span><span class="hide-s">1920 × 1080</span><span class="hide-s">Grid 40</span><span class="hide-s">Datum ±0.00</span><span class="live">Status / live</span></div>
-      <img src="assets/app/overview.jpg" alt="Studio Ledger overview: who is in the studio today, drawings waiting for review, overdue tasks and active projects" width="1600" height="813" fetchpriority="high">
+
+    <!-- Live product mock: dashboard that hands one drawing to AI review -->
+    <figure class="app sheet" id="app" aria-label="Studio Ledger dashboard: 6 active projects, 142 drawings, 18 open tasks, 87% first-pass rate, and the drawing register">
+      <div class="sheet-bar"><span>01 / Master control</span><span class="hide-s">X 0.00 · Y 0.00</span><span class="hide-s">Grid 40</span><span class="live">Status / live</span></div>
+      <div class="app-body">
+        <aside class="app-side" aria-hidden="true">
+          <div class="app-brand"><img src="assets/icon.png" alt="" width="20" height="20"><span>Meridian Architects</span></div>
+          <p>Studio</p>
+          <ul><li class="on">Overview</li><li>Drawings <i>3</i></li><li>Register</li><li>Tasks</li><li>Projects</li><li>Standards</li></ul>
+          <p>People</p>
+          <ul><li>Team</li><li>Timesheets</li><li>Attendance</li></ul>
+          <p>Office</p>
+          <ul><li>Finance</li><li>Reports</li></ul>
+        </aside>
+        <div class="app-main">
+          <div class="app-head">
+            <div><span class="app-kicker">Monday, 5 October · Principal architect</span><b class="app-title">Studio overview</b></div>
+            <span class="app-btn" aria-hidden="true">+ Submit drawing</span>
+          </div>
+          <div class="app-stats">
+            <div class="stat"><span>Active projects</span><b data-count="6">6</b><small>2 in construction docs</small></div>
+            <div class="stat"><span>Drawings</span><b data-count="142">142</b><small>38 approved this month</small></div>
+            <div class="stat"><span>Open tasks</span><b data-count="18">18</b><small>3 due this week</small></div>
+            <div class="stat"><span>First-pass rate</span><b><span data-count="87">87</span>%</b><small class="up">▲ 6 pts vs last month</small></div>
+          </div>
+          <div class="app-cols">
+            <div class="panel">
+              <div class="panel-h"><b>Drawing register</b><span>CH-24 · Courtyard House</span></div>
+              <table class="reg">
+                <thead><tr><th>Sheet</th><th>Title</th><th>Rev</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr id="row-a104"><td class="mono">A-104</td><td>First floor plan</td><td class="mono">04</td><td><span class="chip warn">Needs review</span></td></tr>
+                  <tr><td class="mono">A-105</td><td>Roof plan</td><td class="mono">02</td><td><span class="chip ok">Approved</span></td></tr>
+                  <tr><td class="mono">A-203</td><td>Section B–B</td><td class="mono">01</td><td><span class="chip info">In review</span></td></tr>
+                  <tr class="hide-s"><td class="mono">A-301</td><td>South elevation</td><td class="mono">03</td><td><span class="chip ok">Approved</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel app-prog">
+              <div class="panel-h"><b>Projects</b><span>6 active</span></div>
+              <ul>
+                <li><span>Courtyard House</span><i style="--w:.53"></i><em class="mono">53%</em></li>
+                <li><span>Coastal Office</span><i style="--w:.52"></i><em class="mono">52%</em></li>
+                <li><span>Riverside Library</span><i style="--w:.71"></i><em class="mono">71%</em></li>
+                <li><span>Hillside Retreat</span><i style="--w:.6"></i><em class="mono">60%</em></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI review overlay -->
+        <div class="app-review" id="app-review" aria-hidden="true">
+          <div class="ar-head"><span class="ar-ai">AI drawing review</span><b class="mono">A-104 / First floor plan / Rev 04</b></div>
+          <div class="ar-body">
+            <svg class="ar-plan" viewBox="0 0 300 200" aria-hidden="true">
+              <rect class="ln" pathLength="1" x="20" y="20" width="260" height="160" fill="none" stroke-width="3"/>
+              <path class="ln" pathLength="1" d="M110 20v70M20 90h150M170 20v160M230 90v90M170 120h60" fill="none" stroke-width="1.6"/>
+              <path class="ln thin" pathLength="1" d="M180 130h40M180 140h40M180 150h40M180 160h40M180 170h40" fill="none"/>
+              <rect class="bb" x="174" y="122" width="52" height="54"/>
+              <rect class="bb" x="230" y="182" width="50" height="14"/>
+              <rect class="bb" x="160" y="84" width="22" height="22"/>
+              <line class="scan" x1="0" y1="0" x2="0" y2="200"/>
+            </svg>
+            <ul class="ar-list">
+              <li data-r="ok">Sheet number</li><li data-r="ok">Scale</li><li data-r="ok">Dimensions</li>
+              <li data-r="warn">Checked by</li><li data-r="warn">Door tags</li><li data-r="warn">Stair annotation</li>
+            </ul>
+            <div class="ar-score"><b class="mono" id="ar-score">0</b><span>/ 100</span><small>3 issues require attention</small></div>
+          </div>
+        </div>
+      </div>
     </figure>
   </div>
 </section>
 
-<!-- PROBLEM -->
-<section class="sec" id="problem">
+<!-- ============ BEFORE / AFTER ============ -->
+<section class="sec" id="before">
   <div class="wrap">
-    <div class="sec-h"><span class="num">01</span><span class="eyebrow">The problem</span></div>
-    <h2>Architecture is complex.<br><span class="dim">Your software shouldn't be.</span></h2>
-    <ol class="problems">
-      <li><span>01</span>Drawings go out with missing title blocks, wrong scales and overlapping dimensions</li>
-      <li><span>02</span>The principal is the last line of quality control, on every sheet</li>
-      <li><span>03</span>Attendance, leave and timesheets live in three different spreadsheets</li>
-      <li><span>04</span>Fees are invoiced late because nobody noticed a phase had finished</li>
-      <li><span>05</span>Juniors repeat the same mistakes because feedback never gets tracked</li>
-    </ol>
+    <div class="sec-h"><span class="bubble"><b>01</b><i>A-101</i></span><span class="eyebrow">Existing / proposed</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>Six tools and a lot of checking by eye.<br><span class="dim">Or one ledger.</span></h2>
+    <div class="ba">
+      <figure class="ba-sheet existing">
+        <figcaption><span class="mono">Existing</span><b>Before Studio Ledger</b></figcaption>
+        <div class="ba-field">
+          <svg class="ba-tangle" viewBox="0 0 400 260" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M60 40 C 180 120, 220 10, 330 70 M70 200 C 160 60, 260 230, 340 190 M200 30 C 120 160, 300 150, 190 230 M50 120 C 200 90, 230 250, 350 120"/>
+          </svg>
+          <span class="tool" style="--x:8%;--y:10%;--r:-4deg">WhatsApp</span>
+          <span class="tool" style="--x:60%;--y:6%;--r:3deg">Google Drive</span>
+          <span class="tool" style="--x:36%;--y:40%;--r:-2deg">Excel</span>
+          <span class="tool" style="--x:72%;--y:46%;--r:5deg">Email</span>
+          <span class="tool" style="--x:6%;--y:66%;--r:2deg">PDF</span>
+          <span class="tool" style="--x:46%;--y:76%;--r:-3deg">Manual checking</span>
+        </div>
+        <p class="ba-note"><span class="key dashed"></span>To be removed · files in four places · standards checked by eye · fees chased late</p>
+      </figure>
+      <div class="ba-arrow" aria-hidden="true"><svg viewBox="0 0 40 12"><path d="M0 6h36M30 1l6 5-6 5"/></svg></div>
+      <figure class="ba-sheet proposed">
+        <figcaption><span class="mono">Proposed</span><b>With Studio Ledger</b></figcaption>
+        <div class="ba-build">
+        <div class="ba-grid">
+          <span>Projects</span><span>Drawings</span><span>Tasks</span><span>People</span>
+          <span>Standards</span><span class="hl">AI Review</span><span>Finance</span><span>Reports</span>
+        </div>
+        <div class="ba-datum"><svg viewBox="0 0 12 10" aria-hidden="true"><path d="M0 0h12L6 10z"/></svg><span class="mono">Studio Ledger ±0.00</span></div>
+        </div>
+        <p class="ba-note"><span class="key solid"></span>New work · one record · every sheet checked · every hour costed</p>
+      </figure>
+    </div>
   </div>
 </section>
 
-<!-- DRAWING REVIEW -->
+<!-- ============ SYSTEM DIAGRAM ============ -->
+<section class="sec" id="system">
+  <div class="wrap">
+    <div class="sec-h"><span class="bubble"><b>02</b><i>A-201</i></span><span class="eyebrow">The system</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>One ledger.<br><span class="dim">Everything connected.</span></h2>
+    <div class="sys-wrap">
+      <div class="sys" id="sys">
+        <svg class="sys-lines" id="sys-lines" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="sys-core"><span class="mono">SL-00</span><b>Studio Ledger</b></div>
+      </div>
+      <aside class="sys-info" aria-live="polite">
+        <span class="eyebrow" id="sys-code">Node</span>
+        <h3 id="sys-title">Drawings</h3>
+        <p id="sys-text"></p>
+        <p class="sys-links-h">Connected to</p>
+        <div class="sys-chips" id="sys-chips"></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AI DRAWING REVIEW ============ -->
 <section class="sec" id="review">
   <div class="wrap">
-    <div class="sec-h"><span class="num">02</span><span class="eyebrow">Drawing review</span></div>
-    <h2>Your standards,<br><span class="dim">checked on every sheet.</span></h2>
-    <p class="sub">When someone submits a PDF, Studio Ledger reads it the moment it lands. A sheet only reaches a senior once it meets the standards your studio wrote.</p>
+    <div class="sec-h"><span class="bubble"><b>03</b><i>A-301</i></span><span class="eyebrow">AI drawing review</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>Your drawings.<br><span class="dim">Understood.</span></h2>
+    <p class="sub">Studio Ledger reads every sheet against your firm's own standards and marks exactly where the problems are, before a senior architect, a consultant or a site ever sees it.</p>
 
-    <ol class="pipe" aria-label="How a drawing moves through review">
-      <li><b>Submit</b><span>Author uploads the PDF and ticks the visual self-check</span></li>
-      <li><b>Automatic check</b><span>Sheet number, scale, paper size, title block and file name read from the PDF</span></li>
-      <li><b>Claude review</b><span>Optional: judges the drawing itself and says where the problem is</span></li>
-      <li><b>Senior review</b><span>Marks each visual check OK or Flag, redlines the sheet</span></li>
-      <li><b>Principal</b><span>Approves or returns. Every step stays in the sheet's history</span></li>
-    </ol>
+    <div class="ai" id="ai">
+      <figure class="ai-sheet sheet">
+        <div class="sheet-bar"><span>A-104 · First floor plan</span><span class="hide-s">1:100 @ A1</span><span class="live" id="ai-status">Ready</span></div>
+        <svg class="plan" viewBox="0 0 640 470" role="img" aria-label="First floor plan with three issues highlighted: missing Checked by field, a door without a tag, and a stair without an annotation">
+          <!-- grid -->
+          <g class="grid">
+            <path class="ln thin" pathLength="1" d="M70 52V392M250 52V392M420 52V392M570 52V392M40 80H600M40 240H600M40 380H600"/>
+            <g class="gb"><circle cx="70" cy="34" r="11"/><text x="70" y="38">A</text><circle cx="250" cy="34" r="11"/><text x="250" y="38">B</text><circle cx="420" cy="34" r="11"/><text x="420" y="38">C</text><circle cx="570" cy="34" r="11"/><text x="570" y="38">D</text>
+            <circle cx="24" cy="80" r="11"/><text x="24" y="84">1</text><circle cx="24" cy="240" r="11"/><text x="24" y="244">2</text><circle cx="24" cy="380" r="11"/><text x="24" y="384">3</text></g>
+          </g>
+          <!-- dimension string -->
+          <g class="dims">
+            <path class="ln thin" pathLength="1" d="M70 14H570M70 9v10M250 9v10M420 9v10M570 9v10"/>
+            <text x="160" y="10">6 000</text><text x="335" y="10">5 400</text><text x="495" y="10">4 500</text>
+          </g>
+          <!-- walls -->
+          <path class="ln wall" pathLength="1" d="M70 80H570V380H70Z"/>
+          <path class="ln wall2" pathLength="1" d="M250 80V140M250 182V240M70 240H160M200 240H420M420 80V120M420 162V380M300 240V380M420 300H570"/>
+          <!-- windows -->
+          <path class="ln thin" pathLength="1" d="M110 77h90M110 83h90M300 77h80M300 83h80M460 77h80M460 83h80M567 130v70M573 130v70M110 377h90M110 383h90"/>
+          <!-- doors -->
+          <path class="ln thin" pathLength="1" d="M250 140a42 42 0 0 1 42 42M160 240a40 40 0 0 0 40 40M420 120a42 42 0 0 1 42 42M420 300a36 36 0 0 0 36 -36"/>
+          <!-- stair -->
+          <path class="ln thin" pathLength="1" d="M310 252H410M310 268H410M310 284H410M310 300H410M310 316H410M310 332H410M310 348H410M310 364H410M360 252V372"/>
+          <!-- door tags -->
+          <g class="tag"><rect x="262" y="186" width="30" height="14" rx="7"/><text x="277" y="196">D-01</text></g>
+          <g class="tag"><rect x="166" y="282" width="30" height="14" rx="7"/><text x="181" y="292">D-02</text></g>
+          <g class="tag"><rect x="458" y="268" width="30" height="14" rx="7"/><text x="473" y="278">D-04</text></g>
+          <!-- room names -->
+          <g class="rooms">
+            <text x="160" y="155">LIVING</text><text x="160" y="170" class="sm">01 · 26.4 m²</text>
+            <text x="335" y="155">KITCHEN</text><text x="335" y="170" class="sm">02 · 18.2 m²</text>
+            <text x="495" y="200">BED</text><text x="495" y="215" class="sm">03 · 14.8 m²</text>
+            <text x="160" y="315">DINING</text><text x="160" y="330" class="sm">04 · 19.6 m²</text>
+            <text x="495" y="345">STUDIO</text><text x="495" y="360" class="sm">05 · 12.1 m²</text>
+          </g>
+          <!-- section marker + north -->
+          <g class="sec-mark"><circle cx="46" cy="160" r="12"/><path d="M34 160h24"/><text x="46" y="157">S</text><text x="46" y="169">02</text></g>
+          <g class="north"><circle cx="605" cy="420" r="13"/><path d="M605 405l6 22-6-5-6 5z"/><text x="605" y="452">N</text></g>
+          <!-- title block -->
+          <g class="tb">
+            <rect x="70" y="402" width="500" height="34"/>
+            <path d="M170 402v34M270 402v34M350 402v34M420 402v34M490 402v34"/>
+            <text x="78" y="414" class="k">PROJECT</text><text x="78" y="429">CH-24</text>
+            <text x="178" y="414" class="k">SHEET</text><text x="178" y="429">A-104</text>
+            <text x="278" y="414" class="k">SCALE</text><text x="278" y="429">1:100</text>
+            <text x="358" y="414" class="k">REV</text><text x="358" y="429">04</text>
+            <text x="428" y="414" class="k">DRAWN</text><text x="428" y="429">PN</text>
+            <text x="498" y="414" class="k">CHECKED</text><text x="498" y="429">—</text>
+          </g>
+          <!-- issue bounding boxes -->
+          <g class="bbx" data-issue="checked"><rect x="486" y="398" width="88" height="42"/><text x="486" y="393">01 · Checked by missing</text></g>
+          <g class="bbx" data-issue="door"><rect x="410" y="110" width="62" height="62"/><text x="410" y="105">02 · Door tag missing</text></g>
+          <g class="bbx" data-issue="stair"><rect x="302" y="246" width="116" height="128"/><text x="296" y="372" style="text-anchor:end">03 · No UP arrow / risers</text></g>
+          <rect class="ai-scan" x="0" y="0" width="2" height="470"/>
+        </svg>
+      </figure>
 
-    <div class="review-grid">
-      <div class="report" role="figure" aria-label="Example drawing check report">
-        <div class="report-h"><b>A-104 · First floor plan</b><span class="eyebrow">Rev 04</span></div>
-        <div class="report-b">
-          <ul>
-            <li class="ok"><i>✓</i><span>Sheet number follows studio format</span></li>
-            <li class="ok"><i>✓</i><span>Drawn at a studio scale <small>1:100</small></span></li>
-            <li class="ok"><i>✓</i><span>Issued on a studio paper size <small>A1</small></span></li>
-            <li class="ok"><i>✓</i><span>Title block shows the project code</span></li>
-            <li class="no"><i>!</i><span>"Checked by" field missing <small>Must · Title block</small></span></li>
-            <li class="ok"><i>✓</i><span>North point and scale bar shown</span></li>
-            <li class="no"><i>!</i><span>Dimensions overlap at the stair core <small>Must · Dimensions · Claude</small></span></li>
-            <li class="ok"><i>✓</i><span>Grid lines bubbled and labelled</span></li>
+      <div class="ai-panel">
+        <div class="ai-meta">
+          <b class="mono">A-104 / First floor plan / Rev 04</b>
+          <span class="mono">Analysis / Standards v3.4</span>
+        </div>
+        <div class="ai-group">
+          <h4>Standards</h4>
+          <ul class="checks">
+            <li data-r="ok">Sheet number</li><li data-r="ok">Project code</li><li data-r="ok">Drawing title</li>
+            <li data-r="ok">Scale</li><li data-r="ok">Revision</li><li data-r="warn" data-issue="checked">Checked by</li>
           </ul>
-          <div class="score">
-            <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" class="track"/><circle cx="50" cy="50" r="42" class="val" pathLength="100" stroke-dasharray="87 100"/></svg>
-            <b>87</b><span class="eyebrow">of 100</span>
-            <em>Returned</em>
+        </div>
+        <div class="ai-group">
+          <h4>Architectural check</h4>
+          <ul class="checks">
+            <li data-r="ok">Dimensions</li><li data-r="warn" data-issue="door">Door tags</li>
+            <li data-r="ok">Room names</li><li data-r="warn" data-issue="stair">Stair annotation</li>
+          </ul>
+        </div>
+        <div class="ai-score">
+          <div><span class="eyebrow">Drawing score</span><p><b class="mono" id="ai-score">0</b><span class="mono">/ 100</span></p></div>
+          <div class="cloud-note">
+            <svg viewBox="0 0 220 64" preserveAspectRatio="none" aria-hidden="true"><path d="M14 32c-10-10 0-26 14-22 4-10 20-10 24 0 6-8 20-8 26 0 6-8 20-8 26 0 6-8 20-8 26 0 6-8 20-8 26 0 6-8 22-6 24 4 14-2 22 14 12 22 10 10 0 26-14 22-4 10-20 10-24 0-6 8-20 8-26 0-6 8-20 8-26 0-6 8-20 8-26 0-6 8-20 8-26 0-6 8-22 6-24-4-14 2-22-14-12-22z"/></svg>
+            <span><b id="ai-issues">3</b> issues require attention</span>
           </div>
         </div>
-        <p class="report-f">A failed MUST rule sends the sheet back to the author with a fix list, before a senior spends any time on it.</p>
+        <button class="btn ghost sm replay" id="ai-replay" type="button">↻ Run review again</button>
       </div>
-      <div class="review-copy">
-        <h3>What it checks</h3>
-        <ul class="ticks">
-          <li><b>From the file:</b> sheet-number format, file naming, allowed scales, paper size, required title-block text, pages per file</li>
-          <li><b>From your checklist:</b> line weights, dimensions, north point, section markers, hatches, revision clouds, anything your studio writes down</li>
-          <li><b>Pass mark:</b> no MUST rule failed and a score at or above 80 (you set it)</li>
-        </ul>
-        <h3>With Claude connected</h3>
-        <ul class="ticks">
-          <li>Claude looks at the drawing itself against your standards and principles, and says <em>where</em> on the sheet the problem is</li>
-          <li><b>Decides</b> mode overrides a self-ticked box that isn't true. <b>Advises</b> mode only adds notes. A reviewer's OK or Flag always wins</li>
-          <li>Authors can pre-check a sheet before submitting. Spend stops at the monthly budget you set</li>
-        </ul>
-        <p class="fine">Claude runs on your studio's own Anthropic key, so you pay Anthropic directly for what you use. Without internet, sheets fall back to the automatic checks.</p>
+    </div>
+
+    <div class="ai-notes">
+      <div><h3>Read from the file</h3><p>Sheet number, file name, scale, paper size and title-block text are checked the moment a PDF is submitted.</p></div>
+      <div><h3>Judged by AI</h3><p>Claude reviews the drawing itself against the standards you write, and says where on the sheet each problem is.</p></div>
+      <div><h3>Decided by people</h3><p>A failed MUST rule returns the sheet with a fix list. Seniors and the principal still have the final say on every sheet.</p></div>
+    </div>
+    <p class="fine ai-fine">AI review runs on your studio's own Anthropic key, so you pay Anthropic directly per check, with a monthly budget you set. Without internet, sheets fall back to the automatic checks.</p>
+  </div>
+</section>
+
+<!-- ============ BUILT FOR ARCHITECTURE ============ -->
+<section class="sec" id="built">
+  <div class="wrap built">
+    <div>
+      <div class="sec-h"><span class="bubble"><b>04</b><i>A-401</i></span><span class="eyebrow">Purpose-built</span></div>
+      <h2>Built for architecture.<br><span class="dim">Not adapted to it.</span></h2>
+    </div>
+    <div class="vs" role="table" aria-label="Generic software compared with Studio Ledger">
+      <div class="vs-row vs-head" role="row"><span role="columnheader">Generic software</span><span aria-hidden="true"></span><span role="columnheader">Studio Ledger</span></div>
+      <div class="vs-row" role="row"><span role="cell">Generic tasks</span><i aria-hidden="true"></i><span role="cell"><b>Project-linked tasks</b><small>Every task sits in its project, next to its drawings and deadlines</small></span></div>
+      <div class="vs-row" role="row"><span role="cell">Generic files</span><i aria-hidden="true"></i><span role="cell"><b>Drawing register</b><small>Sheets, revisions, issues and transmittals per project</small></span></div>
+      <div class="vs-row" role="row"><span role="cell">Generic checklists</span><i aria-hidden="true"></i><span role="cell"><b>Studio standards</b><small>Your title blocks, scales, line weights and principles</small></span></div>
+      <div class="vs-row" role="row"><span role="cell">Generic time tracking</span><i aria-hidden="true"></i><span role="cell"><b>Project profitability</b><small>Hours × rates against fee stages, per project</small></span></div>
+      <div class="vs-row" role="row"><span role="cell">Generic AI</span><i aria-hidden="true"></i><span role="cell"><b>AI drawing review</b><small>Reads the sheet, not just the text about it</small></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECT JOURNEY ============ -->
+<section class="sec" id="journey">
+  <div class="wrap">
+    <div class="sec-h"><span class="bubble"><b>05</b><i>A-501</i></span><span class="eyebrow">How it works</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>See how a project moves<br><span class="dim">through Studio Ledger.</span></h2>
+    <div class="jn" id="jn">
+      <ol class="jn-steps" role="tablist" aria-label="Project stages">
+        <li><button role="tab" aria-selected="true" data-i="0"><span class="mono">01</span>Create project</button></li>
+        <li><button role="tab" aria-selected="false" data-i="1"><span class="mono">02</span>Add drawing</button></li>
+        <li><button role="tab" aria-selected="false" data-i="2"><span class="mono">03</span>Assign architect</button></li>
+        <li><button role="tab" aria-selected="false" data-i="3"><span class="mono">04</span>AI review</button></li>
+        <li><button role="tab" aria-selected="false" data-i="4"><span class="mono">05</span>Approval</button></li>
+        <li><button role="tab" aria-selected="false" data-i="5"><span class="mono">06</span>Project reporting</button></li>
+      </ol>
+      <div class="jn-track" aria-hidden="true"><i id="jn-fill"></i></div>
+      <div class="jn-stage">
+        <article class="jn-card on" data-i="0">
+          <div class="jn-copy"><h3>Create the project</h3><p>Set the phase, lead architect, team and fee stages. Everything that follows, from sheets and tasks to hours and invoices, is filed against it.</p></div>
+          <div class="mock">
+            <div class="mock-h"><span class="mono">New project</span><b>CH-24 · Courtyard House</b></div>
+            <dl class="kv"><dt>Client</dt><dd>Mehra Family Trust</dd><dt>Phase</dt><dd><span class="chip info">Design development</span></dd><dt>Lead</dt><dd>Arjun Mehta</dd><dt>Team</dt><dd>Priya Nair · Kabir Shah · Sana Iqbal</dd><dt>Fee</dt><dd class="mono">₹18,00,000 · 5 stages</dd></dl>
+          </div>
+        </article>
+        <article class="jn-card" data-i="1">
+          <div class="jn-copy"><h3>Add a drawing</h3><p>Upload the PDF. Paper size, sheet number, scale and title block are read straight from the file and filed in the register.</p></div>
+          <div class="mock">
+            <div class="mock-h"><span class="mono">Submit a drawing</span><b>CH-24_A-104_R04.pdf</b></div>
+            <ul class="mini-checks"><li class="ok">Paper size <span class="mono">A1</span></li><li class="ok">Sheet number <span class="mono">A-104</span></li><li class="ok">Scale <span class="mono">1:100</span></li><li class="ok">Revision <span class="mono">04</span></li><li class="ok">Project code <span class="mono">CH-24</span></li></ul>
+          </div>
+        </article>
+        <article class="jn-card" data-i="2">
+          <div class="jn-copy"><h3>Assign an architect</h3><p>Hand the work to someone with a due date and priority. They see it on their day, and the studio sees its progress.</p></div>
+          <div class="mock">
+            <div class="mock-h"><span class="mono">Task</span><b>Complete A-104 for review</b></div>
+            <dl class="kv"><dt>Assigned to</dt><dd>Priya Nair · Junior architect</dd><dt>Due</dt><dd class="mono">Wed 14 Oct</dd><dt>Priority</dt><dd><span class="chip warn">High</span></dd><dt>Progress</dt><dd><span class="bar" style="--w:.7"></span><span class="mono">70%</span></dd></dl>
+          </div>
+        </article>
+        <article class="jn-card" data-i="3">
+          <div class="jn-copy"><h3>AI review</h3><p>The sheet is checked against your standards. Issues are marked on the drawing, and a failed MUST rule sends it back with a fix list.</p></div>
+          <div class="mock">
+            <div class="mock-h"><span class="mono">AI drawing review</span><b>A-104 · Score 87 / 100</b></div>
+            <ul class="mini-checks"><li class="ok">Title block, scale, revision</li><li class="ok">Dimensions and room names</li><li class="warn">Checked by missing</li><li class="warn">Door tag missing · D-03</li><li class="warn">Stair annotation</li></ul>
+          </div>
+        </article>
+        <article class="jn-card" data-i="4">
+          <div class="jn-copy"><h3>Approval</h3><p>The senior architect marks each check and redlines the sheet; the principal approves. Every step stays in the sheet's history.</p></div>
+          <div class="mock">
+            <div class="mock-h"><span class="mono">A-104 · Rev 05</span><b>Approved</b></div>
+            <ol class="pipe-mini"><li class="done">Standards</li><li class="done">Senior review</li><li class="done">Principal</li><li class="done last">Approved</li></ol>
+            <p class="mock-foot">Approved by Rhea Kapoor · 5 Oct, 11:42 · issued to consultant with transmittal T-031</p>
+          </div>
+        </article>
+        <article class="jn-card" data-i="5">
+          <div class="jn-copy"><h3>Project reporting</h3><p>Weekly and monthly reports pull it all together: drawings, first-pass rate, hours, costs and fees ready to invoice.</p></div>
+          <div class="mock">
+            <div class="mock-h"><span class="mono">Monthly report · October</span><b>Courtyard House</b></div>
+            <div class="mini-stats"><div><b class="mono">12</b><span>drawings approved</span></div><div><b class="mono">87%</b><span>first-pass rate</span></div><div><b class="mono">164 h</b><span>logged</span></div><div><b class="mono">₹4.2L</b><span>ready to invoice</span></div></div>
+          </div>
+        </article>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRODUCT TOUR (screenshots) -->
+<!-- ============ FIRM WORKFLOW ============ -->
+<section class="sec" id="workflow">
+  <div class="wrap flow-wrap">
+    <div class="flow-intro">
+      <div class="sec-h"><span class="bubble"><b>06</b><i>A-601</i></span><span class="eyebrow">For the entire practice</span></div>
+      <h2>Every handoff.<br><span class="dim">Visible and accountable.</span></h2>
+      <p class="sub">From the principal setting standards to a sheet being issued, everyone can see where a drawing is, who has it and what it's waiting for.</p>
+    </div>
+    <ol class="flow" id="flow">
+      <li><span class="who">Principal</span><span class="act">sets the studio standards</span></li>
+      <li><span class="who">Project architect</span><span class="act">assigns the drawing</span></li>
+      <li><span class="who">Junior architect</span><span class="act">submits the sheet</span></li>
+      <li class="ai-step"><span class="who">AI review</span><span class="act">checks it against the standards</span></li>
+      <li><span class="who">Project architect</span><span class="act">reviews and redlines</span></li>
+      <li><span class="who">Principal</span><span class="act">approves</span></li>
+      <li class="end"><span class="who">Issued</span><span class="act">logged in the register with a transmittal</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ PRODUCT SHOWCASE ============ -->
 <section class="sec" id="product">
   <div class="wrap">
-    <div class="sec-h"><span class="num">03</span><span class="eyebrow">Inside the product</span></div>
-    <h2>Built around the way<br><span class="dim">architects actually work.</span></h2>
+    <div class="sec-h"><span class="bubble"><b>07</b><i>A-701</i></span><span class="eyebrow">Inside the product</span><span class="dimline" aria-hidden="true"></span></div>
+    <div class="show-h">
+      <h2>The actual application.<br><span class="dim">Not a mockup.</span></h2>
+      <button class="btn ghost" id="open-tour" type="button"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z"/></svg>Watch the 6-minute tour</button>
+    </div>
     <div class="tabs" role="tablist" aria-label="Product screens" id="tabs"></div>
     <figure class="sheet shot">
-      <div class="sheet-bar"><span id="shot-code">A-01</span><span id="shot-title">Overview</span><span class="hide-s">Scale 1:1</span><span class="live">Live workspace</span></div>
-      <img id="shot-img" src="assets/app/overview.jpg" alt="" width="1600" height="813" loading="lazy">
+      <div class="sheet-bar"><span id="shot-code">A-01</span><span id="shot-title">Dashboard</span><span class="hide-s">Scale 1:1</span><span class="live">Live workspace</span></div>
+      <div class="shot-frame"><img id="shot-img" src="assets/app/overview.jpg" alt="" width="1600" height="813" loading="lazy"><i class="shot-wipe" aria-hidden="true"></i></div>
       <figcaption id="shot-cap"></figcaption>
     </figure>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="sec" id="features">
-  <div class="wrap">
-    <div class="sec-h"><span class="num">04</span><span class="eyebrow">Everything connected</span></div>
-    <h2>One ledger.<br><span class="dim">The whole practice.</span></h2>
-    <div class="fgroups">
-      <div class="fgroup">
-        <h3><span>A</span>Drawings</h3>
-        <dl>
-          <dt>Drawing board</dt><dd>Every sheet from Returned to Senior review, Principal review and Approved, with revisions and history</dd>
-          <dt>Standards</dt><dd>Your core principles and drawing rules, which the checker uses</dd>
-          <dt>Redlining</dt><dd>Pen, revision cloud, arrow and text on the sheet. The author sees them when it comes back</dd>
-          <dt>Register &amp; transmittals</dt><dd>Sheet list per project with last issue, exported with a transmittal sheet PDF</dd>
-        </dl>
-      </div>
-      <div class="fgroup">
-        <h3><span>B</span>Work</h3>
-        <dl>
-          <dt>Projects</dt><dd>Phase from Concept to Completed, lead, team, progress and approved drawings</dd>
-          <dt>Tasks</dt><dd>Assign with due dates, priority and progress; filter by person, project and status</dd>
-          <dt>Schedule</dt><dd>Week calendar of meetings, site visits, design reviews, deadlines and leave</dd>
-          <dt>Meetings</dt><dd>Minutes with attendees. Each action with an owner becomes a task; minutes as PDF</dd>
-        </dl>
-      </div>
-      <div class="fgroup">
-        <h3><span>C</span>People</h3>
-        <dl>
-          <dt>Attendance</dt><dd>One-click check-in, site visit or remote. Monthly register with CSV export for payroll</dd>
-          <dt>Leave</dt><dd>Half days, approvals and balances, per year or per month with carry-forward</dd>
-          <dt>Timesheets</dt><dd>Weekly hours per project with Friday reminders, feeding project costs</dd>
-          <dt>Mentoring &amp; happiness</dt><dd>The standards each junior misses most, goals and mentor notes. A weekly mood check-in shows who needs care</dd>
-        </dl>
-      </div>
-      <div class="fgroup">
-        <h3><span>D</span>Office</h3>
-        <dl>
-          <dt>Finances</dt><dd>Fee stages per project, ready-to-invoice reminders when a phase finishes, overdue payments, costs from timesheets</dd>
-          <dt>Reports</dt><dd>Weekly and monthly reports with a Claude summary, saved as PDF</dd>
-          <dt>Performance &amp; Instagram</dt><dd>First-pass rate and output per person; follower growth and what content works</dd>
-          <dt>Ask Claude</dt><dd>Ask about the studio in plain words. Answers only use what the asker's role can see</dd>
-        </dl>
-      </div>
-    </div>
-    <p class="also"><span class="eyebrow">Also</span> Windows notifications when work lands in your queue · reflections board · anonymous complaints to the principal · works for studios with or without seniors</p>
-  </div>
-</section>
-
-<!-- ROLES -->
-<section class="sec" id="roles">
-  <div class="wrap">
-    <div class="sec-h"><span class="num">05</span><span class="eyebrow">For the entire practice</span></div>
-    <h2>Every handoff<br><span class="dim">visible and accountable.</span></h2>
-    <div class="roles">
-      <article><span class="eyebrow">R-01</span><h3>Principal architect</h3><p>Sets the standards once. Sees who's in, what's waiting on them, which fees are ready to invoice and who on the team is under strain. Only approves sheets that have already passed.</p></article>
-      <article><span class="eyebrow">R-02</span><h3>Senior architect</h3><p>Gets sheets that already meet the basics, with the check report attached. Marks each item OK or Flag, redlines, and sends it to the principal or back to the author.</p></article>
-      <article><span class="eyebrow">R-03</span><h3>Junior architect &amp; intern</h3><p>Checks in, sees today's tasks and where each drawing is in review. Can pre-check a sheet before submitting and sees the standards they miss most.</p></article>
-    </div>
-  </div>
-</section>
-
-<!-- VIDEO TOUR -->
-<section class="sec" id="tour">
-  <div class="wrap">
-    <div class="sec-h"><span class="num">06</span><span class="eyebrow">Product tour</span></div>
-    <h2>Six minutes.<br><span class="dim">Six people. One studio.</span></h2>
-    <div class="tour">
-      <div class="sheet video">
-        <video id="tour-video" controls preload="metadata" poster="assets/app/review.jpg" playsinline>
-          <source src="assets/demo.mp4" type="video/mp4">
-        </video>
-      </div>
-      <ol class="chapters" id="chapters" aria-label="Jump to a chapter"></ol>
-    </div>
-  </div>
-</section>
-
-<!-- DATA -->
+<!-- ============ DATA ============ -->
 <section class="sec" id="data">
   <div class="wrap">
-    <div class="sec-h"><span class="num">07</span><span class="eyebrow">Your data</span></div>
+    <div class="sec-h"><span class="bubble"><b>08</b><i>A-801</i></span><span class="eyebrow">Your data</span><span class="dimline" aria-hidden="true"></span></div>
     <h2>Your folder.<br><span class="dim">Your drawings. Your records.</span></h2>
     <div class="notes">
-      <div><h3>No cloud account</h3><p>Everything is kept in a shared studio folder on your own server, NAS or synced drive. Drawings only leave the office for the Claude reviews you choose to run.</p></div>
-      <div><h3>Works offline</h3><p>Check-ins, tasks, reviews and approvals all work without internet. Claude features return when you're back online.</p></div>
-      <div><h3>Nothing is deleted</h3><p>If a plan lapses you get 14 days to renew with everything working. After that the studio is read-only, and every project, drawing and report stays viewable.</p></div>
-      <div><h3>One licence, every PC</h3><p>The principal pastes one licence key and every PC on the studio folder picks it up. Growing? A new key replaces the old one, with nothing to reinstall.</p></div>
+      <div><h3>No cloud account</h3><p>Everything is kept in a shared studio folder on your own server, NAS or synced drive. Drawings leave the office only for the AI reviews you choose to run.</p></div>
+      <div><h3>Works offline</h3><p>Check-ins, tasks, reviews and approvals all work without internet. AI features return when you're back online.</p></div>
+      <div><h3>Nothing is deleted</h3><p>If a plan lapses you get 14 days to renew with everything working. After that the studio is read-only, and every record stays viewable.</p></div>
+      <div><h3>One licence, every PC</h3><p>The principal pastes one licence key and every PC on the studio folder picks it up. Nothing to reinstall when you grow.</p></div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
+<!-- ============ PRICING ============ -->
 <section class="sec" id="pricing">
   <div class="wrap">
-    <div class="sec-h"><span class="num">08</span><span class="eyebrow">Pricing</span></div>
-    <div class="price-top">
-      <h2>Priced per studio.<br><span class="dim">Not per seat.</span></h2>
-      <div class="calc">
-        <div class="calc-row">
-          <label for="people" class="eyebrow">People in your studio</label>
-          <output id="people-out" class="mono">8</output>
-        </div>
-        <input type="range" id="people" min="1" max="60" value="8" aria-describedby="r-plan">
-        <div class="calc-row">
-          <div class="seg" role="group" aria-label="Billing">
-            <button type="button" id="b-month" aria-pressed="true">Monthly</button>
-            <button type="button" id="b-year" aria-pressed="false">Yearly · 2 months free</button>
-          </div>
-        </div>
-        <div class="result">
-          <span class="r-plan" id="r-plan">Practice</span><span class="r-price mono" id="r-price">₹6,999/mo</span>
-          <span class="fine" id="r-note"></span><span class="fine r" id="r-per"></span>
-        </div>
+    <div class="sec-h"><span class="bubble"><b>09</b><i>A-901</i></span><span class="eyebrow">Pricing</span><span class="dimline" aria-hidden="true"></span></div>
+    <div class="price-h">
+      <h2>A plan for every practice.</h2>
+      <div class="seg" role="group" aria-label="Billing period">
+        <button type="button" id="b-month" aria-pressed="true">Monthly</button>
+        <button type="button" id="b-year" aria-pressed="false">Annual <em>2 months free</em></button>
       </div>
     </div>
     <div class="plans" id="plans"></div>
-    <div class="ent"><div><b>Enterprise</b> <span class="fine">· 40+ people, multiple offices, custom terms and onboarding</span></div><a href="#" data-demo class="link">Talk to us →</a></div>
-    <p class="fine price-note">Prices in rupees, plus GST. Yearly billing is ten months' price for twelve. Every new studio starts with a 30-day trial of everything.</p>
-
-    <h3 class="sched-h">What's in each plan</h3>
-    <div class="tablewrap">
-      <table>
-        <thead><tr><th scope="col">Module</th><th scope="col">Solo</th><th scope="col">Studio</th><th scope="col">Practice</th><th scope="col">Firm</th></tr></thead>
-        <tbody id="sched"></tbody>
-      </table>
-    </div>
+    <div class="ent"><div><b>Enterprise</b><span class="fine">40+ people, multiple offices, custom terms and onboarding. API and single sign-on are on the way.</span></div><a href="#" data-demo class="btn ghost sm">Talk to us</a></div>
+    <p class="fine price-note">Prices in rupees, plus GST. Every new studio starts with a 30-day trial of everything, no card needed. Unlimited AI reviews run on your studio's own Anthropic key.</p>
   </div>
 </section>
 
-<!-- REFERRAL -->
+<!-- ============ REFERRAL ============ -->
 <section class="sec" id="refer">
   <div class="wrap">
     <div class="refer">
       <div>
         <div class="refer-top"><span class="tag">Limited offer</span><span class="eyebrow" id="offer-left">Ends 31 Dec 2026</span></div>
         <h2>Refer a firm.<br><span class="dim">Get a month free.</span></h2>
-        <p>Every studio has a referral code in <b>Settings → Plan &amp; billing</b>. Share it with another practice. When they join on a paid plan, you both get time added to your licence.</p>
+        <p>Every studio has a referral code in <b>Settings → Plan &amp; billing</b>. When a practice you refer joins on a paid plan, you both get time added to your licence.</p>
       </div>
       <div class="gifts">
         <div class="gift"><span class="eyebrow">You get</span><b>1 month</b><span>extra on the plan you're on</span></div>
         <div class="gift"><span class="eyebrow">They get</span><b>15 days</b><span>extra on their first paid plan</span></div>
-        <p class="fine">Counts once the referred firm has paid for Studio, Practice, Firm or Enterprise; trials and the free Solo plan don't qualify. For firms joining Studio Ledger for the first time. If you aren't on a paid plan yet, your month is kept and added when you buy. Referrals must be paid for by 31 December 2026.</p>
+        <p class="fine">Counts once the referred firm has paid for Studio, Practice, Firm or Enterprise; trials and Solo don't qualify. For firms new to Studio Ledger. If you aren't on a paid plan yet, your month is kept until you buy. Referrals must be paid for by 31 December 2026.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- GET STARTED -->
-<section class="sec" id="start">
-  <div class="wrap">
-    <div class="sec-h"><span class="num">09</span><span class="eyebrow">Get started</span></div>
-    <h2>Try it with your whole team<br><span class="dim">for 30 days.</span></h2>
-    <ol class="steps">
-      <li><span class="mono">01</span><h3>Install</h3><p>Download Studio Ledger and install it on each PC. Point it at a shared studio folder on your server, NAS or a synced drive.</p></li>
-      <li><span class="mono">02</span><h3>Set up your studio</h3><p>Add your projects and team, and write your drawing standards, or start from the built-in set. Every feature is open for 30 days.</p></li>
-      <li><span class="mono">03</span><h3>Get your licence</h3><p>Open <b>Settings → Plan &amp; billing</b>, copy your Studio ID and email it to us with your plan and number of people. Paste the licence key you receive, and every PC picks it up.</p></li>
-    </ol>
-    <div class="start-cta">
-      <a class="btn lg" data-download href="#">Download for Windows <span aria-hidden="true">↓</span></a>
-      <a class="btn ghost lg" data-demo href="#">Book a demo</a>
-      <p class="fine" id="dl-meta">Version <span data-version></span> · Windows 10 &amp; 11 · 64-bit</p>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
+<!-- ============ FAQ ============ -->
 <section class="sec" id="faq">
-  <div class="wrap">
-    <div class="sec-h"><span class="num">10</span><span class="eyebrow">Questions</span></div>
-    <h2>Questions studios ask.</h2>
+  <div class="wrap faq-wrap">
+    <div>
+      <div class="sec-h"><span class="bubble"><b>10</b><i>A-001</i></span><span class="eyebrow">Questions</span></div>
+      <h2>Questions studios ask.</h2>
+    </div>
     <div class="faq">
-      <details><summary>Does it need internet or a server?</summary><p>No special server. Studio Ledger keeps everything in a shared folder: a folder on a NAS, a shared drive on one PC, or a synced drive all work. It works offline; only Claude reviews and Ask Claude need internet.</p></details>
-      <details><summary>What do I need for the Claude drawing review?</summary><p>An Anthropic API key from console.anthropic.com, which the principal adds in Settings. You pay Anthropic directly for each check, and you set a monthly budget in Studio Ledger. A Claude Pro or Max chat subscription can't be used by other apps. Solo includes 10 Claude checks a month; paid plans have no cap.</p></details>
-      <details><summary>Which file types can be checked?</summary><p>PDF is recommended: paper size, sheet number, scale and title-block text are read straight from it. Export your sheets from AutoCAD, Revit, ArchiCAD or SketchUp Layout as PDF as you would for issue.</p></details>
+      <details><summary>Does it need internet or a server?</summary><p>No special server. Studio Ledger keeps everything in a shared folder: a NAS, a shared drive on one PC, or a synced drive all work. It works offline; only AI reviews and Ask Claude need internet.</p></details>
+      <details><summary>What do I need for AI drawing review?</summary><p>An Anthropic API key from console.anthropic.com, which the principal adds in Settings. You pay Anthropic directly for each check and set a monthly budget in Studio Ledger. A Claude Pro or Max chat subscription can't be used by other apps. Solo includes 10 AI checks a month; paid plans have no cap.</p></details>
+      <details><summary>Which file types can be checked?</summary><p>PDF. Export your sheets from AutoCAD, Revit, ArchiCAD or SketchUp Layout as PDF, as you would for issue. Paper size, sheet number, scale and title-block text are read straight from it.</p></details>
       <details><summary>What happens when the trial ends?</summary><p>Choose a plan and paste the licence key. If you don't, Studio Ledger moves to the free Solo plan; a studio with more people or projects than Solo allows becomes read-only. Nothing is deleted, and a licence key unlocks everything again.</p></details>
-      <details><summary>Do I pay per person?</summary><p>No. Each plan includes a number of people (5, 15 or 30), with a lower price for every extra person on larger plans. Use the calculator above to see your price.</p></details>
+      <details><summary>Do I pay per person?</summary><p>No. Each plan includes a number of people (5, 15 or 30), with a lower price for every extra person on larger plans.</p></details>
       <details><summary>Does it work on Mac?</summary><p>Not yet. Studio Ledger runs on Windows 10 and 11.</p></details>
     </div>
   </div>
 </section>
 
-<!-- FINAL CTA -->
-<section class="final">
+<!-- ============ FINAL CTA ============ -->
+<section class="final" id="start">
   <div class="wrap">
     <p class="eyebrow">Ready when you are</p>
     <h2>Run your studio like a practice.<br><span class="dim">Not a spreadsheet.</span></h2>
+    <ol class="steps">
+      <li><span class="mono">01</span>Install on each PC and point it at a shared studio folder</li>
+      <li><span class="mono">02</span>Add your projects, team and drawing standards</li>
+      <li><span class="mono">03</span>After 30 days, email your Studio ID for a licence key</li>
+    </ol>
     <div class="final-cta">
-      <a class="btn lg" data-download href="#">Download free trial</a>
+      <a class="btn lg" data-download href="#">Download for Windows <span aria-hidden="true">↓</span></a>
       <a class="btn ghost lg" data-demo href="#">Book a demo</a>
     </div>
+    <p class="fine">Version <span data-version></span> · Windows 10 &amp; 11 · 64-bit</p>
   </div>
 </section>
 
@@ -353,11 +513,21 @@
   <div class="wrap foot-in">
     <div class="brand"><img src="assets/icon.png" alt="" width="26" height="26"><span><b>Studio Ledger</b><small>Architecture practice OS</small></span></div>
     <nav aria-label="Footer">
-      <a href="#review">Drawing review</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#refer">Referral</a><a href="#faq">FAQ</a><a data-contact href="#">Contact</a>
+      <a href="#review">AI review</a><a href="#system">Product</a><a href="#pricing">Pricing</a><a href="#refer">Referral</a><a href="#faq">FAQ</a><a data-contact href="#">Contact</a>
     </nav>
-    <p class="fine">© 2026 Studio Ledger · Made for architecture</p>
+    <p class="fine mono">© 2026 Studio Ledger · Sheet 1 of 1 · Made for architecture</p>
   </div>
 </footer>
+
+<dialog class="tour-dlg" id="tour-dlg" aria-label="Studio Ledger product tour">
+  <div class="tour-in">
+    <div class="tour-h"><b>Product tour · 6 minutes · six people, one studio</b><button type="button" class="x" id="close-tour" aria-label="Close">×</button></div>
+    <div class="tour-body">
+      <video id="tour-video" controls preload="none" poster="assets/app/review.jpg" playsinline><source src="assets/demo.mp4" type="video/mp4"></video>
+      <ol class="chapters" id="chapters" aria-label="Jump to a chapter"></ol>
+    </div>
+  </div>
+</dialog>
 
 <script src="main.js"></script>
 </body>
