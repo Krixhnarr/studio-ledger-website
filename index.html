@@ -49,24 +49,137 @@
 
 <main id="main">
 
-<!-- ============ HERO ============ -->
-<section class="hero">
+<!-- ============ INTRO ============ -->
+<section class="intro" id="intro">
   <div class="ruler" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>J</span><span>K</span></div>
-  <div class="wrap">
-    <p class="eyebrow">Practice management for architecture studios</p>
-    <h1>The operating system<br><span class="dim">for architecture</span> studios.</h1>
-    <div class="hero-row">
-      <div class="lede">
-        <span class="datum" aria-hidden="true"><svg viewBox="0 0 12 10"><path d="M0 0h12L6 10z"/></svg>±0.00</span>
-        <p>Projects, drawings, people, standards, time and finance in one workspace. <b>Every drawing reviewed by AI against your studio's own standards</b> before it reaches the principal.</p>
-      </div>
-      <div class="hero-cta">
+  <div class="wrap intro-in">
+    <div class="intro-copy">
+      <p class="eyebrow">Architecture practice OS</p>
+      <h1>Studio <span>Ledger</span></h1>
+      <p class="intro-tag">The operating system for architecture studios.</p>
+      <p class="intro-brief">Projects, drawings, people, standards, time and finance in one workspace, with every drawing reviewed by AI against your studio’s own standards before it reaches the principal.</p>
+      <div class="intro-cta" id="intro-cta">
         <a class="btn lg" data-download href="#start">Start 30-day free trial <span aria-hidden="true">→</span></a>
         <a class="btn ghost lg" data-demo href="#">Book a demo</a>
-        <p class="fine">Windows 10 &amp; 11 · no card · your data stays in your studio</p>
       </div>
+      <p class="fine">Windows 10 &amp; 11 · no card · your data stays in your studio</p>
     </div>
+    <div class="mascot" id="mascot">
+      <svg class="m-layer" data-depth="10" viewBox="0 0 500 500" aria-hidden="true">
+        <circle cx="250" cy="250" r="210" class="m-ring"/>
+        <circle cx="250" cy="250" r="150" class="m-ring dash"/>
+        <path class="m-grid" d="M40 250H460M250 40V460M102 102L398 398M398 102L102 398"/>
+      </svg>
+      <svg class="m-layer" data-depth="22" viewBox="0 0 500 500" aria-hidden="true">
+        <path class="m-plan" d="M70 300V120H190M70 190H150M70 380H200V330L270 300M330 120H430V260"/>
+        <path class="m-dim" d="M70 92H430M70 86v12M190 86v12M330 86v12M430 86v12"/>
+        <text x="130" y="80">4 200</text><text x="260" y="80">5 600</text><text x="380" y="80">3 000</text>
+        <g class="m-bub"><circle cx="455" cy="200" r="13"/><text x="455" y="204">B</text></g>
+        <g class="m-bub"><circle cx="40" cy="250" r="13"/><text x="40" y="254">2</text></g>
+      </svg>
+      <svg class="m-layer" data-depth="36" viewBox="0 0 500 500" aria-hidden="true">
+        <g class="m-north"><circle cx="420" cy="410" r="20"/><path d="M420 388l8 30-8-7-8 7z"/></g>
+        <g class="m-detail"><circle cx="78" cy="420" r="22"/><path d="M56 420h44"/><text x="78" y="415">03</text><text x="78" y="434">A-301</text></g>
+      </svg>
+      <div class="m-figure" id="m-figure">
+        <span class="m-shadow" aria-hidden="true"></span>
+        <img id="m-img" src="assets/mascot/happy.webp" alt="Ledger, the Studio Ledger mascot, waving hello" width="282" height="440">
+        <button class="m-hit" id="m-hit" type="button" aria-label="Say hello to Ledger and see the story"></button>
+      </div>
+      <p class="m-bubble" id="m-bubble" aria-live="polite">Hi! I’m Ledger, your studio companion.</p>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#story"><span>Scroll · see what changes</span><i aria-hidden="true"></i></a>
+</section>
 
+<!-- ============ STORY: struggles and solutions over full-bleed renders ============ -->
+<section class="story" id="story" style="--n:6" aria-label="What architecture studios struggle with, and how Studio Ledger solves it">
+  <div class="story-stage">
+    <div class="story-imgs" aria-hidden="true">
+      <img class="s-img on" src="assets/renders/drawings.webp" alt="" width="1536" height="1024">
+      <img class="s-img" src="assets/renders/standards.webp" alt="" loading="lazy" width="1536" height="1024">
+      <img class="s-img" src="assets/renders/tasks.webp" alt="" loading="lazy" width="1536" height="1024">
+      <img class="s-img" src="assets/renders/team.webp" alt="" loading="lazy" width="1536" height="1024">
+      <img class="s-img" src="assets/renders/finances.webp" alt="" loading="lazy" width="1536" height="1024">
+      <img class="s-img" src="assets/renders/projects.webp" alt="" loading="lazy" width="1536" height="1024">
+    </div>
+    <div class="story-shade" aria-hidden="true"></div>
+    <div class="story-bar" aria-hidden="true"><span id="s-code">A-001</span><span class="hide-s" id="s-title">Existing conditions</span><span class="hide-s mono" id="s-coord">X 00.00 · Y 00.00</span></div>
+    <ol class="story-rail" id="story-rail">
+      <li><button type="button" data-i="0"><b>01</b><span>Drawing review</span></button></li>
+      <li><button type="button" data-i="1"><b>02</b><span>Studio standards</span></button></li>
+      <li><button type="button" data-i="2"><b>03</b><span>Projects and tasks</span></button></li>
+      <li><button type="button" data-i="3"><b>04</b><span>People</span></button></li>
+      <li><button type="button" data-i="4"><b>05</b><span>Fees and finance</span></button></li>
+      <li><button type="button" data-i="5"><b>06</b><span>The practice</span></button></li>
+    </ol>
+    <div class="story-slides">
+      <article class="s-slide on" data-i="0" data-struggle="tired" data-solved="approved">
+        <p class="s-num"><b>01</b> / 06 · Drawing review</p>
+        <p class="s-kicker">The struggle</p>
+        <h2 class="s-problem">Every sheet is still checked by eye, usually the principal’s, the night before an issue.</h2>
+        <div class="s-solution">
+          <p class="s-kicker cu">How Studio Ledger solves it</p>
+          <p>Studio Ledger checks each PDF against your standards the moment it’s submitted. AI marks exactly where the problems are, so seniors only review sheets that already meet the basics.</p>
+        </div>
+      </article>
+      <article class="s-slide" data-i="1" data-struggle="confused" data-solved="checking">
+        <p class="s-num"><b>02</b> / 06 · Studio standards</p>
+        <p class="s-kicker">The struggle</p>
+        <h2 class="s-problem">Your drawing standards live in one person’s head, and leave with them.</h2>
+        <div class="s-solution">
+          <p class="s-kicker cu">How Studio Ledger solves it</p>
+          <p>Write them once: title blocks, scales, line weights, naming and principles. Every sheet from every architect is held to the same rules, and juniors see exactly which ones they miss.</p>
+        </div>
+      </article>
+      <article class="s-slide" data-i="2" data-struggle="running" data-solved="focused">
+        <p class="s-num"><b>03</b> / 06 · Projects and tasks</p>
+        <p class="s-kicker">The struggle</p>
+        <h2 class="s-problem">The work is scattered across WhatsApp, Excel, email and the shared drive.</h2>
+        <div class="s-solution">
+          <p class="s-kicker cu">How Studio Ledger solves it</p>
+          <p>Projects, drawings, tasks and deadlines sit in one ledger. Everyone can see what’s due, who has it and where each sheet is in review.</p>
+        </div>
+      </article>
+      <article class="s-slide" data-i="3" data-struggle="thinking" data-solved="happy">
+        <p class="s-num"><b>04</b> / 06 · People</p>
+        <p class="s-kicker">The struggle</p>
+        <h2 class="s-problem">You find out someone is overloaded when they hand in their notice.</h2>
+        <div class="s-solution">
+          <p class="s-kicker cu">How Studio Ledger solves it</p>
+          <p>Attendance, leave, timesheets and a 30-second weekly check-in show who’s in, who’s stretched and who needs mentoring, long before it becomes a resignation.</p>
+        </div>
+      </article>
+      <article class="s-slide" data-i="4" data-struggle="carrying" data-solved="celebrating">
+        <p class="s-num"><b>05</b> / 06 · Fees and finance</p>
+        <p class="s-kicker">The struggle</p>
+        <h2 class="s-problem">A phase finishes, and the invoice goes out weeks later.</h2>
+        <div class="s-solution">
+          <p class="s-kicker cu">How Studio Ledger solves it</p>
+          <p>When a phase is complete, Studio Ledger tells you it’s ready to invoice, tracks what’s overdue and shows what every project really costs in hours.</p>
+        </div>
+      </article>
+      <article class="s-slide" data-i="5" data-struggle="pointing" data-solved="pointing">
+        <p class="s-num"><b>06</b> / 06 · The practice</p>
+        <p class="s-kicker">The struggle</p>
+        <h2 class="s-problem">Running an architecture practice on spreadsheets.</h2>
+        <div class="s-solution">
+          <p class="s-kicker cu">How Studio Ledger solves it</p>
+          <p>Run it like a practice instead: one ledger for the work, the people and the business.</p>
+          <a class="btn" href="#workspace">See the workspace <span aria-hidden="true">↓</span></a>
+        </div>
+      </article>
+    </div>
+    <div class="s-mascot" aria-hidden="true"><img id="s-mascot" src="assets/mascot/tired.webp" alt="" width="368" height="440"></div>
+    <div class="story-progress" aria-hidden="true"><i id="story-fill"></i></div>
+  </div>
+</section>
+
+<!-- ============ WORKSPACE ============ -->
+<section class="sec" id="workspace">
+  <div class="wrap">
+    <div class="sec-h"><span class="bubble"><b>01</b><i>A-101</i></span><span class="eyebrow">The workspace</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>Your whole studio.<br><span class="dim">On one screen.</span></h2>
     <!-- Live product mock: dashboard that hands one drawing to AI review -->
     <figure class="app sheet" id="app" aria-label="Studio Ledger dashboard: 6 active projects, 142 drawings, 18 open tasks, 87% first-pass rate, and the drawing register">
       <div class="sheet-bar"><span>01 / Master control</span><span class="hide-s">X 0.00 · Y 0.00</span><span class="hide-s">Grid 40</span><span class="live">Status / live</span></div>
@@ -138,43 +251,6 @@
         </div>
       </div>
     </figure>
-  </div>
-</section>
-
-<!-- ============ BEFORE / AFTER ============ -->
-<section class="sec" id="before">
-  <div class="wrap">
-    <div class="sec-h"><span class="bubble"><b>01</b><i>A-101</i></span><span class="eyebrow">Existing / proposed</span><span class="dimline" aria-hidden="true"></span></div>
-    <h2>Six tools and a lot of checking by eye.<br><span class="dim">Or one ledger.</span></h2>
-    <div class="ba">
-      <figure class="ba-sheet existing">
-        <figcaption><span class="mono">Existing</span><b>Before Studio Ledger</b></figcaption>
-        <div class="ba-field">
-          <svg class="ba-tangle" viewBox="0 0 400 260" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M60 40 C 180 120, 220 10, 330 70 M70 200 C 160 60, 260 230, 340 190 M200 30 C 120 160, 300 150, 190 230 M50 120 C 200 90, 230 250, 350 120"/>
-          </svg>
-          <span class="tool" style="--x:8%;--y:10%;--r:-4deg">WhatsApp</span>
-          <span class="tool" style="--x:60%;--y:6%;--r:3deg">Google Drive</span>
-          <span class="tool" style="--x:36%;--y:40%;--r:-2deg">Excel</span>
-          <span class="tool" style="--x:72%;--y:46%;--r:5deg">Email</span>
-          <span class="tool" style="--x:6%;--y:66%;--r:2deg">PDF</span>
-          <span class="tool" style="--x:46%;--y:76%;--r:-3deg">Manual checking</span>
-        </div>
-        <p class="ba-note"><span class="key dashed"></span>To be removed · files in four places · standards checked by eye · fees chased late</p>
-      </figure>
-      <div class="ba-arrow" aria-hidden="true"><svg viewBox="0 0 40 12"><path d="M0 6h36M30 1l6 5-6 5"/></svg></div>
-      <figure class="ba-sheet proposed">
-        <figcaption><span class="mono">Proposed</span><b>With Studio Ledger</b></figcaption>
-        <div class="ba-build">
-        <div class="ba-grid">
-          <span>Projects</span><span>Drawings</span><span>Tasks</span><span>People</span>
-          <span>Standards</span><span class="hl">AI Review</span><span>Finance</span><span>Reports</span>
-        </div>
-        <div class="ba-datum"><svg viewBox="0 0 12 10" aria-hidden="true"><path d="M0 0h12L6 10z"/></svg><span class="mono">Studio Ledger ±0.00</span></div>
-        </div>
-        <p class="ba-note"><span class="key solid"></span>New work · one record · every sheet checked · every hour costed</p>
-      </figure>
-    </div>
   </div>
 </section>
 

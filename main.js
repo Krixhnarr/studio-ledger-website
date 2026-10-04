@@ -75,7 +75,141 @@ addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimat
 addEventListener('resize', onScroll);
 onScroll();
 
-// ---- Hero: live dashboard that hands A-104 to AI review ----
+// ---- Intro: Ledger the mascot follows the cursor and reacts ----
+(() => {
+  const stage = $('#mascot'), fig = $('#m-figure'), img = $('#m-img'), bubble = $('#m-bubble'), hit = $('#m-hit');
+  if (!stage) return;
+  const LINES = {
+    happy: 'Hi! I’m Ledger, your studio companion.',
+    idea: 'Click me and I’ll show you what changes.',
+    pointing: 'Thirty days free, with every feature open.',
+    thinking: 'Still deciding? Scroll down and I’ll walk you through it.',
+    confused: 'Hey, where did you go?',
+    celebrating: 'Let’s go!',
+  };
+  const ALT = {
+    happy: 'waving hello', idea: 'with an idea', pointing: 'pointing at the buttons',
+    thinking: 'thinking', confused: 'looking puzzled', celebrating: 'celebrating',
+  };
+  Object.keys(LINES).forEach(p => { new Image().src = `assets/mascot/${p}.webp`; });
+  let pose = 'happy', swapT;
+  function setPose(p) {
+    if (p === pose) return;
+    pose = p;
+    clearTimeout(swapT);
+    img.classList.add('swap');
+    swapT = setTimeout(() => {
+      img.src = `assets/mascot/${p}.webp`; img.alt = `Ledger, the Studio Ledger mascot, ${ALT[p]}`;
+      img.classList.remove('swap');
+    }, 200);
+    bubble.textContent = LINES[p];
+    bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
+  }
+
+  // Tilt toward the cursor; drawing layers drift at their own depths
+  const layers = $$('.m-layer', stage).map(el => [el, +el.dataset.depth]);
+  let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+  function frame() {
+    cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
+    fig.style.setProperty('--ry', `${(cx * 16).toFixed(2)}deg`);
+    fig.style.setProperty('--rx', `${(-cy * 8).toFixed(2)}deg`);
+    layers.forEach(([el, d]) => { el.style.transform = `translate3d(${(-cx * d).toFixed(1)}px, ${(-cy * d).toFixed(1)}px, 0)`; });
+    raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.002 ? requestAnimationFrame(frame) : 0;
+  }
+  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+
+  const hover = matchMedia('(hover: hover)').matches;
+  let idle, busy = false;
+  const rest = () => { clearTimeout(idle); idle = setTimeout(() => { if (!busy) setPose('thinking'); }, 6500); };
+
+  if (hover) {
+    addEventListener('pointermove', e => {
+      if (busy || scrollY > innerHeight) return;
+      const r = stage.getBoundingClientRect();
+      tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (innerWidth / 2)));
+      ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (innerHeight / 2)));
+      if (!calm) kick();
+      const t = e.target;
+      setPose(t.closest && t.closest('#m-hit') ? 'idea' : t.closest && t.closest('#intro-cta') ? 'pointing' : 'happy');
+      rest();
+    }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', () => { if (!busy) setPose('confused'); tx = ty = 0; kick(); });
+    rest();
+  } else {
+    // Touch: Ledger cycles a few friendly poses until tapped
+    const cycle = ['happy', 'idea', 'pointing'];
+    let k = 0;
+    setInterval(() => { if (!busy && scrollY < innerHeight) setPose(cycle[++k % cycle.length]); }, 4200);
+  }
+
+  hit.addEventListener('click', () => {
+    busy = true; setPose('celebrating');
+    setTimeout(() => {
+      $('#story').scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
+      setTimeout(() => { busy = false; setPose('happy'); }, 1500);
+    }, 900);
+  });
+})();
+
+// ---- Story: full-bleed renders, struggle then solution, pinned while scrolling ----
+(() => {
+  const story = $('#story');
+  if (!story) return;
+  const imgs = $$('.s-img', story), slides = $$('.s-slide', story), rail = $('#story-rail'), dots = $$('button', rail);
+  const mascot = $('#s-mascot'), fill = $('#story-fill');
+  const code = $('#s-code'), title = $('#s-title'), coord = $('#s-coord');
+  const N = slides.length;
+  slides.forEach(s => { [s.dataset.struggle, s.dataset.solved].forEach(p => { new Image().src = `assets/mascot/${p}.webp`; }); });
+  let lastI = -1, lastSolved = null, poseT;
+  const ease = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+  function update() {
+    const r = story.getBoundingClientRect(), total = story.offsetHeight - innerHeight;
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const t = Math.max(0, Math.min(1, -r.top / total)), x = t * N;
+    const i = Math.min(N - 1, Math.floor(x)), p = Math.min(1, x - i);
+    const solved = p > (i === N - 1 ? 0.25 : 0.42);
+
+    // each render pushes in slowly, then dissolves into the next one
+    imgs.forEach((im, k) => {
+      let o = 0, s = 1;
+      if (k === i) { o = 1; s = 1 + 0.12 * p; }
+      else if (k === i + 1) { o = ease(0.8, 1, p); s = 1; }
+      im.style.opacity = o;
+      im.style.transform = calm ? '' : `scale(${s.toFixed(4)})`;
+    });
+    if (i !== lastI) {
+      slides.forEach((s, k) => s.classList.toggle('on', k === i));
+      dots.forEach((d, k) => { d.classList.toggle('on', k === i); d.classList.toggle('done', k < i); });
+      code.textContent = `A-${String(i + 1).padStart(3, '0')}`;
+    }
+    slides[i].classList.toggle('solved', solved);
+    if (i !== lastI || solved !== lastSolved) {
+      title.textContent = solved ? 'Proposed · with Studio Ledger' : 'Existing conditions';
+      const want = `assets/mascot/${solved ? slides[i].dataset.solved : slides[i].dataset.struggle}.webp`;
+      if (!mascot.src.endsWith(want)) {
+        clearTimeout(poseT);
+        mascot.classList.add('swap');
+        poseT = setTimeout(() => { mascot.src = want; mascot.classList.remove('swap'); }, 260);
+      }
+      lastI = i; lastSolved = solved;
+    }
+    rail.style.setProperty('--rp', ((i + p) / (N - 1)).toFixed(3));
+    fill.style.width = `${(t * 100).toFixed(2)}%`;
+    coord.textContent = `X ${(t * 48).toFixed(2).padStart(5, '0')} · Y ${(p * 12).toFixed(2).padStart(5, '0')}`;
+  }
+  let ticking = false;
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; update(); }); } }, { passive: true });
+  addEventListener('resize', update);
+  update();
+
+  dots.forEach((d, k) => d.addEventListener('click', () => {
+    const total = story.offsetHeight - innerHeight;
+    scrollTo({ top: story.offsetTop + (k + 0.08) / N * total, behavior: calm ? 'auto' : 'smooth' });
+  }));
+})();
+
+// ---- Workspace: live dashboard that hands A-104 to AI review ----
 (() => {
   const app = $('#app'), overlay = $('#app-review'), row = $('#row-a104');
   const items = $$('.ar-list li', overlay), boxes = $$('.ar-plan .bb', overlay), score = $('#ar-score');
