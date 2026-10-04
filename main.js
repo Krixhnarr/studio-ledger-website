@@ -2,7 +2,7 @@
 const SITE = {
   // Installer link. The GitHub release always serves the newest upload under this name.
   downloadUrl: 'https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Setup.exe',
-  version: '1.9.4',
+  version: '1.9.5',
   email: 'thepincstudio@gmail.com',
 };
 
