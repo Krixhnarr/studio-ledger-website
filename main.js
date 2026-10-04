@@ -84,30 +84,30 @@ onScroll();
   if (!calm) stats.forEach(s => { s.textContent = '0'; });
   onView(app, async () => {
     app.classList.add('in');
-    stats.forEach(s => countUp(s, +s.dataset.count, 1300));
+    stats.forEach(s => countUp(s, +s.dataset.count, 2000));
     if (calm) return;
-    await sleep(1600);
+    await sleep(2400);
     // warn items map to boxes: Checked by → title block, Door tags → door, Stair → stair
     const boxFor = { 'Checked by': 1, 'Door tags': 2, 'Stair annotation': 0 };
     for (;;) {
       while (!seen.visible || document.hidden) await sleep(500);
       row.classList.add('focus');
-      await sleep(1100);
+      await sleep(1700);
       items.forEach(li => li.classList.remove('on')); boxes.forEach(b => b.classList.remove('show'));
       score.textContent = '0';
       overlay.classList.add('open');
-      await sleep(700);
+      await sleep(1100);
       overlay.classList.remove('scanning'); void overlay.offsetWidth; overlay.classList.add('scanning');
       for (const li of items) {
-        await sleep(260);
+        await sleep(450);
         li.classList.add('on');
         if (li.dataset.r === 'warn') boxes[boxFor[li.textContent.trim()]]?.classList.add('show');
       }
-      await countUp(score, 87, 900);
-      await sleep(5200);
+      await countUp(score, 87, 1500);
+      await sleep(7000);
       overlay.classList.remove('open', 'scanning');
       row.classList.remove('focus');
-      await sleep(3800);
+      await sleep(5000);
     }
   }, 0.3);
 })();
@@ -181,7 +181,7 @@ onScroll();
     if (!auto || !seen.visible || document.hidden) return;
     const i = NODES.findIndex(n => n[0] === current);
     select(NODES[(i + 1) % NODES.length][0]);
-  }, 2800);
+  }, 4200);
 })();
 
 // ---- AI drawing review sequence ----
@@ -204,15 +204,15 @@ onScroll();
     status.textContent = 'Loading drawing';
     await sleep(60); if (me !== run) return;
     ai.classList.add('drawn');
-    await sleep(1500); if (me !== run) return;
+    await sleep(2400); if (me !== run) return;
     status.textContent = 'Analysing';
     ai.classList.add('scanning');
     for (const li of items) {
-      await sleep(210); if (me !== run) return;
+      await sleep(380); if (me !== run) return;
       li.classList.add('on');
       if (li.dataset.issue) boxes[li.dataset.issue].classList.add('show');
     }
-    await countUp(score, 87, 1300); if (me !== run) return;
+    await countUp(score, 87, 2000); if (me !== run) return;
     ai.classList.add('done');
     Object.values(boxes).forEach(b => b.classList.add('pulse'));
     status.textContent = '3 issues'; status.classList.add('warn');
@@ -240,7 +240,7 @@ onScroll();
     if (step) { e.preventDefault(); auto = false; show((cur + step + tabs.length) % tabs.length); tabs[cur].focus(); }
   });
   show(0);
-  if (!calm) setInterval(() => { if (auto && seen.visible && !document.hidden) show((cur + 1) % tabs.length); }, 4800);
+  if (!calm) setInterval(() => { if (auto && seen.visible && !document.hidden) show((cur + 1) % tabs.length); }, 6800);
 })();
 
 // ---- Product screens ----
