@@ -537,8 +537,7 @@ onScroll();
     next.onload = () => {
       img.src = next.src; img.alt = `Studio Ledger ${name} screen`;
       if (!calm) {
-        wipe.classList.remove('go'); fig.classList.remove('live-zoom'); void wipe.offsetWidth;
-        wipe.classList.add('go'); requestAnimationFrame(() => fig.classList.add('live-zoom'));
+        wipe.classList.remove('go'); void wipe.offsetWidth; wipe.classList.add('go');
       }
     };
     next.src = `assets/app/${id}.jpg`;
