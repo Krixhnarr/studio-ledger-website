@@ -37,6 +37,7 @@
       <a href="#system">Product</a>
       <a href="#journey">How it works</a>
       <a href="#pricing">Pricing</a>
+      <a href="#setup">Set up</a>
       <a href="#faq">FAQ</a>
     </nav>
     <div class="nav-cta">
@@ -544,11 +545,61 @@
   </div>
 </section>
 
+<!-- ============ INSTALL & SET UP ============ -->
+<section class="sec" id="setup">
+  <div class="wrap">
+    <div class="sec-h"><span class="bubble"><b>10</b><i>A-110</i></span><span class="eyebrow">Install &amp; set up</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>Up and running<br><span class="dim">in an afternoon.</span></h2>
+    <p class="sub">Studio Ledger runs on each PC and keeps the studio’s records in one shared folder. Nothing is installed on the server: it only holds the folder.</p>
+
+    <div class="su-grid">
+      <article class="su-card">
+        <div class="su-h"><span class="mono">S-01</span><span>Server or NAS · once</span></div>
+        <h3>Prepare the studio folder</h3>
+        <ol class="su-steps">
+          <li>Create a shared folder every studio PC can reach, for example <code>\\OFFICE-NAS\Studio</code>. A file server, a NAS or an always-on office PC all work.</li>
+          <li>Give each studio member <b>read and write</b> access to it.</li>
+          <li>Keep the share to studio staff only. Roles are enforced inside the app, and the records are ordinary files in this folder.</li>
+          <li>Turn on scheduled backups of the folder. Most NAS drives can do this for you.</li>
+        </ol>
+      </article>
+      <article class="su-card">
+        <div class="su-h"><span class="mono">S-02</span><span>Principal’s PC · first</span></div>
+        <h3>Create the studio</h3>
+        <ol class="su-steps">
+          <li><a href="#" data-download class="link">Download the installer</a> and run it. If Windows shows <i>“Windows protected your PC”</i>, choose <b>More info → Run anyway</b>.</li>
+          <li>Open Studio Ledger, choose <b>Set up a new studio</b> and pick the shared folder. Enter the studio name and your name.</li>
+          <li>In <b>Team → Add person</b>, add everyone, with their Windows username if you know it.</li>
+          <li>Write your drawing rules in <b>Standards</b>, or start from the built-in set.</li>
+          <li>Optional: connect AI review in <b>Settings → Claude drawing review</b> with your Anthropic API key and a monthly budget.</li>
+        </ol>
+      </article>
+      <article class="su-card">
+        <div class="su-h"><span class="mono">S-03</span><span>Every other PC</span></div>
+        <h3>Join the studio</h3>
+        <ol class="su-steps">
+          <li>Install Studio Ledger the same way on each PC.</li>
+          <li>Open it, choose <b>Join your studio</b> and pick the same shared folder.</li>
+          <li>Pick your name from the list, or choose <b>Request to join</b>. The principal approves it in <b>Team</b>.</li>
+          <li>That’s it. People are recognised by the account they sign in to Windows with, so there are no extra passwords.</li>
+        </ol>
+      </article>
+    </div>
+
+    <div class="su-notes">
+      <div><h4>Before you start</h4><p>Windows 10 or 11 (64-bit) on every PC, and a shared folder they can all open. Internet is needed only for AI review and Ask Claude.</p></div>
+      <div><h4>After 30 days</h4><p>Open <b>Settings → Plan &amp; billing</b>, copy your Studio ID and email it to us with your plan. Paste the licence key you receive there, and every PC picks it up.</p></div>
+      <div><h4>Updating</h4><p>Download the new installer and run it on each PC. It installs over the old version; your records stay in the studio folder.</p></div>
+      <div><h4>If a PC can’t connect</h4><p>“Studio folder unreachable” in the sidebar means that PC can’t reach the share. Check the network, then open the folder path in File Explorer to confirm access.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ FAQ ============ -->
 <section class="sec" id="faq">
   <div class="wrap faq-wrap">
     <div>
-      <div class="sec-h"><span class="bubble"><b>10</b><i>A-001</i></span><span class="eyebrow">Questions</span></div>
+      <div class="sec-h"><span class="bubble"><b>11</b><i>A-111</i></span><span class="eyebrow">Questions</span></div>
       <h2>Questions studios ask.</h2>
     </div>
     <div class="faq">
@@ -572,6 +623,7 @@
       <li><span class="mono">02</span>Add your projects, team and drawing standards</li>
       <li><span class="mono">03</span>After 30 days, email your Studio ID for a licence key</li>
     </ol>
+    <p class="fine su-more"><a href="#setup" class="link">Full install &amp; setup guide</a></p>
     <div class="final-cta">
       <a class="btn lg" data-download href="#">Download for Windows <span aria-hidden="true">↓</span></a>
       <a class="btn ghost lg" data-demo href="#">Book a demo</a>
@@ -587,7 +639,7 @@
   <div class="wrap foot-in">
     <div class="brand"><img src="assets/icon.png" alt="" width="26" height="26"><span><b>Studio Ledger</b><small>Architecture practice OS</small></span></div>
     <nav aria-label="Footer">
-      <a href="#review">AI review</a><a href="#system">Product</a><a href="#pricing">Pricing</a><a href="#refer">Referral</a><a href="#faq">FAQ</a><a data-contact href="#">Contact</a>
+      <a href="#review">AI review</a><a href="#system">Product</a><a href="#pricing">Pricing</a><a href="#refer">Referral</a><a href="#setup">Set up</a><a href="#faq">FAQ</a><a data-contact href="#">Contact</a>
     </nav>
     <p class="fine mono">© 2026 Studio Ledger · Sheet 1 of 1 · Made for architecture</p>
   </div>

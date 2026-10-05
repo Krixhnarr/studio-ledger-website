@@ -901,3 +901,24 @@ button { font-family: inherit; }
 .s-slide.solved .s-solution { transition-delay: .75s; }
 .s-slide.solved .s-solution::before { transition-delay: .8s; }
 @media (prefers-reduced-motion: reduce) { .strike, .s-slide.solved .strike { transition: none; } .s-slide.solved .s-solution { transition-delay: 0s; } }
+/* ---------- install & set up ---------- */
+.su-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.su-card { border: 1px solid var(--border); border-radius: var(--r); background: var(--card); display: flex; flex-direction: column; transition: border-color var(--t-ui); }
+.su-card:hover { border-color: var(--copper-soft); }
+.su-h { display: flex; justify-content: space-between; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--border); font: 500 10.5px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.su-h .mono { color: var(--copper); }
+.su-card h3 { font: 500 22px/1.2 var(--display); padding: 18px 18px 6px; }
+.su-steps { list-style: none; counter-reset: su; margin: 0; padding: 6px 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.su-steps li { counter-increment: su; position: relative; padding-left: 30px; font-size: 14.5px; color: var(--muted); }
+.su-steps li::before { content: counter(su, decimal-leading-zero); position: absolute; left: 0; top: 2px; font: 500 11px/1 var(--mono); color: var(--copper); }
+.su-steps b { color: var(--fg); font-weight: 500; }
+.su-steps i { font-style: normal; color: var(--fg); }
+.su-steps code { font: 500 12.5px var(--mono); color: var(--fg); background: var(--raised); border: 1px solid var(--hair); border-radius: 3px; padding: 1px 5px; white-space: nowrap; }
+.su-notes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 36px; }
+.su-notes > div { border-top: 1px solid var(--copper-soft); padding-top: 14px; }
+.su-notes h4 { font: 500 18px/1.2 var(--display); margin-bottom: 8px; }
+.su-notes p { font-size: 14px; color: var(--muted); }
+.su-notes b { color: var(--fg); font-weight: 500; }
+.su-more { margin-top: 20px; }
+@media (max-width: 1080px) { .su-grid { grid-template-columns: 1fr; } .su-notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } .links { gap: 14px; } }
+@media (max-width: 600px) { .su-notes { grid-template-columns: 1fr; } .su-steps code { white-space: normal; word-break: break-all; } }
