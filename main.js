@@ -75,15 +75,15 @@ addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimat
 addEventListener('resize', onScroll);
 onScroll();
 
-// ---- Entrance: the studio builds itself as you scroll; Ledger keeps you company ----
+// ---- Entrance: the studio builds itself as you scroll ----
 (() => {
   const root = $('#entrance');
   if (!root) return;
   const canvas = $('#en-canvas'), ctx = canvas.getContext('2d'), poster = $('#en-poster');
   const intro = $('#en-intro'), slides = $$('.s-slide', root), rail = $('#story-rail'), dots = $$('button', rail);
   const code = $('#s-code'), title = $('#s-title'), coord = $('#s-coord'), fill = $('#story-fill');
-  const stage = $('#mascot'), fig = $('#m-figure'), mimg = $('#m-img'), bubble = $('#m-bubble'), hit = $('#m-hit');
   const draft = $('#en-draft');
+  const NAV = 64, BG = '#090c0b';
 
   // Scroll progress → video time. Each beat builds one part of the studio; the intro holds the empty shell.
   const FRAMES = 100, LENGTH = 10;
@@ -108,8 +108,9 @@ onScroll();
     }
   }
 
-  // Frames: portrait screens get the centre-cropped phone set
-  const set = innerWidth / innerHeight < 0.75 ? 'm' : 'd';
+  // Frames: full 16:9 frames; phones get a lighter 960px set
+  const portrait = () => innerWidth < innerHeight;
+  const set = innerWidth <= 860 ? 'm' : 'd';
   const imgs = new Array(FRAMES);
   let target = 0, shown = -1;
   const order = [];
@@ -131,6 +132,8 @@ onScroll();
     canvas.height = Math.round(canvas.clientHeight * dpr);
     shown = -1; draw();
   }
+  // Show the whole room: fit the frame under the navigation (cropping at most ~6%), feathering any gap into the page.
+  // On portrait screens the room sits across the lower part, under the text.
   function draw() {
     let best = -1;
     for (let d = 0; d < FRAMES; d++) {
@@ -138,79 +141,35 @@ onScroll();
       if (imgs[target + d]) { best = target + d; break; }
     }
     if (best < 0 || best === shown) return;
-    const im = imgs[best], cw = canvas.width, ch = canvas.height;
-    const s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight);
-    const w = im.naturalWidth * s, h = im.naturalHeight * s;
-    ctx.drawImage(im, (cw - w) / 2, (ch - h) / 2, w, h);
+    const im = imgs[best], cw = canvas.width, ch = canvas.height, k = cw / canvas.clientWidth;
+    const top = NAV * k, ah = ch - top, iw = im.naturalWidth, ih = im.naturalHeight;
+    let s, x, y;
+    if (portrait()) {
+      s = cw / iw; x = 0; y = ch - ih * s - Math.max(28 * k, ah * 0.07);
+    } else {
+      const cover = Math.max(cw / iw, ah / ih), contain = Math.min(cw / iw, ah / ih);
+      s = Math.min(cover, contain * 1.06);
+      x = (cw - iw * s) / 2; y = top + (ah - ih * s) / 2;
+    }
+    const w = iw * s, h = ih * s;
+    ctx.fillStyle = BG; ctx.fillRect(0, 0, cw, ch);
+    ctx.drawImage(im, x, y, w, h);
+    // feather the frame edges into the background wherever the frame doesn't reach
+    const fade = (x0, y0, x1, y1, rx, ry, rw, rh) => {
+      const g = ctx.createLinearGradient(x0, y0, x1, y1);
+      g.addColorStop(0, BG); g.addColorStop(1, 'rgba(9,12,11,0)');
+      ctx.fillStyle = g; ctx.fillRect(rx, ry, rw, rh);
+    };
+    const f = 90 * k;
+    if (x > 1) { fade(x, 0, x + f, 0, x, 0, f, ch); fade(x + w, 0, x + w - f, 0, x + w - f, 0, f, ch); }
+    if (y > top + 1) fade(0, y, 0, y + f, 0, y, cw, f);
+    if (y + h < ch - 1) fade(0, y + h, 0, y + h - f, 0, y + h - f, cw, f);
     shown = best;
     poster.classList.add('hide');
   }
 
-  // Ledger: tilts toward the cursor; in the intro his pose follows what you point at
-  const LINES = {
-    happy: 'Hi! I’m Ledger. Scroll, and I’ll build your studio.',
-    idea: 'Click me and we’ll start building.',
-    pointing: 'Thirty days free, with every feature open.',
-    thinking: 'Still deciding? Scroll down and watch the studio come together.',
-    confused: 'Hey, where did you go?',
-    celebrating: 'Let’s build it!',
-    final: 'That’s your studio, built. Have a look inside.',
-  };
-  const ALT = {
-    happy: 'waving hello', idea: 'with an idea', pointing: 'pointing', thinking: 'thinking', confused: 'looking puzzled',
-    celebrating: 'celebrating', running: 'rushing between tasks', focused: 'working calmly at a laptop',
-    tired: 'asleep on a stack of drawings', approved: 'giving a thumbs up', checking: 'checking a drawing',
-  };
-  Object.keys(ALT).forEach(p => { new Image().src = `assets/mascot/${p}.webp`; });
-  let pose = 'happy', swapT, mode = 'intro', busy = false;
-  function setPose(p, line) {
-    if (p !== pose) {
-      pose = p;
-      clearTimeout(swapT);
-      mimg.classList.add('swap');
-      swapT = setTimeout(() => {
-        mimg.src = `assets/mascot/${p}.webp`; mimg.alt = `Ledger, the Studio Ledger mascot, ${ALT[p] || p}`;
-        mimg.classList.remove('swap');
-      }, 200);
-    }
-    if (line && bubble.textContent !== line) {
-      bubble.textContent = line;
-      bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
-    }
-  }
-  let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
-  function tilt() {
-    cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
-    fig.style.setProperty('--ry', `${(cx * 16).toFixed(2)}deg`);
-    fig.style.setProperty('--rx', `${(-cy * 8).toFixed(2)}deg`);
-    raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.002 ? requestAnimationFrame(tilt) : 0;
-  }
-  const kick = () => { if (!raf && !calm) raf = requestAnimationFrame(tilt); };
-  let idle;
-  const rest = () => { clearTimeout(idle); idle = setTimeout(() => { if (mode === 'intro' && !busy) setPose('thinking', LINES.thinking); }, 6500); };
-  if (matchMedia('(hover: hover)').matches) {
-    addEventListener('pointermove', e => {
-      const r = stage.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > innerHeight) return;
-      tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (innerWidth / 2)));
-      ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (innerHeight / 2)));
-      kick();
-      if (mode !== 'intro' || busy) return;
-      const t = e.target && e.target.closest ? e.target : null;
-      const p = t && t.closest('#m-hit') ? 'idea' : t && t.closest('#intro-cta') ? 'pointing' : 'happy';
-      setPose(p, LINES[p]);
-      rest();
-    }, { passive: true });
-    document.documentElement.addEventListener('mouseleave', () => { if (mode === 'intro' && !busy) setPose('confused', LINES.confused); tx = ty = 0; kick(); });
-    rest();
-  } else {
-    const cycle = ['happy', 'idea', 'pointing'];
-    let k = 0;
-    setInterval(() => { if (mode === 'intro' && !busy) { const p = cycle[++k % cycle.length]; setPose(p, LINES[p]); } }, 4200);
-  }
-
-  // Scroll → frame, captions, Ledger's pose, rail and sheet bar
-  let last = '', lastPhase = 0;
+  // Scroll → frame, captions, rail and sheet bar
+  let last = '';
   function update() {
     const r = root.getBoundingClientRect(), total = root.offsetHeight - innerHeight;
     if (r.bottom < 0 || r.top > innerHeight) return;
@@ -225,23 +184,11 @@ onScroll();
     const state = `${phase}|${solved}`;
     if (state !== last) {
       last = state;
-      // Ledger turns his attention when a new stage starts, and settles once the studio is complete
-      if (phase !== lastPhase) {
-        lastPhase = phase;
-        stage.classList.remove('attend');
-        if (phase > 0 && !calm) { void stage.offsetWidth; stage.classList.add('attend'); setTimeout(() => stage.classList.remove('attend'), 650); }
-      }
-      stage.classList.toggle('content', final);
-      mode = phase === 0 ? 'intro' : final ? 'final' : 'beat';
       intro.classList.toggle('gone', phase > 0);
       root.classList.toggle('at-intro', phase === 0);
       slides.forEach((s, k) => s.classList.toggle('on', final ? k === slides.length - 1 : k === beat));
       if (beat >= 0 && !final) slides[beat].classList.toggle('solved', solved);
       dots.forEach((d, k) => { d.classList.toggle('on', k === beat && !final); d.classList.toggle('done', final || k < beat); });
-      stage.classList.toggle('quiet', mode === 'beat');
-      if (mode === 'beat') setPose(solved ? slides[beat].dataset.solved : slides[beat].dataset.struggle);
-      else if (mode === 'final') setPose('pointing', LINES.final);
-      else if (!busy) setPose('happy', LINES.happy);
       code.textContent = `A-${String(phase).padStart(3, '0')}`;
       title.textContent = phase === 0 ? 'Existing conditions · empty shell'
         : final ? 'Proposed · complete' : solved ? 'Proposed · with Studio Ledger' : 'Existing conditions';
@@ -257,14 +204,16 @@ onScroll();
 
   const goTo = p => scrollTo({ top: root.offsetTop + p * (root.offsetHeight - innerHeight), behavior: calm ? 'auto' : 'smooth' });
   dots.forEach((d, k) => d.addEventListener('click', () => goTo(PHASES[k][0] + 0.02)));
-  // Clicking Ledger moves the build on to its next stage
-  hit.addEventListener('click', () => {
-    const total = root.offsetHeight - innerHeight, p = Math.max(0, Math.min(1, -root.getBoundingClientRect().top / total));
-    const nextEnd = PHASES.find(([b]) => b > p + 0.001);
-    if (!nextEnd || nextEnd[0] >= 1) { $('#workspace').scrollIntoView({ behavior: calm ? 'auto' : 'smooth' }); return; }
-    if (mode === 'intro') { busy = true; setPose('celebrating', LINES.celebrating); setTimeout(() => { busy = false; }, 1600); }
-    goTo(nextEnd[0] + 0.02);
-  });
+})();
+
+// ---- Ledger waves from the closing section: once on arrival, again on hover ----
+(() => {
+  const wave = $('#wave');
+  if (!wave) return;
+  const play = () => { if (calm || wave.classList.contains('play')) return; wave.classList.add('play'); };
+  wave.addEventListener('animationend', () => wave.classList.remove('play'));
+  wave.addEventListener('pointerenter', play);
+  onView(wave, () => setTimeout(play, 300), 0.6);
 })();
 
 // ---- Workspace: the dashboard loads like an application, then hands A-104 to AI review ----
