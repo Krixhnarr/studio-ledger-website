@@ -226,11 +226,28 @@ onScroll();
 })();
 
 // ---- Ledger waves from the closing section: once on arrival, again on hover ----
+// The sprite rises (0–12), waves (13–28), then sinks back by replaying the rise in reverse (12–0).
+// Frames 29–47 (a long still stand, then a hard cut) are skipped, so he never stalls or pops.
 (() => {
   const wave = $('#wave');
   if (!wave) return;
-  const play = () => { if (calm || wave.classList.contains('play')) return; wave.classList.add('play'); };
-  wave.addEventListener('animationend', () => wave.classList.remove('play'));
+  const FW = 176, FPS = 12, SEQ = [];
+  for (let f = 0; f <= 28; f++) SEQ.push(f);
+  for (let f = 12; f >= 0; f--) SEQ.push(f);
+  let playing = false;
+  const show = f => { wave.style.backgroundPosition = `${-f * FW}px 0`; };
+  function play() {
+    if (calm || playing) return;
+    playing = true;
+    const t0 = performance.now();
+    const step = now => {
+      const i = Math.floor((now - t0) * FPS / 1000);
+      if (i >= SEQ.length) { show(0); playing = false; return; }
+      show(SEQ[i]);
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
   wave.addEventListener('pointerenter', play);
   onView(wave, () => setTimeout(play, 300), 0.6);
 })();
