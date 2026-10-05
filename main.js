@@ -112,7 +112,8 @@ onScroll();
   const portrait = () => innerWidth < innerHeight;
   const set = innerWidth <= 860 ? 'm' : 'd';
   const imgs = new Array(FRAMES);
-  let target = 0, shown = -1;
+  // The picture glides toward the scroll position (tWant) and blends neighbouring frames, so it never steps
+  let tWant = 0, tShown = 0, raf = 0, lastTs = 0;
   const order = [];
   for (const step of [FRAMES, 10, 5, 2, 1]) for (let i = 0; i < FRAMES; i += step) if (!order.includes(i)) order.push(i);
   let next = 0;
@@ -120,28 +121,29 @@ onScroll();
     if (next >= order.length) return;
     const i = order[next++], im = new Image();
     im.decoding = 'async';
-    im.onload = () => { imgs[i] = im; if (shown < 0 || Math.abs(i - target) < Math.abs(shown - target)) draw(); loadMore(); };
+    im.onload = () => { imgs[i] = im; if (!raf) render(tShown); loadMore(); };
     im.onerror = loadMore;
     im.src = `assets/entrance/${set}/${String(i).padStart(3, '0')}.webp`;
   }
-  for (let k = 0; k < 6; k++) loadMore();
+  for (let k = 0; k < 8; k++) loadMore();
 
   function size() {
     const dpr = Math.min(2, devicePixelRatio || 1);
     canvas.width = Math.round(canvas.clientWidth * dpr);
     canvas.height = Math.round(canvas.clientHeight * dpr);
-    shown = -1; draw();
+    render(tShown);
   }
+  const below = i => { for (let j = Math.min(i, FRAMES - 1); j >= 0; j--) if (imgs[j]) return j; return -1; };
+  const above = i => { for (let j = Math.max(i, 0); j < FRAMES; j++) if (imgs[j]) return j; return -1; };
   // Show the whole room: fit the frame under the navigation (cropping at most ~6%), feathering any gap into the page.
   // On portrait screens the room sits across the lower part, under the text.
-  function draw() {
-    let best = -1;
-    for (let d = 0; d < FRAMES; d++) {
-      if (imgs[target - d]) { best = target - d; break; }
-      if (imgs[target + d]) { best = target + d; break; }
-    }
-    if (best < 0 || best === shown) return;
-    const im = imgs[best], cw = canvas.width, ch = canvas.height, k = cw / canvas.clientWidth;
+  function render(t) {
+    const f = Math.max(0, Math.min(FRAMES - 1, t / LENGTH * (FRAMES - 1)));
+    let a = below(Math.floor(f)), b = above(Math.ceil(f));
+    if (a < 0) a = b; if (b < 0) b = a;
+    if (a < 0) return;
+    const blend = b > a ? (f - a) / (b - a) : 0;
+    const im = imgs[a], cw = canvas.width, ch = canvas.height, k = cw / canvas.clientWidth;
     const top = NAV * k, ah = ch - top, iw = im.naturalWidth, ih = im.naturalHeight;
     let s, x, y;
     if (portrait()) {
@@ -152,20 +154,38 @@ onScroll();
       x = (cw - iw * s) / 2; y = top + (ah - ih * s) / 2;
     }
     const w = iw * s, h = ih * s;
+    ctx.globalAlpha = 1;
     ctx.fillStyle = BG; ctx.fillRect(0, 0, cw, ch);
     ctx.drawImage(im, x, y, w, h);
+    if (blend > 0.01) { ctx.globalAlpha = blend; ctx.drawImage(imgs[b], x, y, w, h); ctx.globalAlpha = 1; }
     // feather the frame edges into the background wherever the frame doesn't reach
     const fade = (x0, y0, x1, y1, rx, ry, rw, rh) => {
       const g = ctx.createLinearGradient(x0, y0, x1, y1);
       g.addColorStop(0, BG); g.addColorStop(1, 'rgba(9,12,11,0)');
       ctx.fillStyle = g; ctx.fillRect(rx, ry, rw, rh);
     };
-    const f = 90 * k;
-    if (x > 1) { fade(x, 0, x + f, 0, x, 0, f, ch); fade(x + w, 0, x + w - f, 0, x + w - f, 0, f, ch); }
-    if (y > top + 1) fade(0, y, 0, y + f, 0, y, cw, f);
-    if (y + h < ch - 1) fade(0, y + h, 0, y + h - f, 0, y + h - f, cw, f);
-    shown = best;
+    const fe = 90 * k;
+    if (x > 1) { fade(x, 0, x + fe, 0, x, 0, fe, ch); fade(x + w, 0, x + w - fe, 0, x + w - fe, 0, fe, ch); }
+    if (y > top + 1) fade(0, y, 0, y + fe, 0, y, cw, fe);
+    if (y + h < ch - 1) fade(0, y + h, 0, y + h - fe, 0, y + h - fe, cw, fe);
     poster.classList.add('hide');
+  }
+  // ~110ms time constant: smooth enough to hide wheel steps, quick enough to feel attached to the scroll
+  function glide(ts) {
+    const dt = lastTs ? Math.min(64, ts - lastTs) : 16;
+    lastTs = ts;
+    tShown += (tWant - tShown) * (1 - Math.exp(-dt / 110));
+    if (Math.abs(tWant - tShown) < 0.003) tShown = tWant;
+    render(tShown);
+    if (tShown !== tWant) raf = requestAnimationFrame(glide);
+    else { raf = 0; lastTs = 0; }
+  }
+  let first = true;
+  function seek(t) {
+    tWant = t;
+    if (first) { first = false; tShown = t; render(t); return; }   // arriving mid-page: start where the page is
+    if (calm) { tShown = t; render(t); return; }
+    if (!raf) raf = requestAnimationFrame(glide);
   }
 
   // Scroll → frame, captions, rail and sheet bar
@@ -175,8 +195,7 @@ onScroll();
     if (r.bottom < 0 || r.top > innerHeight) return;
     const p = Math.max(0, Math.min(1, -r.top / total));
     const { phase, q, time } = locate(p);
-    target = Math.min(FRAMES - 1, Math.round(time / LENGTH * (FRAMES - 1)));
-    draw();
+    seek(time);
     if (draft && !calm) draft.style.transform = `translate3d(0, ${(-Math.min(p, 0.1) * 100).toFixed(1)}px, 0)`;
 
     const beat = phase - 1, final = phase === PHASES.length - 1;

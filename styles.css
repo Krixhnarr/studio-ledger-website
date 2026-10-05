@@ -895,3 +895,11 @@ button { font-family: inherit; }
 @keyframes wave { from { background-position-x: 0; } to { background-position-x: -8448px; } }
 @media (max-width: 860px) { .wave { position: relative; right: auto; display: block; margin: 36px auto -120px; transform: scale(.8); transform-origin: bottom center; } }
 @media (prefers-reduced-motion: reduce) { .wave.play { animation: none; } }
+
+/* ---- Crossing out: a pen line draws across each line of the struggle, then the solution follows ---- */
+.s-slide .s-problem, .s-slide.solved .s-problem { text-decoration: none; color: inherit; }
+.strike { background: linear-gradient(var(--copper), var(--copper)) 0 62% / 0% 2.5px no-repeat; transition: background-size .35s ease, color .4s ease; }
+.s-slide.solved .strike { background-size: 100% 2.5px; color: rgba(241, 238, 232, .62); transition: background-size 1.15s cubic-bezier(.45, .05, .55, .95), color .6s ease 1.1s; }
+.s-slide.solved .s-solution { transition-delay: .75s; }
+.s-slide.solved .s-solution::before { transition-delay: .8s; }
+@media (prefers-reduced-motion: reduce) { .strike, .s-slide.solved .strike { transition: none; } .s-slide.solved .s-solution { transition-delay: 0s; } }
