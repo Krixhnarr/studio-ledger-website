@@ -83,6 +83,7 @@ onScroll();
   const intro = $('#en-intro'), slides = $$('.s-slide', root), rail = $('#story-rail'), dots = $$('button', rail);
   const code = $('#s-code'), title = $('#s-title'), coord = $('#s-coord'), fill = $('#story-fill');
   const stage = $('#mascot'), fig = $('#m-figure'), mimg = $('#m-img'), bubble = $('#m-bubble'), hit = $('#m-hit');
+  const draft = $('#en-draft');
 
   // Scroll progress → video time. Each beat builds one part of the studio; the intro holds the empty shell.
   const FRAMES = 100, LENGTH = 10;
@@ -209,7 +210,7 @@ onScroll();
   }
 
   // Scroll → frame, captions, Ledger's pose, rail and sheet bar
-  let last = '';
+  let last = '', lastPhase = 0;
   function update() {
     const r = root.getBoundingClientRect(), total = root.offsetHeight - innerHeight;
     if (r.bottom < 0 || r.top > innerHeight) return;
@@ -217,12 +218,20 @@ onScroll();
     const { phase, q, time } = locate(p);
     target = Math.min(FRAMES - 1, Math.round(time / LENGTH * (FRAMES - 1)));
     draw();
+    if (draft && !calm) draft.style.transform = `translate3d(0, ${(-Math.min(p, 0.1) * 100).toFixed(1)}px, 0)`;
 
     const beat = phase - 1, final = phase === PHASES.length - 1;
     const solved = beat >= 0 && !final && q > 0.5;
     const state = `${phase}|${solved}`;
     if (state !== last) {
       last = state;
+      // Ledger turns his attention when a new stage starts, and settles once the studio is complete
+      if (phase !== lastPhase) {
+        lastPhase = phase;
+        stage.classList.remove('attend');
+        if (phase > 0 && !calm) { void stage.offsetWidth; stage.classList.add('attend'); setTimeout(() => stage.classList.remove('attend'), 650); }
+      }
+      stage.classList.toggle('content', final);
       mode = phase === 0 ? 'intro' : final ? 'final' : 'beat';
       intro.classList.toggle('gone', phase > 0);
       root.classList.toggle('at-intro', phase === 0);
@@ -258,18 +267,23 @@ onScroll();
   });
 })();
 
-// ---- Workspace: live dashboard that hands A-104 to AI review ----
+// ---- Workspace: the dashboard loads like an application, then hands A-104 to AI review ----
 (() => {
   const app = $('#app'), overlay = $('#app-review'), row = $('#row-a104');
   const items = $$('.ar-list li', overlay), boxes = $$('.ar-plan .bb', overlay), score = $('#ar-score');
   const stats = $$('.app-stats [data-count]', app);
+  $$('.app-stats .stat', app).forEach((s, i) => s.style.setProperty('--i', i));
+  $$('.reg tbody tr', app).forEach((r, i) => r.style.setProperty('--i', i));
+  $$('.reg .chip', app).forEach((c, i) => c.style.setProperty('--i', i));
+  $$('.app-prog li i', app).forEach((b, i) => b.style.setProperty('--i', i));
   const seen = watch(app);
   if (!calm) stats.forEach(s => { s.textContent = '0'; });
   onView(app, async () => {
     app.classList.add('in');
-    stats.forEach(s => countUp(s, +s.dataset.count, 2000));
+    stats.forEach((s, i) => setTimeout(() => countUp(s, +s.dataset.count, 1000), calm ? 0 : 150 + i * 70));
+    setTimeout(() => app.classList.add('rows-in'), calm ? 0 : 1150);
     if (calm) return;
-    await sleep(2400);
+    await sleep(3000);
     // warn items map to boxes: Checked by → title block, Door tags → door, Stair → stair
     const boxFor = { 'Checked by': 1, 'Door tags': 2, 'Stair annotation': 0 };
     for (;;) {
@@ -295,7 +309,7 @@ onScroll();
   }, 0.3);
 })();
 
-// ---- System diagram ----
+// ---- System diagram: built connector by connector, then each node can be explored ----
 (() => {
   const NODES = [
     ['projects', 'Projects', 'Phase from Concept to Completed, lead, team, progress, approved drawings and fee stages for every project.'],
@@ -316,15 +330,14 @@ onScroll();
   const sys = $('#sys'), svg = $('#sys-lines'), core = $('.sys-core', sys);
   const name = Object.fromEntries(NODES.map(n => [n[0], n[1]]));
   const nbrs = id => LINKS.filter(l => l.includes(id)).map(l => l[0] === id ? l[1] : l[0]);
-  let pos = {}, buttons = {}, current = 'drawings', auto = true;
+  let pos = {}, buttons = {}, current = 'drawings', auto = true, built = false;
 
   NODES.forEach(([id, label], i) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'sys-node' + (id === 'ai' ? ' is-ai' : '');
     b.innerHTML = `<span>SL-${String(i + 1).padStart(2, '0')}</span>${label}`;
-    b.addEventListener('mouseenter', () => { auto = false; select(id); });
-    b.addEventListener('focus', () => { auto = false; select(id); });
-    b.addEventListener('click', () => { auto = false; select(id); });
+    const pick = () => { if (!built) return; auto = false; select(id); };
+    b.addEventListener('mouseenter', pick); b.addEventListener('focus', pick); b.addEventListener('click', pick);
     sys.insertBefore(b, core);
     buttons[id] = b;
   });
@@ -339,9 +352,9 @@ onScroll();
       buttons[id].style.top = (pos[id][1] / 6.2) + '%';
     });
     svg.innerHTML = `<ellipse class="ring" cx="500" cy="310" rx="${rx}" ry="${ry}"/>`
-      + NODES.map(([id]) => `<line class="core" data-a="core" data-b="${id}" x1="500" y1="310" x2="${pos[id][0]}" y2="${pos[id][1]}"/>`).join('')
-      + LINKS.map(([a, b]) => `<line data-a="${a}" data-b="${b}" x1="${pos[a][0]}" y1="${pos[a][1]}" x2="${pos[b][0]}" y2="${pos[b][1]}"/>`).join('');
-    select(current, true);
+      + NODES.map(([id]) => `<line class="core" pathLength="1" data-a="core" data-b="${id}" x1="500" y1="310" x2="${pos[id][0]}" y2="${pos[id][1]}"/>`).join('')
+      + LINKS.map(([a, b]) => `<line pathLength="1" data-a="${a}" data-b="${b}" x1="${pos[a][0]}" y1="${pos[a][1]}" x2="${pos[b][0]}" y2="${pos[b][1]}"/>`).join('');
+    if (built) select(current, true);
   }
   function select(id, quiet) {
     current = id;
@@ -356,74 +369,181 @@ onScroll();
     $('#sys-text').textContent = NODES[i][2];
     $('#sys-chips').innerHTML = near.map(n => `<span>${name[n]}</span>`).join('');
   }
-  sys.addEventListener('mouseleave', () => { auto = true; });
+  function finish() { built = true; sys.classList.remove('pre'); sys.classList.add('built'); select(current); }
+
+  sys.classList.add('pre');
   layout();
   addEventListener('resize', layout);
+  if (calm || !('IntersectionObserver' in window)) finish();
+  else onView(sys, async () => {
+    // core → (connector, node) × 9 → cross links → the ring
+    sys.classList.remove('pre');
+    await sleep(350);
+    for (const [id] of NODES) {
+      $(`line.core[data-b="${id}"]`, svg)?.classList.add('drawn');
+      await sleep(150);
+      buttons[id].classList.add('lit');
+      await sleep(60);
+    }
+    await sleep(200);
+    $$('line:not(.core)', svg).forEach(l => l.classList.add('drawn'));
+    await sleep(700);
+    Object.values(buttons).forEach(b => b.classList.remove('lit'));
+    finish();
+  }, 0.35);
+
+  sys.addEventListener('mouseleave', () => { auto = true; });
   const seen = watch(sys);
   if (!calm) setInterval(() => {
-    if (!auto || !seen.visible || document.hidden) return;
+    if (!built || !auto || !seen.visible || document.hidden) return;
     const i = NODES.findIndex(n => n[0] === current);
     select(NODES[(i + 1) % NODES.length][0]);
   }, 4200);
 })();
 
-// ---- AI drawing review sequence ----
+// ---- AI drawing review: draw the sheet, scan it, detect its parts, then report ----
 (() => {
   const ai = $('#ai'), status = $('#ai-status'), score = $('#ai-score');
-  const items = $$('.checks li', ai), boxes = Object.fromEntries($$('.bbx', ai).map(b => [b.dataset.issue, b]));
+  const plan = $('.plan', ai), dets = $('#ai-dets'), scan = $('#ai-scan');
+  const items = $$('.checks li', ai), issues = Object.fromEntries($$('.bbx', ai).map(b => [b.dataset.issue, b]));
+  const W = 640;
+
+  // a soft trailing gradient behind the scan line
+  const NS = 'http://www.w3.org/2000/svg';
+  plan.insertAdjacentHTML('afterbegin', '<defs><linearGradient id="scanfade" x1="0" x2="1"><stop offset="0" stop-color="#a9d6e2" stop-opacity="0"/><stop offset="1" stop-color="#a9d6e2" stop-opacity=".14"/></linearGradient></defs>');
+
+  // What the scan detects, keyed to the checklist: [x, y, w, h, label]
+  const DETECT = {
+    dims: [[66, 3, 508, 18, 'DIMENSIONS']],
+    project: [[70, 432, 100, 34, 'PROJECT CODE']],
+    sheet: [[170, 432, 100, 34, 'SHEET NO.']],
+    scale: [[270, 432, 80, 34, 'SCALE']],
+    revision: [[350, 432, 70, 34, 'REV']],
+    title: [[70, 398, 160, 30, 'DRAWING TITLE']],
+    doors: [[260, 184, 34, 18, ''], [164, 280, 34, 18, ''], [456, 266, 34, 18, '']],
+    rooms: [[130, 144, 60, 32, ''], [306, 144, 58, 32, ''], [470, 189, 50, 32, ''], [130, 304, 60, 32, ''], [466, 334, 58, 32, '']],
+  };
+  const byKey = {};
+  for (const [k, list] of Object.entries(DETECT)) byKey[k] = list.map(([x, y, w, h, label]) => {
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'det');
+    g.dataset.x = x;
+    const ly = y > 430 ? y + h + 8 : y - 3;   // title-block cells are labelled underneath, so labels never collide
+    g.innerHTML = `<rect x="${x}" y="${y}" width="${w}" height="${h}"/>${label ? `<text x="${x + 2}" y="${ly}">${label}</text>` : ''}`;
+    dets.appendChild(g);
+    return g;
+  });
+  const allDets = Object.values(byKey).flat();
+  const issueX = Object.fromEntries(Object.entries(issues).map(([k, g]) => [k, +g.querySelector('rect').getAttribute('x')]));
+
   let run = 0;
-  async function review() {
-    const me = ++run;
+  const alive = me => me === run;
+  function reset() {
     ai.classList.remove('drawn', 'scanning', 'done');
     items.forEach(li => li.classList.remove('on'));
-    Object.values(boxes).forEach(b => b.classList.remove('show', 'pulse'));
+    allDets.forEach(d => d.classList.remove('hit', 'settled', 'focus'));
+    Object.values(issues).forEach(b => b.classList.remove('show', 'pulse'));
     score.textContent = '0';
     status.classList.remove('warn');
-    if (calm) {
-      ai.classList.add('drawn', 'done'); items.forEach(li => li.classList.add('on'));
-      Object.values(boxes).forEach(b => b.classList.add('show')); score.textContent = '87';
-      status.textContent = '3 issues'; status.classList.add('warn'); return;
-    }
-    status.textContent = 'Loading drawing';
-    await sleep(60); if (me !== run) return;
-    ai.classList.add('drawn');
-    await sleep(2400); if (me !== run) return;
-    status.textContent = 'Analysing';
-    ai.classList.add('scanning');
+    scan.setAttribute('transform', 'translate(0 0)');
+  }
+  function finalState() {
+    ai.classList.add('drawn', 'done');
+    items.forEach(li => li.classList.add('on'));
+    allDets.forEach(d => d.classList.add('settled'));
+    Object.values(issues).forEach(b => b.classList.add('show'));
+    score.textContent = '87';
+    status.textContent = '3 issues'; status.classList.add('warn');
+  }
+  // one sweep across the sheet; anything the line passes is detected
+  function sweep(me, ms) {
+    return new Promise(res => {
+      const t0 = performance.now();
+      const step = t => {
+        if (!alive(me)) return res();
+        const k = Math.min(1, (t - t0) / ms), x = k * W;
+        scan.setAttribute('transform', `translate(${x.toFixed(1)} 0)`);
+        status.textContent = `Analysing A-104 · ${Math.round(k * 100)}%`;
+        allDets.forEach(d => {
+          if (!d.classList.contains('hit') && x >= +d.dataset.x) {
+            d.classList.add('hit');
+            setTimeout(() => { if (alive(me)) d.classList.add('settled'); }, 650);
+          }
+        });
+        for (const [key, ix] of Object.entries(issueX)) if (x >= ix) issues[key].classList.add('show');
+        k < 1 ? requestAnimationFrame(step) : res();
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  async function review() {
+    const me = ++run;
+    reset();
+    if (calm) return finalState();
+    status.textContent = 'Loading A-104';
+    await sleep(60); if (!alive(me)) return;
+    ai.classList.add('drawn');                       // 1 · the drawing is drafted
+    await sleep(1500); if (!alive(me)) return;
+    ai.classList.add('scanning');                    // 2-4 · scan, highlight, detect
+    await sweep(me, 2600); if (!alive(me)) return;
+    ai.classList.remove('scanning');
+    status.textContent = 'Checking standards v3.4';  // 5-6 · checklist resolves, each line re-lighting what it checked
     for (const li of items) {
-      await sleep(380); if (me !== run) return;
+      await sleep(190); if (!alive(me)) return;
       li.classList.add('on');
-      if (li.dataset.issue) boxes[li.dataset.issue].classList.add('show');
+      const lit = byKey[li.dataset.k] || [];
+      lit.forEach(d => d.classList.add('focus'));
+      setTimeout(() => lit.forEach(d => d.classList.remove('focus')), 420);
+      if (li.dataset.issue) issues[li.dataset.issue].classList.add('pulse');
     }
-    await countUp(score, 87, 2000); if (me !== run) return;
+    await sleep(250); if (!alive(me)) return;
+    await countUp(score, 87, 1100); if (!alive(me)) return;  // 7 · the score, then the issues
     ai.classList.add('done');
-    Object.values(boxes).forEach(b => b.classList.add('pulse'));
     status.textContent = '3 issues'; status.classList.add('warn');
   }
   onView($('.ai-sheet', ai), review, 0.3);
   $('#ai-replay').addEventListener('click', review);
 })();
 
-// ---- Project journey ----
+// ---- How it works: one project travels through the six stages as you scroll ----
 (() => {
-  const jn = $('#jn'), tabs = $$('.jn-steps button', jn), cards = $$('.jn-card', jn), fill = $('#jn-fill');
-  let cur = 0, auto = true;
-  const seen = watch(jn);
+  const sec = $('#journey'), jn = $('#jn'), tabs = $$('.jn-steps button', jn), cards = $$('.jn-card', jn);
+  const fill = $('#jn-fill'), track = $('.jn-track', jn), strip = $('.jn-steps', jn);
+  const N = tabs.length;
+  const token = document.createElement('span');
+  token.className = 'jn-token'; token.setAttribute('aria-hidden', 'true'); token.textContent = 'CH-24 · A-104';
+  track.appendChild(token);
+  let cur = -1;
   function show(i) {
+    if (i === cur) return;
     cur = i;
-    tabs.forEach((t, j) => { t.setAttribute('aria-selected', String(j === i)); t.tabIndex = j === i ? 0 : -1; });
+    tabs.forEach((t, j) => {
+      t.setAttribute('aria-selected', String(j === i)); t.tabIndex = j === i ? 0 : -1;
+      t.classList.toggle('done', j < i);
+    });
     cards.forEach((c, j) => c.classList.toggle('on', j === i));
-    fill.style.width = `${(i / (tabs.length - 1)) * 100}%`;
-    const strip = tabs[i].closest('.jn-steps');
     if (strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: tabs[i].parentElement.offsetLeft - 16, behavior: calm ? 'auto' : 'smooth' });
   }
-  tabs.forEach((t, i) => t.addEventListener('click', () => { auto = false; show(i); }));
-  jn.querySelector('.jn-steps').addEventListener('keydown', e => {
+  const span = () => sec.offsetHeight - (innerHeight - 64);
+  function update() {
+    const r = sec.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const p = Math.max(0, Math.min(1, (64 - r.top) / span()));
+    const at = Math.max(0, Math.min(1, (p * N - 0.5) / (N - 1)));   // stage centres sit at 0, 1/5 … 1 on the line
+    fill.style.width = `${(at * 100).toFixed(2)}%`;
+    token.style.left = `${(at * 100).toFixed(2)}%`;
+    show(Math.min(N - 1, Math.floor(p * N)));
+  }
+  const goTo = i => scrollTo({ top: sec.offsetTop - 64 + ((i + 0.5) / N) * span(), behavior: calm ? 'auto' : 'smooth' });
+  tabs.forEach((t, i) => t.addEventListener('click', () => goTo(i)));
+  strip.addEventListener('keydown', e => {
     const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-    if (step) { e.preventDefault(); auto = false; show((cur + step + tabs.length) % tabs.length); tabs[cur].focus(); }
+    if (step) { e.preventDefault(); const i = Math.max(0, Math.min(N - 1, cur + step)); goTo(i); tabs[i].focus(); }
   });
-  show(0);
-  if (!calm) setInterval(() => { if (auto && seen.visible && !document.hidden) show((cur + 1) % tabs.length); }, 6800);
+  let ticking = false;
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; update(); }); } }, { passive: true });
+  addEventListener('resize', update);
+  show(0); update();
 })();
 
 // ---- Product screens ----
@@ -550,11 +670,74 @@ onScroll();
   $('#offer-left').textContent = `Ends 31 Dec 2026 · ${left} day${left === 1 ? '' : 's'} left`;
 })();
 
-// ---- Reveal sections as they scroll in ----
+// ---- Motion utilities: reveals, blueprint borders and small sequences ----
+
+// Reveal: each section's blocks rise 12px in order (heading, copy, then the piece)
 if ('IntersectionObserver' in window && !calm) {
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
-  $$('.sec .wrap > *, .sec .built > div, .sec .flow-intro > *, .sec .faq-wrap > div > *, .final .wrap > *').forEach(el => {
-    if (el.closest('.flow') || el.id === 'ai' || el.classList.contains('built') || el.classList.contains('faq-wrap') || el.classList.contains('flow-wrap')) return;
-    el.classList.add('reveal'); io.observe(el);
+  const skip = el => el.closest('.flow') || el.id === 'ai' || el.id === 'net' || el.matches('.built, .faq-wrap, .flow-wrap');
+  $$('.sec .wrap, .sec .built > div, .sec .flow-intro, .sec .faq-wrap > div, .final .wrap').forEach(group => {
+    [...group.children].filter(el => !skip(el)).forEach((el, i) => {
+      el.classList.add('reveal'); el.style.setProperty('--rd', Math.min(i, 5)); io.observe(el);
+    });
   });
 }
+
+// Blueprint draw: a drafting line traces the border of a few key panels as they arrive
+function drawBorder(el, threshold = 0.25) {
+  if (!el || calm) return;
+  el.classList.add('bp');
+  el.insertAdjacentHTML('beforeend', '<svg class="bp-line" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="4" pathLength="1"/></svg>');
+  onView(el, () => el.classList.add('drawn'), threshold);
+}
+['#app', '.ai-sheet', '.ai-panel', '#sys', '#net'].forEach(s => drawBorder($(s)));
+
+// Built for architecture: scattered generic tools settle into one aligned system
+(() => {
+  const vs = $('.vs');
+  if (!vs || calm) return;
+  const OFF = [[-14, -5, -2.5], [10, 4, 2], [-8, 6, 1.5], [14, -4, -2], [-10, 3, 2.5]];   // fixed, so it never looks random
+  $$('.vs-row:not(.vs-head)', vs).forEach((r, i) => {
+    const [x, y, a] = OFF[i % OFF.length];
+    r.style.setProperty('--i', i);
+    r.style.setProperty('--fx', `${x}px`); r.style.setProperty('--fy', `${y}px`); r.style.setProperty('--fr', `${a}deg`);
+  });
+  vs.classList.add('pre');
+  onView(vs, () => setTimeout(() => vs.classList.remove('pre'), 250), 0.35);
+})();
+
+// Data: the studio network draws itself; the internet indicator only pulses while on screen
+(() => {
+  const net = $('#net');
+  if (!net) return;
+  if (calm || !('IntersectionObserver' in window)) { net.classList.add('in'); return; }
+  onView(net, () => net.classList.add('in'), 0.3);
+  new IntersectionObserver(es => es.forEach(e => net.classList.toggle('vis', e.isIntersecting))).observe(net);
+})();
+
+// Navigation: the link for the section in view carries a datum line
+(() => {
+  const navLinks = $$('#links a[href^="#"]');
+  const map = new Map(navLinks.map(a => [a.getAttribute('href').slice(1), a]));
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    const a = map.get(e.target.id);
+    if (!a) return;
+    if (e.isIntersecting) { navLinks.forEach(l => l.classList.toggle('on', l === a)); }
+    else if (a.classList.contains('on')) a.classList.remove('on');
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  map.forEach((_, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
+})();
+
+// Jumping to a section: a single hairline sweeps under the navigation
+(() => {
+  if (calm) return;
+  const line = document.createElement('i');
+  line.className = 'sweep'; line.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(line);
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || a.getAttribute('href').length < 2) return;
+    line.classList.remove('go'); void line.offsetWidth; line.classList.add('go');
+  });
+})();

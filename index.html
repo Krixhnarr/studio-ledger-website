@@ -55,9 +55,41 @@
     <img class="en-poster" id="en-poster" src="assets/entrance/d/000.webp" alt="" width="1280" height="720" fetchpriority="high">
     <canvas class="en-canvas" id="en-canvas" aria-hidden="true"></canvas>
     <div class="en-shade" aria-hidden="true"></div>
+    <div class="en-draft-wrap" id="en-draft" aria-hidden="true">
+      <svg class="en-draft" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+        <g class="g-grid" transform="translate(48 0)">
+          <path class="d faint" pathLength="1" style="--w:.05s;--d:.9s" d="M720 140V800M960 140V800M1200 140V800"/>
+          <path class="d faint" pathLength="1" style="--w:.15s;--d:.9s" d="M684 300H1380M684 540H1380M684 780H1380"/>
+          <circle class="d" pathLength="1" style="--w:.3s;--d:.5s" cx="720" cy="122" r="13"/><circle class="d" pathLength="1" style="--w:.36s;--d:.5s" cx="960" cy="122" r="13"/><circle class="d" pathLength="1" style="--w:.42s;--d:.5s" cx="1200" cy="122" r="13"/>
+          <circle class="d" pathLength="1" style="--w:.38s;--d:.5s" cx="664" cy="300" r="13"/><circle class="d" pathLength="1" style="--w:.44s;--d:.5s" cx="664" cy="540" r="13"/><circle class="d" pathLength="1" style="--w:.5s;--d:.5s" cx="664" cy="780" r="13"/>
+          <text x="720" y="126" style="--w:.75s">C</text><text x="960" y="126" style="--w:.8s">D</text><text x="1200" y="126" style="--w:.85s">E</text>
+          <text x="664" y="304" style="--w:.8s">1</text><text x="664" y="544" style="--w:.85s">2</text><text x="664" y="784" style="--w:.9s">3</text>
+        </g>
+        <g class="g-plan" transform="translate(48 0)">
+          <path class="d cu" pathLength="1" style="--w:.25s;--d:1s" d="M760 330H1170V740H760V560"/>
+          <path class="d cu" pathLength="1" style="--w:.45s;--d:.7s" d="M960 330V470M960 520V740M760 560H900"/>
+          <path class="d" pathLength="1" style="--w:.6s;--d:.5s" d="M960 470a50 50 0 0 1 50 50"/>
+          <path class="d faint" pathLength="1" style="--w:.7s;--d:.6s" d="M1010 600H1150M1010 620H1150M1010 640H1150M1010 660H1150M1010 680H1150M1010 700H1150M1080 600V720"/>
+        </g>
+        <g class="g-dims" transform="translate(48 0)">
+          <path class="d" pathLength="1" style="--w:.5s;--d:.8s" d="M720 182H1200M720 176v12M960 176v12M1200 176v12"/>
+          <text x="840" y="172" style="--w:1s">6 000</text><text x="1080" y="172" style="--w:1.05s">6 000</text>
+          <path class="d" pathLength="1" style="--w:.7s;--d:.6s" d="M700 812H1380"/>
+          <path class="d cu" pathLength="1" style="--w:.9s;--d:.35s" d="M1292 800l8 12 8-12z"/>
+          <text x="1316" y="808" class="l" style="--w:1.1s">+0.00 FFL</text>
+        </g>
+        <g class="g-marks" transform="translate(48 0)">
+          <circle class="d" pathLength="1" style="--w:.75s;--d:.5s" cx="1320" cy="540" r="18"/>
+          <path class="d" pathLength="1" style="--w:.85s;--d:.4s" d="M1302 540H1338M1320 522l-7 -8M1320 522l7 -8"/>
+          <text x="1320" y="536" style="--w:1.1s">B</text><text x="1320" y="551" class="s" style="--w:1.12s">A-201</text>
+          <text x="724" y="290" class="l" style="--w:1.15s">X 12 400 · Y 08 200</text>
+        </g>
+      </svg>
+    </div>
     <div class="story-bar" aria-hidden="true"><span id="s-code">A-000</span><span class="hide-s" id="s-title">Existing conditions · empty shell</span><span class="hide-s mono" id="s-coord">X 00.00 · Y 00.00</span></div>
 
     <div class="en-intro" id="en-intro">
+      <div class="en-stamp" aria-hidden="true"><span><b>Sheet</b>A-000</span><span><b>Project</b>Studio Ledger</span><span><b>Rev</b>01</span><span><b>Scale</b>1:100</span></div>
       <p class="eyebrow">Architecture practice OS</p>
       <h1>Studio <span>Ledger</span></h1>
       <p class="intro-tag">The operating system for architecture studios.</p>
@@ -245,7 +277,7 @@
     <div class="ai" id="ai">
       <figure class="ai-sheet sheet">
         <div class="sheet-bar"><span>A-104 · First floor plan</span><span class="hide-s">1:100 @ A1</span><span class="live" id="ai-status">Ready</span></div>
-        <svg class="plan" viewBox="0 0 640 470" role="img" aria-label="First floor plan with three issues highlighted: missing Checked by field, a door without a tag, and a stair without an annotation">
+        <svg class="plan" viewBox="0 0 640 500" role="img" aria-label="First floor plan with three issues highlighted: missing Checked by field, a door without a tag, and a stair without an annotation">
           <!-- grid -->
           <g class="grid">
             <path class="ln thin" pathLength="1" d="M70 52V392M250 52V392M420 52V392M570 52V392M40 80H600M40 240H600M40 380H600"/>
@@ -280,9 +312,11 @@
           </g>
           <!-- section marker + north -->
           <g class="sec-mark"><circle cx="46" cy="160" r="12"/><path d="M34 160h24"/><text x="46" y="157">S</text><text x="46" y="169">02</text></g>
-          <g class="north"><circle cx="605" cy="420" r="13"/><path d="M605 405l6 22-6-5-6 5z"/><text x="605" y="452">N</text></g>
+          <g class="north" transform="translate(0 30)"><circle cx="605" cy="420" r="13"/><path d="M605 405l6 22-6-5-6 5z"/><text x="605" y="452">N</text></g>
+          <!-- view title -->
+          <g class="vtitle"><circle cx="84" cy="412" r="11"/><path d="M73 412h22"/><text x="84" y="409" class="vn">1</text><text x="84" y="420" class="vs">A-104</text><text x="102" y="410" class="vt">FIRST FLOOR PLAN</text><path d="M102 414h122"/><text x="102" y="424" class="vsc">SCALE 1:100</text></g>
           <!-- title block -->
-          <g class="tblock">
+          <g class="tblock" transform="translate(0 30)">
             <rect x="70" y="402" width="500" height="34"/>
             <path d="M170 402v34M270 402v34M350 402v34M420 402v34M490 402v34"/>
             <text x="78" y="414" class="k">PROJECT</text><text x="78" y="429">CH-24</text>
@@ -293,10 +327,11 @@
             <text x="498" y="414" class="k">CHECKED</text><text x="498" y="429">—</text>
           </g>
           <!-- issue bounding boxes -->
-          <g class="bbx" data-issue="checked"><rect x="486" y="398" width="88" height="42"/><text x="486" y="393">01 · Checked by missing</text></g>
+          <g class="bbx" data-issue="checked" transform="translate(0 30)"><rect x="486" y="398" width="88" height="42"/><text x="486" y="393">01 · Checked by missing</text></g>
           <g class="bbx" data-issue="door"><rect x="410" y="110" width="62" height="62"/><text x="410" y="105">02 · Door tag missing</text></g>
           <g class="bbx" data-issue="stair"><rect x="302" y="246" width="116" height="128"/><text x="296" y="372" style="text-anchor:end">03 · No UP arrow / risers</text></g>
-          <rect class="ai-scan" x="0" y="0" width="2" height="470"/>
+          <g class="dets" id="ai-dets"></g>
+          <g class="scan-g" id="ai-scan"><rect class="ai-scan-trail" x="-46" y="0" width="46" height="500"/><rect class="ai-scan" x="0" y="0" width="1.5" height="500"/></g>
         </svg>
       </figure>
 
@@ -308,15 +343,15 @@
         <div class="ai-group">
           <h4>Standards</h4>
           <ul class="checks">
-            <li data-r="ok">Sheet number</li><li data-r="ok">Project code</li><li data-r="ok">Drawing title</li>
-            <li data-r="ok">Scale</li><li data-r="ok">Revision</li><li data-r="warn" data-issue="checked">Checked by</li>
+            <li data-r="ok" data-k="sheet">Sheet number</li><li data-r="ok" data-k="project">Project code</li><li data-r="ok" data-k="title">Drawing title</li>
+            <li data-r="ok" data-k="scale">Scale</li><li data-r="ok" data-k="revision">Revision</li><li data-r="warn" data-k="checked" data-issue="checked">Checked by</li>
           </ul>
         </div>
         <div class="ai-group">
           <h4>Architectural check</h4>
           <ul class="checks">
-            <li data-r="ok">Dimensions</li><li data-r="warn" data-issue="door">Door tags</li>
-            <li data-r="ok">Room names</li><li data-r="warn" data-issue="stair">Stair annotation</li>
+            <li data-r="ok" data-k="dims">Dimensions</li><li data-r="warn" data-k="doors" data-issue="door">Door tags</li>
+            <li data-r="ok" data-k="rooms">Room names</li><li data-r="warn" data-k="stair" data-issue="stair">Stair annotation</li>
           </ul>
         </div>
         <div class="ai-score">
@@ -463,6 +498,16 @@
   <div class="wrap">
     <div class="sec-h"><span class="bubble"><b>08</b><i>A-801</i></span><span class="eyebrow">Your data</span><span class="dimline" aria-hidden="true"></span></div>
     <h2>Your folder.<br><span class="dim">Your drawings. Your records.</span></h2>
+    <figure class="net" id="net" aria-label="Every PC in the studio works from the same shared studio folder on your server, NAS or synced drive. AI review connects over the internet only for the reviews you run.">
+      <p class="net-cap">Local studio data</p>
+      <div class="net-pcs"><span class="net-pc" style="--i:0">PC 01</span><span class="net-pc" style="--i:1">PC 02</span><span class="net-pc" style="--i:2">PC 03</span><span class="net-pc" style="--i:3">PC 04</span></div>
+      <div class="net-bus" aria-hidden="true"><i class="v" style="--i:0"></i><i class="v" style="--i:1"></i><i class="v" style="--i:2"></i><i class="v" style="--i:3"></i><b class="h"></b><b class="t"></b></div>
+      <div class="net-row">
+        <div class="net-node folder"><span class="mono">Studio folder</span><small>Your server, NAS or synced drive</small></div>
+        <div class="net-link" aria-hidden="true"><b></b><span><i class="net-dot"></i>Internet</span></div>
+        <div class="net-node ai"><span class="net-cap cu">+ Optional AI connection</span><span class="mono">AI review</span><small>Only for the reviews you run</small></div>
+      </div>
+    </figure>
     <div class="notes">
       <div><h3>No cloud account</h3><p>Everything is kept in a shared studio folder on your own server, NAS or synced drive. Drawings leave the office only for the AI reviews you choose to run.</p></div>
       <div><h3>Works offline</h3><p>Check-ins, tasks, reviews and approvals all work without internet. AI features return when you're back online.</p></div>
