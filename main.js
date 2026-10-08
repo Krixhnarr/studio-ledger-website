@@ -2,6 +2,8 @@
 const SITE = {
   // Installer link. The GitHub release always serves the newest upload under this name.
   downloadUrl: 'https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Setup.exe',
+  // Google Apps Script web app that adds each download form to the "Downloads" sheet.
+  leadsUrl: 'https://script.google.com/macros/s/AKfycbxdibj8QEd8AEUxKYFFEFeysbT9pHsi_Y2I3DjqTkicfwmxfTK-6hzIMQiOEG9XXszR/exec',
   version: '1.9.6',
   email: 'thepincstudio@gmail.com',
 };
@@ -43,10 +45,51 @@ function countUp(el, to, ms = 1100) {
 const mail = (subject, body) => `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 const demoLink = mail('Studio Ledger demo request',
   'Hi,\n\nWe would like a demo of Studio Ledger.\n\nStudio name:\nCity:\nNumber of people:\nPreferred days and times:\n\nThanks');
-$$('[data-download]').forEach(a => { a.href = SITE.downloadUrl; a.setAttribute('download', ''); });
 $$('[data-demo]').forEach(a => { a.href = demoLink; });
 $$('[data-contact]').forEach(a => { a.href = mail('Studio Ledger', ''); });
 $$('[data-version]').forEach(el => { el.textContent = SITE.version; });
+
+// ---- Download: ask who they are once, then start the installer ----
+const getDlg = $('#get-dlg'), getForm = $('#get-form'), getErr = $('#get-err');
+const VISITOR = 'sl-visitor';
+const visitor = {
+  get() { try { return JSON.parse(localStorage.getItem(VISITOR)); } catch { return null; } },
+  set(v) { try { localStorage.setItem(VISITOR, JSON.stringify(v)); } catch {} },
+};
+function startDownload() {
+  getDlg.dataset.mode = 'done';
+  if (!getDlg.open) getDlg.showModal();
+  location.href = SITE.downloadUrl;
+}
+$$('[data-direct]').forEach(a => { a.href = SITE.downloadUrl; });
+document.addEventListener('click', e => {
+  if (!e.target.closest('[data-download]')) return;
+  e.preventDefault();
+  if (visitor.get()) return startDownload();
+  getDlg.dataset.mode = 'ask';
+  getErr.hidden = true;
+  getDlg.showModal();
+});
+getForm.addEventListener('change', e => {
+  if (e.target.name === 'type') getForm.firm.required = e.target.value === 'Firm';
+});
+getForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const f = Object.fromEntries(['name', 'email', 'type', 'firm'].map(k => [k, (getForm[k].value || '').trim()]));
+  const problem = !f.name ? 'Enter your name.'
+    : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email) ? 'Enter a valid email address.'
+    : !f.type ? 'Choose solo or firm.'
+    : f.type === 'Firm' && !f.firm ? 'Enter your firm name.' : '';
+  if (problem) { getErr.textContent = problem; getErr.hidden = false; return; }
+  if (SITE.leadsUrl) {
+    fetch(SITE.leadsUrl, { method: 'POST', mode: 'no-cors', keepalive: true, body: new URLSearchParams({ ...f, page: location.href }) }).catch(() => {});
+  }
+  visitor.set(f);
+  startDownload();
+});
+$('#get-close').addEventListener('click', () => getDlg.close());
+$('#get-ok').addEventListener('click', () => getDlg.close());
+getDlg.addEventListener('click', e => { if (e.target === getDlg) getDlg.close(); });
 
 // ---- Mobile menu ----
 const menu = $('#menu'), links = $('#links');
@@ -630,7 +673,7 @@ onScroll();
         <span class="tb-code">${p.code}</span>
         <h3>${p.name}</h3><p class="tb-who">${p.who}</p>
         <div class="tb-price"><b>${inr(price)}</b><small>/ month</small><p>${sub}</p></div>
-        <a class="btn ${p.pop ? '' : 'ghost'}" href="${SITE.downloadUrl}" download>${p.m ? 'Start 30-day trial' : 'Download free'}</a>
+        <a class="btn ${p.pop ? '' : 'ghost'}" href="#start" data-download>${p.m ? 'Start 30-day trial' : 'Download free'}</a>
         <ul>${ROWS.map(([label, v]) => {
           const x = v[i];
           return `<li class="${x === N ? 'no' : ''}"><span>${label}</span><b>${x === Y ? '✓' : x === N ? '—' : x}</b>${x === N ? '<span class="sr">Not included</span>' : x === Y ? '<span class="sr">Included</span>' : ''}</li>`;

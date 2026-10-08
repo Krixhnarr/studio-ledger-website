@@ -655,6 +655,35 @@
   </div>
 </dialog>
 
+<dialog class="get-dlg" id="get-dlg" aria-labelledby="get-title" data-mode="ask">
+  <div class="get-in">
+    <div class="get-h">
+      <span class="mono">Download · Windows</span>
+      <button type="button" class="x" id="get-close" aria-label="Close">×</button>
+    </div>
+    <h2 id="get-title">Get Studio Ledger</h2>
+    <form id="get-form" novalidate>
+      <p class="get-sub">Tell us who you are and the download starts right away.</p>
+      <label>Your name<input name="name" autocomplete="name" maxlength="80" required></label>
+      <label>Email<input name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required></label>
+      <fieldset class="get-type">
+        <legend>Are you a solo architect or a firm?</legend>
+        <label><input type="radio" name="type" value="Solo" required><span>Solo</span></label>
+        <label><input type="radio" name="type" value="Firm"><span>Firm</span></label>
+      </fieldset>
+      <label class="get-firm">Firm name<input name="firm" autocomplete="organization" maxlength="120"></label>
+      <p class="get-err" id="get-err" role="alert" hidden></p>
+      <button type="submit" class="btn" id="get-submit">Download for Windows <span aria-hidden="true">↓</span></button>
+      <p class="fine get-fine">We’ll only use these details to help you with Studio Ledger. No spam.</p>
+    </form>
+    <div class="get-done">
+      <p role="status">Your download has started. Run the installer once it finishes; the setup guide walks you through the rest.</p>
+      <p class="fine"><a class="link" data-direct href="#">Download didn’t start? Click here.</a></p>
+      <div class="get-done-cta"><a class="btn ghost" href="#setup" id="get-ok">Open the setup guide</a></div>
+    </div>
+  </div>
+</dialog>
+
 <script src="main.js"></script>
 </body>
 </html>
