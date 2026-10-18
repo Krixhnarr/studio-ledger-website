@@ -1,0 +1,42 @@
+# Launch: publish the newest draft release just before 12 am IST on 1 November 2026.
+# Until then the releases stay drafts, so the download links on the site and on GitHub lead nowhere.
+# GitHub can start scheduled jobs late, so it tries from 11:30 pm IST and again until 12:30 am; once one
+# run has published the release, the later runs find no draft and do nothing.
+# If it ever fails, open Actions → Launch release → Run workflow.
+name: Launch release
+
+on:
+  schedule:
+    - cron: '0 18 31 10 *'    # 11:30 pm IST, 31 October
+    - cron: '20 18 31 10 *'   # 11:50 pm IST
+    - cron: '35 18 31 10 *'   # 12:05 am IST
+    - cron: '0 19 31 10 *'    # 12:30 am IST
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Only show which release would be published'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish the newest draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT: ${{ github.event_name }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "$EVENT" = schedule ] && [ "$(date -u +%Y)" != 2026 ]; then echo "The launch was in 2026; nothing to do."; exit 0; fi
+          tag=$(gh release list -R "$REPO" --limit 50 --json tagName,isDraft,createdAt \
+            -q '[.[] | select(.isDraft)] | sort_by(.createdAt) | last | .tagName // empty')
+          if [ -z "$tag" ]; then echo "No draft release, so it is already published. Nothing to do."; exit 0; fi
+          echo "Newest draft release: $tag"
+          if [ "$DRY_RUN" = true ]; then echo "Dry run: not publishing."; exit 0; fi
+          gh release edit "$tag" -R "$REPO" --draft=false --latest
+          echo "Published $tag."

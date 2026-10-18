@@ -46,6 +46,14 @@
       <button class="menu" id="menu" aria-expanded="false" aria-controls="links" aria-label="Menu"><span></span><span></span></button>
     </div>
   </div>
+  <div class="launch-bar" id="launch-bar" hidden>
+    <div class="wrap lb-in">
+      <span class="lb-tag mono">Launch</span>
+      <span class="lb-text">Studio Ledger launches <b>1 November</b></span>
+      <span class="lb-count mono" data-cd="short" aria-label="Time until launch"></span>
+      <button type="button" class="link lb-notify" data-notify>Get notified</button>
+    </div>
+  </div>
 </header>
 
 <main id="main">
@@ -589,7 +597,7 @@
         <h3>The phone app</h3>
         <ol class="su-steps">
           <li>A principal turns it on in <b>Settings → Phone app</b> and makes a one-time code for each principal and senior architect.</li>
-          <li><b>Android:</b> <a class="link" href="https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Android.apk">download the app</a> on the phone and open it. Android asks once to allow installing apps from your browser; allow it.</li>
+          <li><b>Android:</b> <a class="link" data-app href="https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Android.apk">download the app</a> on the phone and open it. Android asks once to allow installing apps from your browser; allow it.</li>
           <li>Open Studio Ledger on the phone, choose <b>First time here</b>, choose an email and password, and enter the code.</li>
           <li>See who's in, approve leave, review drawings and reply to the team from anywhere. Changes go through a PC in the office that has Studio Ledger open.</li>
         </ol>
@@ -640,7 +648,7 @@
       <a class="btn ghost lg" data-demo href="#">Book a demo</a>
     </div>
     <p class="fine">Version <span data-version></span> · Windows 10 &amp; 11 · 64-bit</p>
-    <p class="fine phone-line" style="max-width:420px;margin:14px auto 0;text-align:center">Principal or senior architect? <a class="link" href="https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Android.apk">Get the Android app</a> for your phone. It needs a code from your studio's principal (<a class="link" href="#setup">how it works</a>).</p>
+    <p class="fine phone-line" style="max-width:420px;margin:14px auto 0;text-align:center">Principal or senior architect? <a class="link" data-app href="https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Android.apk">Get the Android app</a> for your phone. It needs a code from your studio's principal (<a class="link" href="#setup">how it works</a>).</p>
   </div>
   <div class="wave" id="wave" role="img" aria-label="Ledger, the Studio Ledger mascot, waving"></div>
 </section>
@@ -674,8 +682,12 @@
       <button type="button" class="x" id="get-close" aria-label="Close">×</button>
     </div>
     <h2 id="get-title">Get Studio Ledger</h2>
+    <div class="get-soon">
+      <p class="get-sub">Downloads for Windows and Android open at <b>12 am on 1 November</b>. Leave your details and we’ll tell you the moment it’s out.</p>
+      <div class="cd-big mono" data-cd="big" role="timer" aria-label="Time until launch"></div>
+    </div>
     <form id="get-form" novalidate>
-      <p class="get-sub">Tell us who you are and the download starts right away.</p>
+      <p class="get-sub get-now">Tell us who you are and the download starts right away.</p>
       <label>Your name<input name="name" autocomplete="name" maxlength="80" required></label>
       <label>Email<input name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required></label>
       <fieldset class="get-type">
@@ -689,8 +701,9 @@
       <p class="fine get-fine">We’ll only use these details to help you with Studio Ledger. No spam.</p>
     </form>
     <div class="get-done">
-      <p role="status">Your download has started. Run the installer once it finishes; the setup guide walks you through the rest.</p>
-      <p class="fine"><a class="link" data-direct href="#">Download didn’t start? Click here.</a></p>
+      <p role="status" class="get-now">Your download has started. Run the installer once it finishes; the setup guide walks you through the rest.</p>
+      <p class="fine get-now"><a class="link" data-direct href="#">Download didn’t start? Click here.</a></p>
+      <p role="status" class="get-soon">You’re on the list. We’ll email you on 1 November when Studio Ledger is ready to download.</p>
       <div class="get-done-cta"><a class="btn ghost" href="#setup" id="get-ok">Open the setup guide</a></div>
     </div>
   </div>

@@ -4,6 +4,9 @@ const SITE = {
   downloadUrl: 'https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Setup.exe',
   // Google Apps Script web app that adds each download form to the "Downloads" sheet.
   leadsUrl: 'https://script.google.com/macros/s/AKfycbxdibj8QEd8AEUxKYFFEFeysbT9pHsi_Y2I3DjqTkicfwmxfTK-6hzIMQiOEG9XXszR/exec',
+  // Launch: 12 am India time on 1 November 2026. Before this, downloads are closed and the
+  // buttons collect a launch list instead. Nothing needs changing on the day; the page opens itself.
+  launchAt: Date.parse('2026-11-01T00:00:00+05:30'),
   version: '1.9.6',
   email: 'thepincstudio@gmail.com',
 };
@@ -50,25 +53,38 @@ $$('[data-contact]').forEach(a => { a.href = mail('Studio Ledger', ''); });
 $$('[data-version]').forEach(el => { el.textContent = SITE.version; });
 
 // ---- Download: ask who they are once, then start the installer ----
+// Before launch the same form fills a launch list, and every download link (Windows and Android) waits.
 const getDlg = $('#get-dlg'), getForm = $('#get-form'), getErr = $('#get-err');
 const VISITOR = 'sl-visitor';
 const visitor = {
   get() { try { return JSON.parse(localStorage.getItem(VISITOR)); } catch { return null; } },
   set(v) { try { localStorage.setItem(VISITOR, JSON.stringify(v)); } catch {} },
 };
-function startDownload() {
-  getDlg.dataset.mode = 'done';
+const launched = () => Date.now() >= SITE.launchAt;
+const submitBtn = $('#get-submit'), submitLabel = submitBtn.innerHTML;
+
+function openGet(mode) {
+  const soon = !launched();
+  getDlg.classList.toggle('soon', soon);
+  $('#get-title').textContent = soon ? 'Launching 1 November' : 'Get Studio Ledger';
+  submitBtn.innerHTML = soon ? 'Tell me when it’s out' : submitLabel;
+  getDlg.dataset.mode = mode;
+  getErr.hidden = true;
+  tick();
   if (!getDlg.open) getDlg.showModal();
+}
+function startDownload() {
+  openGet('done');
   location.href = SITE.downloadUrl;
 }
 $$('[data-direct]').forEach(a => { a.href = SITE.downloadUrl; });
 document.addEventListener('click', e => {
-  if (!e.target.closest('[data-download]')) return;
+  const t = e.target.closest('[data-download], [data-app], [data-notify]');
+  if (!t) return;
+  if (t.matches('[data-app]') && launched()) return;   // the Android link works as a plain link once live
   e.preventDefault();
-  if (visitor.get()) return startDownload();
-  getDlg.dataset.mode = 'ask';
-  getErr.hidden = true;
-  getDlg.showModal();
+  if (launched() && visitor.get()) return startDownload();
+  openGet(!launched() && visitor.get() ? 'done' : 'ask');
 });
 getForm.addEventListener('change', e => {
   if (e.target.name === 'type') getForm.firm.required = e.target.value === 'Firm';
@@ -81,12 +97,41 @@ getForm.addEventListener('submit', e => {
     : !f.type ? 'Choose solo or firm.'
     : f.type === 'Firm' && !f.firm ? 'Enter your firm name.' : '';
   if (problem) { getErr.textContent = problem; getErr.hidden = false; return; }
+  const soon = !launched();
   if (SITE.leadsUrl) {
-    fetch(SITE.leadsUrl, { method: 'POST', mode: 'no-cors', keepalive: true, body: new URLSearchParams({ ...f, page: location.href }) }).catch(() => {});
+    const page = (soon ? 'Pre-launch list · ' : '') + location.href;
+    fetch(SITE.leadsUrl, { method: 'POST', mode: 'no-cors', keepalive: true, body: new URLSearchParams({ ...f, page }) }).catch(() => {});
   }
   visitor.set(f);
-  startDownload();
+  soon ? openGet('done') : startDownload();
 });
+
+// ---- Launch countdown: the bar under the nav and the big one in the dialog ----
+const pad = n => String(n).padStart(2, '0');
+function tick() {
+  const left = SITE.launchAt - Date.now();
+  if (left <= 0) {
+    $('#launch-bar').hidden = true;
+    getDlg.classList.remove('soon');
+    return false;
+  }
+  const s = Math.floor(left / 1000), d = Math.floor(s / 86400), h = Math.floor(s / 3600) % 24, m = Math.floor(s / 60) % 60, sec = s % 60;
+  $$('[data-cd="short"]').forEach(el => { el.textContent = `${d}d ${pad(h)}h ${pad(m)}m ${pad(sec)}s`; });
+  $$('[data-cd="big"]').forEach(el => {
+    el.innerHTML = [[d, d === 1 ? 'day' : 'days'], [pad(h), 'hours'], [pad(m), 'min'], [pad(sec), 'sec']]
+      .map(([v, l]) => `<span><b>${v}</b><small>${l}</small></span>`).join('');
+  });
+  return true;
+}
+if (tick()) {
+  $('#launch-bar').hidden = false;
+  const timer = setInterval(() => {
+    if (tick()) return;
+    clearInterval(timer);
+    // Launch moment while the page is open: an open "soon" dialog turns into the real download form
+    if (getDlg.open) openGet('ask');
+  }, 1000);
+}
 $('#get-close').addEventListener('click', () => getDlg.close());
 $('#get-ok').addEventListener('click', () => getDlg.close());
 getDlg.addEventListener('click', e => { if (e.target === getDlg) getDlg.close(); });

@@ -553,6 +553,24 @@ button { font-family: inherit; }
 .get-done p:first-child { font-size: 15px; margin: 12px 0 10px; }
 .get-done-cta { margin-top: 18px; }
 @media (max-width: 600px) { .get-in { padding: 0 18px 20px; } .get-h { margin-inline: -18px; padding-left: 18px; } }
+/* before launch the dialog shows the countdown and fills the launch list */
+.get-dlg .get-soon { display: none; }
+.get-dlg.soon .get-soon { display: block; }
+.get-dlg.soon .get-now { display: none; }
+#get-dlg.soon[data-mode="done"] .get-done-cta { display: none; }
+.cd-big { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 18px 0 22px; }
+.cd-big span { display: grid; justify-items: center; gap: 4px; padding: 12px 4px; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); }
+.cd-big b { font: 500 26px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--fg); }
+.cd-big small { font: 10.5px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+
+/* ---------- launch countdown bar (under the nav until 1 November) ---------- */
+.launch-bar { border-top: 1px solid var(--hair); background: linear-gradient(90deg, var(--copper-wash), transparent 70%); }
+.lb-in { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 38px; font-size: 13px; color: var(--muted); }
+.lb-tag { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--copper); border: 1px solid var(--copper-soft); padding: 3px 7px; border-radius: 2px; }
+.lb-text b { color: var(--fg); font-weight: 500; }
+.lb-count { color: var(--fg); font-variant-numeric: tabular-nums; min-width: 13ch; }
+.lb-notify { font-size: 13px; }
+@media (max-width: 600px) { .lb-in { gap: 10px; font-size: 12px; } .lb-tag { display: none; } .lb-text { display: none; } .lb-count::before { content: "Launch in "; color: var(--muted); } .lb-count { min-width: 0; } }
 
 /* ---------- reveal ---------- */
 .reveal { opacity: 0; transform: translateY(14px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
@@ -951,3 +969,5 @@ button { font-family: inherit; }
 .su-more { margin-top: 20px; }
 @media (max-width: 1080px) { .su-grid { grid-template-columns: 1fr; } .su-notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } .links { gap: 14px; } }
 @media (max-width: 600px) { .su-notes { grid-template-columns: 1fr; } .su-steps code { white-space: normal; word-break: break-all; } }
+html:has(.launch-bar:not([hidden])) { scroll-padding-top: 110px; }
+button.link { border: 0; padding: 0 0 2px; background-color: transparent; color: var(--cyan); font: inherit; cursor: pointer; }
