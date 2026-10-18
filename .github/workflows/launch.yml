@@ -33,8 +33,10 @@ jobs:
           DRY_RUN: ${{ inputs.dry_run }}
         run: |
           if [ "$EVENT" = schedule ] && [ "$(date -u +%Y)" != 2026 ]; then echo "The launch was in 2026; nothing to do."; exit 0; fi
-          tag=$(gh release list -R "$REPO" --limit 50 --json tagName,isDraft,createdAt \
-            -q '[.[] | select(.isDraft)] | sort_by(.createdAt) | last | .tagName // empty')
+          # Highest version wins (v2.10.0 after v2.9.0); creation times can tie
+          tag=$(gh release list -R "$REPO" --limit 50 --json tagName,isDraft \
+            -q '[.[] | select(.isDraft) | select(.tagName | test("^v[0-9]+([.][0-9]+)*$"))]
+                | sort_by(.tagName | ltrimstr("v") | split(".") | map(tonumber)) | last | .tagName // empty')
           if [ -z "$tag" ]; then echo "No draft release, so it is already published. Nothing to do."; exit 0; fi
           echo "Newest draft release: $tag"
           if [ "$DRY_RUN" = true ]; then echo "Dry run: not publishing."; exit 0; fi
