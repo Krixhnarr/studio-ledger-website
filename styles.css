@@ -1238,3 +1238,28 @@ html:has(.launch-bar:not([hidden])) .hero-in { min-height: calc(100svh - 104px);
 .aw-panel > .aw-row.hot:last-child { border-radius: 0 0 .5em .5em; }
 .aw-cols.pay { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
 .aw-cols.pay .aw-grow { min-width: 7.5em; }
+
+/* Chapter screens are laid out once at the app's own 1600 x 813 and scaled down with a transform.
+   (Container units are not supported in every in-app browser, e.g. Instagram's, which broke the layout.)
+   --k is the frame width / 1600, set by main.js; annotation labels are counter-scaled to stay readable. */
+.ch-pic { aspect-ratio: auto; height: 0; padding-top: 50.8125%; container-type: normal; overflow: hidden; --k: .5; }
+.ch-pic > .aw { position: absolute; left: 0; top: 0; width: 1600px; height: 813px; font-size: 16px; transform: scale(var(--k)); transform-origin: 0 0; }
+.aw .ch-note::before { left: calc(-8px / var(--k)); top: calc(-8px / var(--k)); width: calc(16px / var(--k)); height: calc(16px / var(--k)); border-width: calc(1.5px / var(--k)); box-shadow: 0 0 0 calc(5px / var(--k)) rgb(212 117 73 / .2); }
+.aw .ch-note::after { width: calc(1px / var(--k)); height: calc(46px / var(--k)); bottom: calc(8px / var(--k)); }
+.aw .ch-note > span { bottom: calc(54px / var(--k)); font-size: calc(10.5px / var(--k)); padding: calc(7px / var(--k)) calc(10px / var(--k)) calc(7px / var(--k)) calc(11px / var(--k)); border-width: calc(1px / var(--k)); border-left-width: calc(2px / var(--k)); }
+.aw .ch-note[data-side="left"] > span { border-left-width: calc(1px / var(--k)); border-right-width: calc(2px / var(--k)); }
+.ch-shot figcaption { display: block; right: 0; overflow: hidden; text-overflow: ellipsis; }
+.ch-shot figcaption::before { display: inline-block; vertical-align: middle; margin: -2px 10px 0 0; }
+@media (min-width: 861px) { .ch-a .ch-shot { margin-right: -10vw; } }
+@media (max-width: 860px) {
+  .ch-a .ch-in, .ch-b .ch-in, .ch-c .ch-in, .ch-d .ch-in { padding-bottom: 0; }
+  .ch-frame, .ch-c .ch-frame { border-width: 1px 0 0; }
+  .ch-num { flex-wrap: wrap; row-gap: 12px; }
+  .ch-num em { flex-basis: 100%; margin-left: 0; }
+  .ch-shot figcaption, .ch-b .ch-shot figcaption, .ch-c .ch-shot figcaption, .ch-d .ch-shot figcaption { right: 16px; }
+}
+@media (min-width: 861px) {
+  .ch-a .ch-in { grid-template-columns: minmax(360px, 460px) minmax(0, 1fr); column-gap: 56px; align-items: center; padding-bottom: 96px; }
+  .ch-a .ch-text { padding-bottom: 0; }
+  .ch-a .ch-shot { margin-bottom: 0; }
+}

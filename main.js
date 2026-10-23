@@ -252,6 +252,14 @@ onScroll();
 
 // ---- Story: each chapter plays once as it arrives (number, heading, problems crossed out, answer, screen, note) ----
 // On wide screens the screen drifts a few pixels against the scroll; only chapters on screen are updated.
+// Each chapter screen is a 1600-wide layout scaled to its frame (--k = frame width / 1600).
+(() => {
+  const pics = $$('.ch-pic');
+  const fit = p => p.style.setProperty('--k', (p.clientWidth / 1600).toFixed(4));
+  pics.forEach(fit);
+  if ('ResizeObserver' in window) { const ro = new ResizeObserver(es => es.forEach(e => fit(e.target))); pics.forEach(p => ro.observe(p)); }
+  else addEventListener('resize', () => pics.forEach(fit));
+})();
 (() => {
   const chs = $$('.ch');
   if (calm) { chs.forEach(ch => ch.classList.add('in')); return; }
