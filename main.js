@@ -163,154 +163,96 @@ addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimat
 addEventListener('resize', onScroll);
 onScroll();
 
-// ---- Entrance: the studio builds itself as you scroll ----
+// ---- Hero: Villa Savoye lies under the Pantheon, uncovered by the pointer ----
+// A soft lens follows a mouse or pen, with two smaller blots trailing it so a moving edge bleeds like wet wash
+// and settles back to a circle. A tap, a click or the plate buttons uncover the whole sheet from that point.
 (() => {
-  const root = $('#entrance');
-  if (!root) return;
-  const canvas = $('#en-canvas'), ctx = canvas.getContext('2d'), poster = $('#en-poster');
-  const intro = $('#en-intro'), slides = $$('.s-slide', root), rail = $('#story-rail'), dots = $$('button', rail);
-  const code = $('#s-code'), title = $('#s-title'), coord = $('#s-coord'), fill = $('#story-fill');
-  const draft = $('#en-draft');
-  const NAV = 64, BG = '#090c0b';
+  const art = $('#plate-art');
+  if (!art) return;
+  const plate = $('#plate'), top = $('.plate-top', art), cur = $('#plate-cursor'), eras = $$('[data-era]', plate);
+  const S = { x: 0, y: 0, r: 0 }, A = { x: 0, y: 0 }, B = { x: 0, y: 0 };   // lens, trailing blots
+  let want = 0, w = 0, h = 0, raf = 0, lastTs = 0, full = false, hover = false;
+  const lens = () => Math.max(110, Math.min(210, w * 0.2));
+  // the gradient is solid to 45% of its radius, so a full uncover needs the far corner inside that
+  const cover = (x, y) => Math.hypot(Math.max(x, w - x), Math.max(y, h - y)) / 0.45;
+  const measure = () => { const b = art.getBoundingClientRect(); w = b.width; h = b.height; return b; };
+  const blot = (p, r) => `radial-gradient(circle ${r.toFixed(1)}px at ${p.x.toFixed(1)}px ${p.y.toFixed(1)}px, #000 45%, rgba(0,0,0,.62) 66%, rgba(0,0,0,.22) 84%, transparent)`;
 
-  // Scroll progress → video time. Each beat builds one part of the studio; the intro holds the empty shell.
-  const FRAMES = 100, LENGTH = 10;
-  const PHASES = [            // [ends at progress, video time reached (s)]
-    [0.10, 0],                // intro: empty shell
-    [0.30, 2.2],              // 01 desks and lamps arrive
-    [0.50, 4.6],              // 02 drawings go up
-    [0.68, 6.6],              // 03 models, samples, mezzanine
-    [0.86, 8.6],              // 04 the team arrives
-    [1.00, LENGTH],           // finale: dusk, lights on
-  ];
-  const BEATS = PHASES.length - 2;
-  function locate(p) {
-    let a = 0, t0 = 0;
-    for (let k = 0; k < PHASES.length; k++) {
-      const [b, t1] = PHASES[k];
-      if (p <= b || k === PHASES.length - 1) {
-        const q = b > a ? Math.max(0, Math.min(1, (p - a) / (b - a))) : 1;
-        return { phase: k, q, time: t0 + (t1 - t0) * q };
-      }
-      a = b; t0 = t1;
-    }
+  function paint() {
+    if (S.r < 0.5) { top.style.visibility = 'hidden'; return; }
+    top.style.visibility = 'visible';
+    const m = full && S.r === want ? 'none' : `${blot(S, S.r)}, ${blot(A, S.r * 0.8)}, ${blot(B, S.r * 0.62)}`;
+    top.style.webkitMaskImage = m;
+    top.style.maskImage = m;
   }
-
-  // Frames: full 16:9 frames; phones get a lighter 960px set
-  const portrait = () => innerWidth < innerHeight;
-  const set = innerWidth <= 860 ? 'm' : 'd';
-  const imgs = new Array(FRAMES);
-  // The picture glides toward the scroll position (tWant) and blends neighbouring frames, so it never steps
-  let tWant = 0, tShown = 0, raf = 0, lastTs = 0;
-  const order = [];
-  for (const step of [FRAMES, 10, 5, 2, 1]) for (let i = 0; i < FRAMES; i += step) if (!order.includes(i)) order.push(i);
-  let next = 0;
-  function loadMore() {
-    if (next >= order.length) return;
-    const i = order[next++], im = new Image();
-    im.decoding = 'async';
-    im.onload = () => { imgs[i] = im; if (!raf) render(tShown); loadMore(); };
-    im.onerror = loadMore;
-    im.src = `assets/entrance/${set}/${String(i).padStart(3, '0')}.webp`;
-  }
-  for (let k = 0; k < 8; k++) loadMore();
-
-  function size() {
-    const dpr = Math.min(2, devicePixelRatio || 1);
-    canvas.width = Math.round(canvas.clientWidth * dpr);
-    canvas.height = Math.round(canvas.clientHeight * dpr);
-    render(tShown);
-  }
-  const below = i => { for (let j = Math.min(i, FRAMES - 1); j >= 0; j--) if (imgs[j]) return j; return -1; };
-  const above = i => { for (let j = Math.max(i, 0); j < FRAMES; j++) if (imgs[j]) return j; return -1; };
-  // Show the whole room: fit the frame under the navigation (cropping at most ~6%), feathering any gap into the page.
-  // On portrait screens the room sits across the lower part, under the text.
-  function render(t) {
-    const f = Math.max(0, Math.min(FRAMES - 1, t / LENGTH * (FRAMES - 1)));
-    let a = below(Math.floor(f)), b = above(Math.ceil(f));
-    if (a < 0) a = b; if (b < 0) b = a;
-    if (a < 0) return;
-    const blend = b > a ? (f - a) / (b - a) : 0;
-    const im = imgs[a], cw = canvas.width, ch = canvas.height, k = cw / canvas.clientWidth;
-    const top = NAV * k, ah = ch - top, iw = im.naturalWidth, ih = im.naturalHeight;
-    let s, x, y;
-    if (portrait()) {
-      s = cw / iw; x = 0; y = ch - ih * s - Math.max(28 * k, ah * 0.07);
-    } else {
-      const cover = Math.max(cw / iw, ah / ih), contain = Math.min(cw / iw, ah / ih);
-      s = Math.min(cover, contain * 1.06);
-      x = (cw - iw * s) / 2; y = top + (ah - ih * s) / 2;
-    }
-    const w = iw * s, h = ih * s;
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = BG; ctx.fillRect(0, 0, cw, ch);
-    ctx.drawImage(im, x, y, w, h);
-    if (blend > 0.01) { ctx.globalAlpha = blend; ctx.drawImage(imgs[b], x, y, w, h); ctx.globalAlpha = 1; }
-    // feather the frame edges into the background wherever the frame doesn't reach
-    const fade = (x0, y0, x1, y1, rx, ry, rw, rh) => {
-      const g = ctx.createLinearGradient(x0, y0, x1, y1);
-      g.addColorStop(0, BG); g.addColorStop(1, 'rgba(9,12,11,0)');
-      ctx.fillStyle = g; ctx.fillRect(rx, ry, rw, rh);
-    };
-    const fe = 90 * k;
-    if (x > 1) { fade(x, 0, x + fe, 0, x, 0, fe, ch); fade(x + w, 0, x + w - fe, 0, x + w - fe, 0, fe, ch); }
-    if (y > top + 1) fade(0, y, 0, y + fe, 0, y, cw, fe);
-    if (y + h < ch - 1) fade(0, y + h, 0, y + h - fe, 0, y + h - fe, cw, fe);
-    poster.classList.add('hide');
-  }
-  // ~110ms time constant: smooth enough to hide wheel steps, quick enough to feel attached to the scroll
-  function glide(ts) {
+  function frame(ts) {
     const dt = lastTs ? Math.min(64, ts - lastTs) : 16;
     lastTs = ts;
-    tShown += (tWant - tShown) * (1 - Math.exp(-dt / 110));
-    if (Math.abs(tWant - tShown) < 0.003) tShown = tWant;
-    render(tShown);
-    if (tShown !== tWant) raf = requestAnimationFrame(glide);
-    else { raf = 0; lastTs = 0; }
+    const k = tau => calm ? 1 : 1 - Math.exp(-dt / tau);
+    S.r += (want - S.r) * k(full ? 260 : 140);
+    const a = k(70), b = k(150);
+    A.x += (S.x - A.x) * a; A.y += (S.y - A.y) * a;
+    B.x += (S.x - B.x) * b; B.y += (S.y - B.y) * b;
+    const settled = Math.abs(want - S.r) < 0.5 && Math.hypot(S.x - B.x, S.y - B.y) < 0.5;
+    if (settled) { S.r = want; A.x = B.x = S.x; A.y = B.y = S.y; }
+    paint();
+    if (settled) { raf = 0; lastTs = 0; } else raf = requestAnimationFrame(frame);
   }
-  let first = true;
-  function seek(t) {
-    tWant = t;
-    if (first) { first = false; tShown = t; render(t); return; }   // arriving mid-page: start where the page is
-    if (calm) { tShown = t; render(t); return; }
-    if (!raf) raf = requestAnimationFrame(glide);
+  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  const jump = (x, y) => { S.x = A.x = B.x = x; S.y = A.y = B.y = y; };
+
+  // While the sheet is fully uncovered the centre can move unseen, so it always moves to the new point
+  function uncover(on, x = w / 2, y = h / 2) {
+    full = on;
+    jump(x, y);
+    want = on ? cover(x, y) : hover ? lens() : 0;
+    plate.classList.toggle('full', on);
+    eras.forEach(b => b.setAttribute('aria-pressed', String((b.dataset.era === '1') === on)));
+    kick();
   }
 
-  // Scroll → frame, captions, rail and sheet bar
-  let last = '';
-  function update() {
-    const r = root.getBoundingClientRect(), total = root.offsetHeight - innerHeight;
-    if (r.bottom < 0 || r.top > innerHeight) return;
-    const p = Math.max(0, Math.min(1, -r.top / total));
-    const { phase, q, time } = locate(p);
-    seek(time);
-    if (draft && !calm) draft.style.transform = `translate3d(0, ${(-Math.min(p, 0.1) * 100).toFixed(1)}px, 0)`;
+  // Touch moves are left to the page so the drawing never traps a scroll; touch uses the tap instead.
+  art.addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') return;
+    const r = measure(), x = e.clientX - r.left, y = e.clientY - r.top;
+    cur.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+    if (!hover) { hover = true; plate.classList.add('peek'); if (!full) jump(x, y); }   // start at the pointer, not where it last left
+    if (full) return;
+    S.x = x; S.y = y; want = lens();
+    kick();
+  });
+  art.addEventListener('pointerleave', () => {
+    hover = false;
+    plate.classList.remove('peek');
+    if (!full) { want = 0; kick(); }
+  });
+  art.addEventListener('click', e => {
+    const r = measure();
+    uncover(!full, e.clientX - r.left, e.clientY - r.top);
+  });
+  eras.forEach(b => b.addEventListener('click', () => { measure(); uncover(b.dataset.era === '1'); }));
+  addEventListener('resize', () => { measure(); if (full) { want = cover(S.x, S.y); kick(); } });
+  measure(); paint();
+})();
 
-    const beat = phase - 1, final = phase === PHASES.length - 1;
-    const solved = beat >= 0 && !final && q > 0.5;
-    const state = `${phase}|${solved}`;
-    if (state !== last) {
-      last = state;
-      intro.classList.toggle('gone', phase > 0);
-      root.classList.toggle('at-intro', phase === 0);
-      slides.forEach((s, k) => s.classList.toggle('on', final ? k === slides.length - 1 : k === beat));
-      if (beat >= 0 && !final) slides[beat].classList.toggle('solved', solved);
-      dots.forEach((d, k) => { d.classList.toggle('on', k === beat && !final); d.classList.toggle('done', final || k < beat); });
-      code.textContent = `A-${String(phase).padStart(3, '0')}`;
-      title.textContent = phase === 0 ? 'Existing conditions · empty shell'
-        : final ? 'Proposed · complete' : solved ? 'Proposed · with Studio Ledger' : 'Existing conditions';
-    }
-    rail.style.setProperty('--rp', Math.max(0, Math.min(1, (p - PHASES[0][0]) / (PHASES[BEATS][0] - PHASES[0][0]))).toFixed(3));
-    fill.style.width = `${(p * 100).toFixed(2)}%`;
-    coord.textContent = `X ${(p * 48).toFixed(2).padStart(5, '0')} · Y ${(time * 1.2).toFixed(2).padStart(5, '0')}`;
-  }
+// ---- Story: each chapter plays once as it arrives (number, heading, problems crossed out, answer, screen, note) ----
+// On wide screens the screen drifts a few pixels against the scroll; only chapters on screen are updated.
+(() => {
+  const chs = $$('.ch');
+  if (calm) { chs.forEach(ch => ch.classList.add('in')); return; }
+  chs.forEach(ch => onView(ch, () => ch.classList.add('in'), 0.22));
+  const wide = matchMedia('(min-width: 861px)'), live = new Set();
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? live.add(e.target) : live.delete(e.target)));
+  chs.forEach(ch => io.observe(ch));
   let ticking = false;
-  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; update(); }); } }, { passive: true });
-  addEventListener('resize', () => { size(); update(); });
-  size(); update();
-
-  const goTo = p => scrollTo({ top: root.offsetTop + p * (root.offsetHeight - innerHeight), behavior: calm ? 'auto' : 'smooth' });
-  dots.forEach((d, k) => d.addEventListener('click', () => goTo(PHASES[k][0] + 0.02)));
+  const drift = () => {
+    ticking = false;
+    live.forEach(ch => {
+      const r = ch.getBoundingClientRect(), p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight + r.height);
+      $('.ch-shot', ch).style.transform = wide.matches ? `translate3d(0, ${(p * 60).toFixed(1)}px, 0)` : '';
+    });
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(drift); } }, { passive: true });
 })();
 
 // ---- Ledger waves from the closing section: once on arrival, again on hover ----
@@ -742,13 +684,24 @@ onScroll();
   $('#offer-left').textContent = `Ends 31 Dec 2026 · ${left} day${left === 1 ? '' : 's'} left`;
 })();
 
+// ---- Launch feedback offer: opens with the launch, closes 31 January 2027 (same dates as FEEDBACK in the app) ----
+(() => {
+  const card = $('#offer-feedback'), when = $('#fb-when');
+  if (!card) return;
+  const now = Date.now(), ends = Date.parse('2027-01-31T23:59:59+05:30');
+  if (now > ends) { card.hidden = true; return; }
+  if (now < SITE.launchAt) { when.textContent = 'Opens 1 November 2026 · until 31 January 2027'; return; }
+  const left = Math.ceil((ends - now) / 864e5);
+  when.textContent = `Open until 31 Jan 2027 · ${left} day${left === 1 ? '' : 's'} left`;
+})();
+
 // ---- Motion utilities: reveals, blueprint borders and small sequences ----
 
 // Reveal: each section's blocks rise 12px in order (heading, copy, then the piece)
 if ('IntersectionObserver' in window && !calm) {
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
   const skip = el => el.closest('.flow') || el.id === 'ai' || el.id === 'net' || el.matches('.built, .faq-wrap, .flow-wrap');
-  $$('.sec .wrap, .sec .built > div, .sec .flow-intro, .sec .faq-wrap > div, .final .wrap').forEach(group => {
+  $$('.sec .wrap, .sec .built > div, .sec .flow-intro, .sec .faq-wrap > div, .final .wrap, .story-intro, .story-end').forEach(group => {
     [...group.children].filter(el => !skip(el)).forEach((el, i) => {
       el.classList.add('reveal'); el.style.setProperty('--rd', Math.min(i, 5)); io.observe(el);
     });

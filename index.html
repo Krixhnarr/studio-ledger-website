@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Studio Ledger — The operating system for architecture studios</title>
-<meta name="description" content="Studio Ledger connects projects, drawings, people, standards, time and finance for architecture practices, and reviews every drawing against your studio's standards with AI. 30-day free trial.">
-<meta name="theme-color" content="#0f1513">
+<meta name="description" content="Behind every great design is a team, a process and a hundred moving parts. Studio Ledger keeps an architecture studio's projects, drawings, people, time and finance in sync, in one workspace. 30-day free trial.">
+<meta name="theme-color" content="#f5f1ea">
 <link rel="icon" type="image/png" href="assets/icon.png">
 <link rel="apple-touch-icon" href="assets/icon.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Studio Ledger — The operating system for architecture studios">
-<meta property="og:description" content="Projects, drawings, people, standards, time and finance in one workspace built for architecture practices. Every drawing reviewed by AI against your studio's standards.">
+<meta property="og:description" content="A team, a process and a hundred moving parts, kept in sync. Projects, drawings, people, standards, time and finance in one workspace built for architecture studios.">
 <link rel="canonical" href="https://studioledger.in/">
 <meta property="og:url" content="https://studioledger.in/">
 <meta property="og:image" content="https://studioledger.in/assets/og.jpg">
@@ -33,10 +33,11 @@
       <span><b>Studio Ledger</b><small>Architecture practice OS</small></span>
     </a>
     <nav class="links" id="links" aria-label="Main">
-      <a href="#review">AI review</a>
+      <a href="#story">The studio</a>
       <a href="#system">Product</a>
       <a href="#journey">How it works</a>
       <a href="#pricing">Pricing</a>
+      <a href="#offers">Offers</a>
       <a href="#setup">Set up</a>
       <a href="#faq">FAQ</a>
     </nav>
@@ -58,121 +59,142 @@
 
 <main id="main">
 
-<!-- ============ ENTRANCE: the studio builds itself as you scroll ============ -->
-<section class="entrance" id="entrance" aria-label="Studio Ledger introduction: scroll to build your studio">
-  <div class="en-stage">
-    <img class="en-poster" id="en-poster" src="assets/entrance/d/000.webp" alt="" width="1280" height="720" fetchpriority="high">
-    <canvas class="en-canvas" id="en-canvas" aria-hidden="true"></canvas>
-    <div class="en-shade" aria-hidden="true"></div>
-    <div class="en-draft-wrap" id="en-draft" aria-hidden="true">
-      <svg class="en-draft" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
-        <g class="g-grid" transform="translate(48 0)">
-          <path class="d faint" pathLength="1" style="--w:.05s;--d:.9s" d="M720 140V800M960 140V800M1200 140V800"/>
-          <path class="d faint" pathLength="1" style="--w:.15s;--d:.9s" d="M684 300H1380M684 540H1380M684 780H1380"/>
-          <circle class="d" pathLength="1" style="--w:.3s;--d:.5s" cx="720" cy="122" r="13"/><circle class="d" pathLength="1" style="--w:.36s;--d:.5s" cx="960" cy="122" r="13"/><circle class="d" pathLength="1" style="--w:.42s;--d:.5s" cx="1200" cy="122" r="13"/>
-          <circle class="d" pathLength="1" style="--w:.38s;--d:.5s" cx="664" cy="300" r="13"/><circle class="d" pathLength="1" style="--w:.44s;--d:.5s" cx="664" cy="540" r="13"/><circle class="d" pathLength="1" style="--w:.5s;--d:.5s" cx="664" cy="780" r="13"/>
-          <text x="720" y="126" style="--w:.75s">C</text><text x="960" y="126" style="--w:.8s">D</text><text x="1200" y="126" style="--w:.85s">E</text>
-          <text x="664" y="304" style="--w:.8s">1</text><text x="664" y="544" style="--w:.85s">2</text><text x="664" y="784" style="--w:.9s">3</text>
-        </g>
-        <g class="g-plan" transform="translate(48 0)">
-          <path class="d cu" pathLength="1" style="--w:.25s;--d:1s" d="M760 330H1170V740H760V560"/>
-          <path class="d cu" pathLength="1" style="--w:.45s;--d:.7s" d="M960 330V470M960 520V740M760 560H900"/>
-          <path class="d" pathLength="1" style="--w:.6s;--d:.5s" d="M960 470a50 50 0 0 1 50 50"/>
-          <path class="d faint" pathLength="1" style="--w:.7s;--d:.6s" d="M1010 600H1150M1010 620H1150M1010 640H1150M1010 660H1150M1010 680H1150M1010 700H1150M1080 600V720"/>
-        </g>
-        <g class="g-dims" transform="translate(48 0)">
-          <path class="d" pathLength="1" style="--w:.5s;--d:.8s" d="M720 182H1200M720 176v12M960 176v12M1200 176v12"/>
-          <text x="840" y="172" style="--w:1s">6 000</text><text x="1080" y="172" style="--w:1.05s">6 000</text>
-          <path class="d" pathLength="1" style="--w:.7s;--d:.6s" d="M700 812H1380"/>
-          <path class="d cu" pathLength="1" style="--w:.9s;--d:.35s" d="M1292 800l8 12 8-12z"/>
-          <text x="1316" y="808" class="l" style="--w:1.1s">+0.00 FFL</text>
-        </g>
-        <g class="g-marks" transform="translate(48 0)">
-          <circle class="d" pathLength="1" style="--w:.75s;--d:.5s" cx="1320" cy="540" r="18"/>
-          <path class="d" pathLength="1" style="--w:.85s;--d:.4s" d="M1302 540H1338M1320 522l-7 -8M1320 522l7 -8"/>
-          <text x="1320" y="536" style="--w:1.1s">B</text><text x="1320" y="551" class="s" style="--w:1.12s">A-201</text>
-          <text x="724" y="290" class="l" style="--w:1.15s">X 12 400 · Y 08 200</text>
-        </g>
-      </svg>
+<!-- ============ HERO: two eras on one sheet. The pointer uncovers Villa Savoye under the Pantheon ============ -->
+<section class="hero" id="hero" aria-labelledby="hero-title">
+  <div class="hero-in">
+    <div class="hero-head">
+      <p class="eyebrow">The operating system for architecture studios</p>
+      <h1 id="hero-title">Built on architectural thinking. <span>Designed for what’s next.</span></h1>
     </div>
-    <div class="story-bar" aria-hidden="true"><span id="s-code">A-000</span><span class="hide-s" id="s-title">Existing conditions · empty shell</span><span class="hide-s mono" id="s-coord">X 00.00 · Y 00.00</span></div>
-
-    <div class="en-intro" id="en-intro">
-      <div class="en-stamp" aria-hidden="true"><span><b>Sheet</b>A-000</span><span><b>Project</b>Studio Ledger</span><span><b>Rev</b>01</span><span><b>Scale</b>1:100</span></div>
-      <p class="eyebrow">Architecture practice OS</p>
-      <h1>Studio <span>Ledger</span></h1>
-      <p class="intro-tag">The operating system for architecture studios.</p>
-      <p class="intro-brief">Projects, drawings, people, standards, time and finance in one workspace, with every drawing reviewed by AI against your studio’s own standards.</p>
-      <div class="intro-cta" id="intro-cta">
-        <a class="btn lg" data-download href="#start">Start 30-day free trial <span aria-hidden="true">→</span></a>
+    <figure class="plate" id="plate">
+      <div class="plate-art" id="plate-art">
+        <img class="plate-base" src="assets/hero/pantheon-watercolor-1672.webp" srcset="assets/hero/pantheon-watercolor-960.webp 960w, assets/hero/pantheon-watercolor-1672.webp 1672w" sizes="(max-width: 1080px) 118vw, 62vw" width="1672" height="941" fetchpriority="high" alt="Watercolour and ink elevation of the Pantheon: a coffered dome over a brick drum, fronted by a portico of Corinthian columns under a sculpted pediment.">
+        <img class="plate-top" src="assets/hero/villa-savoye-watercolor-1672.webp" srcset="assets/hero/villa-savoye-watercolor-960.webp 960w, assets/hero/villa-savoye-watercolor-1672.webp 1672w" sizes="(max-width: 1080px) 118vw, 62vw" width="1672" height="941" alt="Watercolour elevation of Villa Savoye: a white box with a long ribbon window, raised on slender pilotis among trees.">
+        <span class="plate-cursor" id="plate-cursor" aria-hidden="true"></span>
+      </div>
+      <figcaption class="plate-cap">
+        <span class="plate-eras" role="group" aria-label="Choose a drawing">
+          <button type="button" data-era="0" aria-pressed="true"><b class="mono">I</b><span>Pantheon<em>, Rome</em></span><i>c. 126</i></button>
+          <button type="button" data-era="1" aria-pressed="false"><b class="mono">II</b><span>Villa Savoye<em>, Poissy</em></span><i>1931</i></button>
+        </span>
+        <span class="plate-hint mono" aria-hidden="true"><span class="h-move">Move to explore</span><span class="h-tap">Tap to explore</span></span>
+      </figcaption>
+    </figure>
+    <div class="hero-body">
+      <p class="hero-lede">Bring your projects, drawings, people and studio standards into one connected workspace. Give your practice the structure to work smarter, without losing what makes it yours.</p>
+      <div class="hero-cta">
+        <a class="btn lg" data-download href="#start">Start your 30-day free trial <span aria-hidden="true">→</span></a>
         <a class="btn ghost lg" data-demo href="#">Book a demo</a>
       </div>
-      <p class="en-cue"><i aria-hidden="true"></i>Scroll to build your studio</p>
     </div>
+  </div>
+</section>
 
-    <ol class="story-rail" id="story-rail">
-      <li><button type="button" data-i="0"><b>01</b><span>Projects and tasks</span></button></li>
-      <li><button type="button" data-i="1"><b>02</b><span>Drawing review</span></button></li>
-      <li><button type="button" data-i="2"><b>03</b><span>Studio standards</span></button></li>
-      <li><button type="button" data-i="3"><b>04</b><span>People and fees</span></button></li>
-    </ol>
-    <div class="story-slides">
-      <article class="s-slide" data-i="0" data-struggle="running" data-solved="focused">
-        <p class="s-num"><b>01</b> / 04 · Projects and tasks</p>
-        <p class="s-kicker">The struggle</p>
-        <h2 class="s-problem"><span class="strike">The work is scattered across WhatsApp, Excel, email and the shared drive.</span></h2>
-        <div class="s-solution">
-          <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>Projects, tasks and deadlines live in one ledger. Everyone can see what’s due, who has it and where each sheet is in review.</p>
-        </div>
-      </article>
-      <article class="s-slide" data-i="1" data-struggle="tired" data-solved="approved">
-        <p class="s-num"><b>02</b> / 04 · Drawing review</p>
-        <p class="s-kicker">The struggle</p>
-        <h2 class="s-problem"><span class="strike">Every sheet is still checked by eye, usually the principal’s, the night before an issue.</span></h2>
-        <div class="s-solution">
-          <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>Every drawing is checked against your standards the moment it’s submitted, and AI marks exactly where the problems are.</p>
-        </div>
-      </article>
-      <article class="s-slide" data-i="2" data-struggle="confused" data-solved="checking">
-        <p class="s-num"><b>03</b> / 04 · Studio standards</p>
-        <p class="s-kicker">The struggle</p>
-        <h2 class="s-problem"><span class="strike">Your drawing standards live in one person’s head, and leave with them.</span></h2>
-        <div class="s-solution">
-          <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>Write them once: title blocks, scales, line weights, naming and principles. Every sheet is held to them, and juniors see which ones they miss.</p>
-        </div>
-      </article>
-      <article class="s-slide" data-i="3" data-struggle="thinking" data-solved="celebrating">
-        <p class="s-num"><b>04</b> / 04 · People and fees</p>
-        <p class="s-kicker">The struggle</p>
-        <h2 class="s-problem"><span class="strike">You find out someone is overloaded when they resign, and invoices go out weeks late.</span></h2>
-        <div class="s-solution">
-          <p class="s-kicker cu">How Studio Ledger solves it</p>
-          <p>See who’s in, who’s stretched and who needs mentoring, and know the day a phase is ready to invoice.</p>
-        </div>
-      </article>
-      <article class="s-slide en-final" data-i="4">
-        <p class="s-num"><b>✓</b> Proposed · complete</p>
-        <h2 class="en-final-h">Your studio,<br><span>built.</span></h2>
-        <p class="en-final-p">Run it like a practice: one ledger for the work, the people and the business.</p>
-        <div class="intro-cta">
-          <a class="btn lg" href="#workspace">See the workspace <span aria-hidden="true">↓</span></a>
-          <a class="btn ghost lg" data-download href="#start">Start free trial</a>
-        </div>
-      </article>
-    </div>
+<!-- ============ STORY: the promo reel's twenty problems in four full-bleed chapters, each shown in the real app ============ -->
+<section class="story" id="story" aria-labelledby="story-title">
+  <div class="wrap story-intro">
+    <div class="sec-h"><span class="bubble"><b>01</b><i>A-101</i></span><span class="eyebrow">The real challenge</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2 id="story-title">Behind every great design<br><span class="dim">are a hundred moving parts.</span></h2>
+    <p class="sub">A team, a process, deadlines, drawings, clients, fees. Keeping them in sync is where running a studio really gets hard. Here are twenty of those parts, in four chapters, and the screen in Studio Ledger that handles each.</p>
+  </div>
 
-    <div class="story-progress" aria-hidden="true"><i id="story-fill"></i></div>
+  <div class="chs">
+    <article class="ch ch-a" id="ch-1" aria-labelledby="ch-1-h">
+      <div class="ch-bg" aria-hidden="true"><img src="assets/story/01.webp" alt="" width="1536" height="1024" loading="lazy"></div>
+      <div class="ch-in">
+        <div class="ch-text">
+          <p class="ch-num"><b>01</b><span>/ 04</span><em>Initial recognition</em></p>
+          <h3 class="ch-h" id="ch-1-h"><span class="ln"><span>The day starts</span></span><span class="ln"><span>with chasing.</span></span></h3>
+          <ul class="ch-probs" aria-label="Problems"><li><span class="strike">Chasing updates</span></li><li><span class="strike">Deadlines slipping</span></li><li><span class="strike">Reviews piling up</span></li><li><span class="strike">Information scattered</span></li><li><span class="strike">Mistakes repeating</span></li></ul>
+          <p class="ch-fix">Studio Ledger opens on one overview: what needs your attention, who’s waiting on whom, what’s due this week and who’s in. Every submitted sheet is checked against your standards, so repeated mistakes surface before review.</p>
+          <a class="ch-next" href="#ch-2">Next · The team <span aria-hidden="true">↓</span></a>
+        </div>
+        <figure class="ch-shot">
+          <div class="ch-frame"><div class="ch-pic">
+            <img src="assets/app/overview.jpg" width="1600" height="813" loading="lazy" alt="Studio Ledger overview: My day with check-in, Needs your attention listing A-110 waiting two days for principal review, In the studio today with each person’s status, and upcoming deadlines.">
+            <span class="ch-note" style="--x: 59%; --y: 41.5%" data-side="left"><span>Waiting 2 days · principal review</span></span>
+          </div></div>
+          <figcaption>Overview · the first screen of the day</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <article class="ch ch-b" id="ch-2" aria-labelledby="ch-2-h">
+      <div class="ch-bg" aria-hidden="true"><img src="assets/story/02.webp" alt="" width="1536" height="1024" loading="lazy"></div>
+      <div class="ch-in">
+        <figure class="ch-shot">
+          <div class="ch-frame"><div class="ch-pic">
+            <img src="assets/app/performance.jpg" width="1600" height="813" loading="lazy" alt="Studio Ledger performance: first-pass rate, average approval time, on-time completion and capacity this week, then each person’s tasks, drawings, first-pass rate, current load and hours.">
+            <span class="ch-note" style="--x: 74.8%; --y: 78.2%" data-side="up"><span>2 open · 1 overdue</span></span>
+          </div></div>
+          <figcaption>Performance · each person and the whole studio</figcaption>
+        </figure>
+        <div class="ch-text">
+          <p class="ch-num"><b>02</b><span>/ 04</span><em>Team and productivity</em></p>
+          <h3 class="ch-h" id="ch-2-h"><span class="ln"><span>Good people,</span></span><span class="ln"><span>left waiting.</span></span></h3>
+          <ul class="ch-probs" aria-label="Problems"><li><span class="strike">Team performance unclear</span></li><li><span class="strike">Workloads unbalanced</span></li><li><span class="strike">Productivity unmeasured</span></li><li><span class="strike">Instructions forgotten</span></li><li><span class="strike">Team members waiting</span></li></ul>
+          <p class="ch-fix">Every instruction becomes a task with an owner and a date. Performance shows each person’s output, first-pass rate, current load and hours, so you can rebalance the work before someone burns out.</p>
+          <a class="ch-next" href="#ch-3">Next · Time and drawings <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="ch ch-c" id="ch-3" aria-labelledby="ch-3-h">
+      <div class="ch-bg" aria-hidden="true"><img src="assets/story/03.webp" alt="" width="1536" height="1024" loading="lazy"></div>
+      <div class="ch-in">
+        <div class="ch-text">
+          <div class="ch-head">
+            <p class="ch-num"><b>03</b><span>/ 04</span><em>Time, documentation and project control</em></p>
+            <h3 class="ch-h" id="ch-3-h"><span class="ln"><span>Where did</span></span><span class="ln"><span>the week go?</span></span></h3>
+          </div>
+          <div class="ch-body">
+            <ul class="ch-probs" aria-label="Problems"><li><span class="strike">Time unaccounted for</span></li><li><span class="strike">Attendance untracked</span></li><li><span class="strike">Drawing revisions confused</span></li><li><span class="strike">Project status unclear</span></li><li><span class="strike">Meetings undocumented</span></li></ul>
+            <p class="ch-fix">Check-ins, leave and timesheets are recorded as the day happens. The drawing register keeps every sheet’s revision, scale and status for each project, transmittals record what was issued to whom, and meeting minutes are filed with the project.</p>
+            <a class="ch-next" href="#ch-4">Next · The wider studio <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <figure class="ch-shot">
+          <div class="ch-frame"><div class="ch-pic">
+            <img src="assets/app/register.jpg" width="1600" height="813" loading="lazy" alt="Studio Ledger drawing register for CH-24 Courtyard House: sheets A-101, A-102, A-201 and A-301 with type, scale, revision and status, and a transmittals panel.">
+            <span class="ch-note" style="--x: 71.2%; --y: 62.5%"><span>A-301 · in senior review</span></span>
+          </div></div>
+          <figcaption>Drawing register · every sheet, revision and issue</figcaption>
+        </figure>
+      </div>
+    </article>
+
+    <article class="ch ch-d" id="ch-4" aria-labelledby="ch-4-h">
+      <div class="ch-bg" aria-hidden="true"><img src="assets/story/04.webp" alt="" width="1536" height="1024" loading="lazy"></div>
+      <div class="ch-in">
+        <div class="ch-text">
+          <p class="ch-num"><b>04</b><span>/ 04</span><em>The wider studio operation</em></p>
+          <h3 class="ch-h" id="ch-4-h"><span class="ln"><span>Everything around</span></span><span class="ln"><span>the drawings.</span></span></h3>
+          <ul class="ch-probs" aria-label="Problems"><li><span class="strike">Contacts hard to find</span></li><li><span class="strike">Team locations unknown</span></li><li><span class="strike">Morale overlooked</span></li><li><span class="strike">Finances unorganised</span></li><li><span class="strike">Social media unmanaged</span></li></ul>
+          <p class="ch-fix">Fees, invoices and payments sit beside the work: what’s ready to invoice, what’s awaiting payment and how much of each fee is used against progress. Contacts, who’s on site or remote, team happiness and the studio’s Instagram live in the same place.</p>
+        </div>
+        <figure class="ch-shot">
+          <div class="ch-frame"><div class="ch-pic">
+            <img src="assets/app/finances.jpg" width="1600" height="813" loading="lazy" alt="Studio Ledger finances: fees on active projects, ready to invoice, awaiting payment and received, then each project’s fee, invoiced, paid, hours, cost and fee used against progress.">
+            <span class="ch-note" style="--x: 71%; --y: 29%" data-side="left"><span>₹960,000 awaiting payment</span></span>
+          </div></div>
+          <figcaption>Finances · fees, invoices and payments</figcaption>
+        </figure>
+      </div>
+    </article>
+  </div>
+
+  <div class="wrap story-end">
+    <p class="story-end-h">There’s a better way to keep it all together.</p>
+    <a class="btn" href="#workspace">See the workspace <span aria-hidden="true">↓</span></a>
   </div>
 </section>
 
 <!-- ============ WORKSPACE ============ -->
 <section class="sec" id="workspace">
   <div class="wrap">
-    <div class="sec-h"><span class="bubble"><b>01</b><i>A-101</i></span><span class="eyebrow">The workspace</span><span class="dimline" aria-hidden="true"></span></div>
-    <h2>Your whole studio.<br><span class="dim">On one screen.</span></h2>
+    <div class="sec-h"><span class="bubble"><b>02</b><i>A-201</i></span><span class="eyebrow">The workspace</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>Every moving part.<br><span class="dim">On one screen.</span></h2>
+    <p class="sub">Who’s in, what’s due, which sheets are waiting and what each project has earned, all on the first screen you open in the morning.</p>
     <!-- Live product mock: dashboard that hands one drawing to AI review -->
     <figure class="app sheet" id="app" aria-label="Studio Ledger dashboard: 6 active projects, 142 drawings, 18 open tasks, 87% first-pass rate, and the drawing register">
       <div class="sheet-bar"><span>01 / Master control</span><span class="hide-s">X 0.00 · Y 0.00</span><span class="hide-s">Grid 40</span><span class="live">Status / live</span></div>
@@ -250,8 +272,8 @@
 <!-- ============ SYSTEM DIAGRAM ============ -->
 <section class="sec" id="system">
   <div class="wrap">
-    <div class="sec-h"><span class="bubble"><b>02</b><i>A-201</i></span><span class="eyebrow">The system</span><span class="dimline" aria-hidden="true"></span></div>
-    <h2>One ledger.<br><span class="dim">Everything connected.</span></h2>
+    <div class="sec-h"><span class="bubble"><b>03</b><i>A-301</i></span><span class="eyebrow">The system</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>One ledger.<br><span class="dim">Every part in sync.</span></h2>
     <div class="sys-wrap">
       <div class="sys" id="sys">
         <svg class="sys-lines" id="sys-lines" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true"></svg>
@@ -271,9 +293,9 @@
 <!-- ============ AI DRAWING REVIEW ============ -->
 <section class="sec" id="review">
   <div class="wrap">
-    <div class="sec-h"><span class="bubble"><b>03</b><i>A-301</i></span><span class="eyebrow">AI drawing review</span><span class="dimline" aria-hidden="true"></span></div>
-    <h2>Your drawings.<br><span class="dim">Understood.</span></h2>
-    <p class="sub">Studio Ledger reads every sheet against your firm's own standards and marks exactly where the problems are, before a senior architect, a consultant or a site ever sees it.</p>
+    <div class="sec-h"><span class="bubble"><b>04</b><i>A-401</i></span><span class="eyebrow">AI drawing review</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>Reviews that don’t<br><span class="dim">pile up.</span></h2>
+    <p class="sub">Every sheet is read against your studio’s own standards the moment it’s submitted, and each problem is marked where it is on the drawing, before a senior architect, a consultant or a site ever sees it.</p>
 
     <div class="ai" id="ai">
       <figure class="ai-sheet sheet">
@@ -379,7 +401,7 @@
 <section class="sec" id="built">
   <div class="wrap built">
     <div>
-      <div class="sec-h"><span class="bubble"><b>04</b><i>A-401</i></span><span class="eyebrow">Purpose-built</span></div>
+      <div class="sec-h"><span class="bubble"><b>05</b><i>A-501</i></span><span class="eyebrow">Purpose-built</span></div>
       <h2>Built for architecture.<br><span class="dim">Not adapted to it.</span></h2>
     </div>
     <div class="vs" role="table" aria-label="Generic software compared with Studio Ledger">
@@ -396,8 +418,8 @@
 <!-- ============ PROJECT JOURNEY ============ -->
 <section class="sec" id="journey">
   <div class="wrap">
-    <div class="sec-h"><span class="bubble"><b>05</b><i>A-501</i></span><span class="eyebrow">How it works</span><span class="dimline" aria-hidden="true"></span></div>
-    <h2>See how a project moves<br><span class="dim">through Studio Ledger.</span></h2>
+    <div class="sec-h"><span class="bubble"><b>06</b><i>A-601</i></span><span class="eyebrow">How it works</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>Follow one project<br><span class="dim">from brief to report.</span></h2>
     <div class="jn" id="jn">
       <ol class="jn-steps" role="tablist" aria-label="Project stages">
         <li><button role="tab" aria-selected="true" data-i="0"><span class="mono">01</span>Create project</button></li>
@@ -461,9 +483,9 @@
 <section class="sec" id="workflow">
   <div class="wrap flow-wrap">
     <div class="flow-intro">
-      <div class="sec-h"><span class="bubble"><b>06</b><i>A-601</i></span><span class="eyebrow">For the entire practice</span></div>
-      <h2>Every handoff.<br><span class="dim">Visible and accountable.</span></h2>
-      <p class="sub">From the principal setting standards to a sheet being issued, everyone can see where a drawing is, who has it and what it's waiting for.</p>
+      <div class="sec-h"><span class="bubble"><b>07</b><i>A-701</i></span><span class="eyebrow">For the whole practice</span></div>
+      <h2>No one left waiting.<br><span class="dim">Every handoff visible.</span></h2>
+      <p class="sub">From the principal setting the standards to a sheet being issued, everyone can see where a drawing is, who has it and what it’s waiting for.</p>
     </div>
     <ol class="flow" id="flow">
       <li><span class="who">Principal</span><span class="act">sets the studio standards</span></li>
@@ -480,7 +502,7 @@
 <!-- ============ PRODUCT SHOWCASE ============ -->
 <section class="sec" id="product">
   <div class="wrap">
-    <div class="sec-h"><span class="bubble"><b>07</b><i>A-701</i></span><span class="eyebrow">Inside the product</span><span class="dimline" aria-hidden="true"></span></div>
+    <div class="sec-h"><span class="bubble"><b>08</b><i>A-801</i></span><span class="eyebrow">Inside the product</span><span class="dimline" aria-hidden="true"></span></div>
     <div class="show-h">
       <h2>The actual application.<br><span class="dim">Not a mockup.</span></h2>
       <button class="btn ghost" id="open-tour" type="button"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z"/></svg>Watch the 6-minute tour</button>
@@ -497,7 +519,7 @@
 <!-- ============ DATA ============ -->
 <section class="sec" id="data">
   <div class="wrap">
-    <div class="sec-h"><span class="bubble"><b>08</b><i>A-801</i></span><span class="eyebrow">Your data</span><span class="dimline" aria-hidden="true"></span></div>
+    <div class="sec-h"><span class="bubble"><b>09</b><i>A-901</i></span><span class="eyebrow">Your data</span><span class="dimline" aria-hidden="true"></span></div>
     <h2>Your folder.<br><span class="dim">Your drawings. Your records.</span></h2>
     <figure class="net" id="net" aria-label="Every PC in the studio works from the same shared studio folder on your server, NAS or synced drive. AI review connects over the internet only for the reviews you run.">
       <p class="net-cap">Local studio data</p>
@@ -521,9 +543,9 @@
 <!-- ============ PRICING ============ -->
 <section class="sec" id="pricing">
   <div class="wrap">
-    <div class="sec-h"><span class="bubble"><b>09</b><i>A-901</i></span><span class="eyebrow">Pricing</span><span class="dimline" aria-hidden="true"></span></div>
+    <div class="sec-h"><span class="bubble"><b>10</b><i>A-110</i></span><span class="eyebrow">Pricing</span><span class="dimline" aria-hidden="true"></span></div>
     <div class="price-h">
-      <h2>A plan for every practice.</h2>
+      <h2>Whether you run a firm<br><span class="dim">or are starting one.</span></h2>
       <div class="seg" role="group" aria-label="Billing period">
         <button type="button" id="b-month" aria-pressed="true">Monthly</button>
         <button type="button" id="b-year" aria-pressed="false">Annual <em>2 months free</em></button>
@@ -531,24 +553,43 @@
     </div>
     <div class="plans" id="plans"></div>
     <div class="ent"><div><b>Enterprise</b><span class="fine">40+ people, multiple offices, custom terms and onboarding. API and single sign-on are on the way.</span></div><a href="#" data-demo class="btn ghost sm">Talk to us</a></div>
-    <p class="fine price-note">Prices in rupees, plus GST. Every new studio starts with a 30-day trial of everything, no card needed. Unlimited AI reviews run on your studio's own Anthropic key.</p>
+    <p class="fine price-note">Prices in rupees, plus GST. Every new studio starts with a 30-day trial of everything, no card needed. Unlimited AI reviews run on your studio's own Anthropic key. Launch and referral offers are under <a class="link" href="#offers">Offers</a>.</p>
   </div>
 </section>
 
-<!-- ============ REFERRAL ============ -->
-<section class="sec" id="refer">
+<!-- ============ OFFERS: launch feedback offer, referral, trial ============ -->
+<section class="sec" id="offers">
   <div class="wrap">
-    <div class="refer">
-      <div>
-        <div class="refer-top"><span class="tag">Limited offer</span><span class="eyebrow" id="offer-left">Ends 31 Dec 2026</span></div>
-        <h2>Refer a firm.<br><span class="dim">Get a month free.</span></h2>
+    <div class="sec-h"><span class="bubble"><b>11</b><i>A-111</i></span><span class="eyebrow">Offers</span><span class="dimline" aria-hidden="true"></span></div>
+    <h2>For the studios<br><span class="dim">who start with us.</span></h2>
+    <div class="offers">
+      <article class="offer feature" id="offer-feedback">
+        <div class="offer-top"><span class="tag">Launch offer</span><span class="eyebrow" id="fb-when">1 Nov 2026 – 31 Jan 2027</span></div>
+        <h3>Give feedback.<br>Win a free month.</h3>
+        <p>For the first three months after launch, tell us what would make Studio Ledger work better for your studio. If your idea would genuinely improve it, your studio gets a month of its plan free.</p>
+        <ol class="offer-steps">
+          <li><span class="mono">01</span><span>Use Studio Ledger in your studio, on the trial or any plan.</span></li>
+          <li><span class="mono">02</span><span>A principal writes the feedback in <b>Settings → Launch feedback offer</b>.</span></li>
+          <li><span class="mono">03</span><span>We read every message ourselves and reply in the app. If yours is accepted, the free month is added.</span></li>
+        </ol>
+        <p class="fine">One free month per firm, on the plan you’re on. On the trial or Solo, the month is kept and added to the first plan you buy. Feedback must be a few sentences or more, sent between 1 November 2026 and 31 January 2027.</p>
+      </article>
+      <article class="offer" id="refer">
+        <div class="offer-top"><span class="tag">Limited offer</span><span class="eyebrow" id="offer-left">Ends 31 Dec 2026</span></div>
+        <h3>Refer a firm.<br>Get a month free.</h3>
         <p>Every studio has a referral code in <b>Settings → Plan &amp; billing</b>. When a practice you refer joins on a paid plan, you both get time added to your licence.</p>
-      </div>
-      <div class="gifts">
-        <div class="gift"><span class="eyebrow">You get</span><b>1 month</b><span>extra on the plan you're on</span></div>
-        <div class="gift"><span class="eyebrow">They get</span><b>15 days</b><span>extra on their first paid plan</span></div>
-        <p class="fine">Counts once the referred firm has paid for Studio, Practice, Firm or Enterprise; trials and Solo don't qualify. For firms new to Studio Ledger. If you aren't on a paid plan yet, your month is kept until you buy. Referrals must be paid for by 31 December 2026.</p>
-      </div>
+        <div class="gifts">
+          <div class="gift"><span class="eyebrow">You get</span><b>1 month</b><span>extra on the plan you’re on</span></div>
+          <div class="gift"><span class="eyebrow">They get</span><b>15 days</b><span>extra on their first paid plan</span></div>
+        </div>
+        <p class="fine">Counts once the referred firm has paid for Studio, Practice, Firm or Enterprise; trials and Solo don’t qualify. For firms new to Studio Ledger. If you aren’t on a paid plan yet, your month is kept until you buy. Referrals must be paid for by 31 December 2026.</p>
+      </article>
+      <article class="offer">
+        <div class="offer-top"><span class="eyebrow">Every new studio</span></div>
+        <h3>30 days of everything, free.</h3>
+        <p>Every feature for the whole team, with no card needed. Choose annual billing when you buy and get two months free.</p>
+        <a class="btn" data-download href="#start">Start your free trial <span aria-hidden="true">→</span></a>
+      </article>
     </div>
   </div>
 </section>
@@ -556,7 +597,7 @@
 <!-- ============ INSTALL & SET UP ============ -->
 <section class="sec" id="setup">
   <div class="wrap">
-    <div class="sec-h"><span class="bubble"><b>10</b><i>A-110</i></span><span class="eyebrow">Install &amp; set up</span><span class="dimline" aria-hidden="true"></span></div>
+    <div class="sec-h"><span class="bubble"><b>12</b><i>A-112</i></span><span class="eyebrow">Install &amp; set up</span><span class="dimline" aria-hidden="true"></span></div>
     <h2>Up and running<br><span class="dim">in an afternoon.</span></h2>
     <p class="sub">Studio Ledger runs on each PC and keeps the studio’s records in one shared folder. Nothing is installed on the server: it only holds the folder.</p>
 
@@ -617,7 +658,7 @@
 <section class="sec" id="faq">
   <div class="wrap faq-wrap">
     <div>
-      <div class="sec-h"><span class="bubble"><b>11</b><i>A-111</i></span><span class="eyebrow">Questions</span></div>
+      <div class="sec-h"><span class="bubble"><b>13</b><i>A-113</i></span><span class="eyebrow">Questions</span></div>
       <h2>Questions studios ask.</h2>
     </div>
     <div class="faq">
@@ -627,6 +668,7 @@
       <details><summary>What happens when the trial ends?</summary><p>Choose a plan and paste the licence key. If you don't, Studio Ledger moves to the free Solo plan; a studio with more people or projects than Solo allows becomes read-only. Nothing is deleted, and a licence key unlocks everything again.</p></details>
       <details><summary>Do I pay per person?</summary><p>No. Each plan includes a number of people (5, 15 or 30), with a lower price for every extra person on larger plans.</p></details>
       <details><summary>Is there a phone app?</summary><p>Yes, for Android, for principals and senior architects: who's in and who's late, leave and drawings waiting on you, tasks, projects, fees, happiness, complaints and the studio's chats, with approvals from the phone. Juniors and interns use the desktop app. An iPhone app is on the way.</p></details>
+      <details><summary>Is there a launch offer?</summary><p>Yes. From 1 November 2026 to 31 January 2027, send us feedback from Settings → Launch feedback offer. If it would genuinely make Studio Ledger better, your studio gets a month of its plan free, once per firm. <a class="link" href="#offers">See all offers</a>.</p></details>
       <details><summary>Does it work on Mac?</summary><p>Not yet. Studio Ledger runs on Windows 10 and 11.</p></details>
     </div>
   </div>
@@ -635,8 +677,8 @@
 <!-- ============ FINAL CTA ============ -->
 <section class="final" id="start">
   <div class="wrap">
-    <p class="eyebrow">Ready when you are</p>
-    <h2>Run your studio like a practice.<br><span class="dim">Not a spreadsheet.</span></h2>
+    <p class="eyebrow">Something better is taking shape</p>
+    <h2>Run the studio.<br><span class="dim">Not the chaos.</span></h2>
     <ol class="steps">
       <li><span class="mono">01</span>Install on each PC and point it at a shared studio folder</li>
       <li><span class="mono">02</span>Add your projects, team and drawing standards</li>
@@ -659,7 +701,7 @@
   <div class="wrap foot-in">
     <div class="brand"><img src="assets/icon.png" alt="" width="26" height="26"><span><b>Studio Ledger</b><small>Architecture practice OS</small></span></div>
     <nav aria-label="Footer">
-      <a href="#review">AI review</a><a href="#system">Product</a><a href="#pricing">Pricing</a><a href="#refer">Referral</a><a href="#setup">Set up</a><a href="#faq">FAQ</a><a data-contact href="#">Contact</a>
+      <a href="#story">The studio</a><a href="#review">AI review</a><a href="#system">Product</a><a href="#pricing">Pricing</a><a href="#offers">Offers</a><a href="#setup">Set up</a><a href="#faq">FAQ</a><a data-contact href="#">Contact</a>
     </nav>
     <p class="fine mono">© 2026 Studio Ledger · Sheet 1 of 1 · Made for architecture</p>
   </div>
