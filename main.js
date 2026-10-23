@@ -211,22 +211,37 @@ onScroll();
     kick();
   }
 
-  // Touch moves are left to the page so the drawing never traps a scroll; touch uses the tap instead.
-  art.addEventListener('pointermove', e => {
-    if (e.pointerType === 'touch') return;
+  const lift = () => { hover = false; plate.classList.remove('peek'); if (!full) { want = 0; kick(); } };
+  const follow = e => {
     const r = measure(), x = e.clientX - r.left, y = e.clientY - r.top;
     cur.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
     if (!hover) { hover = true; plate.classList.add('peek'); if (!full) jump(x, y); }   // start at the pointer, not where it last left
     if (full) return;
     S.x = x; S.y = y; want = lens();
     kick();
+  };
+  // A finger works like the mouse while it is down: the lens appears under it and follows a sideways drag.
+  // The plate only claims horizontal moves (touch-action: pan-y), so a vertical swipe still scrolls the page;
+  // the browser then cancels the pointer and the lens fades. A tap (no real movement) uncovers the whole sheet.
+  let down = null;
+  art.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'touch') return;
+    down = { x: e.clientX, y: e.clientY, moved: false };
+    follow(e);
   });
-  art.addEventListener('pointerleave', () => {
-    hover = false;
-    plate.classList.remove('peek');
-    if (!full) { want = 0; kick(); }
+  art.addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') {
+      if (!down) return;
+      if (Math.hypot(e.clientX - down.x, e.clientY - down.y) > 10) down.moved = true;
+    }
+    follow(e);
   });
+  art.addEventListener('pointerup', e => { if (e.pointerType === 'touch') lift(); });
+  art.addEventListener('pointercancel', () => { down = null; lift(); });
+  art.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') lift(); });
   art.addEventListener('click', e => {
+    if (down?.moved) { down = null; return; }   // the end of a drag, not a tap
+    down = null;
     const r = measure();
     uncover(!full, e.clientX - r.left, e.clientY - r.top);
   });
