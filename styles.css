@@ -1263,3 +1263,25 @@ html:has(.launch-bar:not([hidden])) .hero-in { min-height: calc(100svh - 104px);
   .ch-a .ch-text { padding-bottom: 0; }
   .ch-a .ch-shot { margin-bottom: 0; }
 }
+
+/* chapter 2: the screen touches the left edge but is never cut off; the table fits its panel */
+@media (min-width: 861px) {
+  .ch-b .ch-in { grid-template-columns: minmax(0, 1fr) minmax(340px, 400px); column-gap: 56px; }
+  .ch-b .ch-shot { margin-left: 0; }
+  .ch-b .ch-shot figcaption { left: 24px; }
+  .ch-b .ch-frame { border-radius: 0 10px 10px 0; border-left-width: 0; }
+}
+.aw-table th { padding-inline: .9em; }
+.aw-table td { padding-inline: .9em; }
+.aw-table th:first-child, .aw-table td:first-child { padding-left: 1.3em; }
+.aw-table th:last-child, .aw-table td:last-child { padding-right: 1.3em; }
+.aw-table td:last-child.aw-dim { white-space: normal; line-height: 1.3; }
+.aw-table th, .aw-table td { padding-inline: .7em; }
+.aw-table th:last-child, .aw-table td:last-child { max-width: 15em; }
+.aw-table.perf { table-layout: fixed; }
+.aw-table.perf th { white-space: normal; vertical-align: bottom; line-height: 1.25; }
+.aw-table.perf td { overflow: hidden; text-overflow: ellipsis; }
+.aw-table.perf td:last-child { white-space: normal; max-width: none; }
+.aw-table.perf th:nth-child(1) { width: 16%; } .aw-table.perf th:nth-child(2) { width: 6.5%; } .aw-table.perf th:nth-child(3) { width: 9%; }
+.aw-table.perf th:nth-child(4) { width: 6.5%; } .aw-table.perf th:nth-child(5) { width: 7.5%; } .aw-table.perf th:nth-child(6) { width: 7.5%; }
+.aw-table.perf th:nth-child(7) { width: 9%; } .aw-table.perf th:nth-child(8) { width: 14%; } .aw-table.perf th:nth-child(9) { width: 6%; } .aw-table.perf th:nth-child(10) { width: 18%; }
