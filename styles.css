@@ -490,7 +490,7 @@ button { font-family: inherit; }
 .cd-big b { font: 500 26px/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--fg); }
 .cd-big small { font: 10.5px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
 
-/* ---------- launch countdown bar (under the nav until 1 November) ---------- */
+/* ---------- launch countdown bar (under the nav until 10 November) ---------- */
 .launch-bar { border-top: 1px solid var(--hair); background: linear-gradient(90deg, var(--copper-wash), transparent 70%); }
 .lb-in { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 38px; font-size: 13px; color: var(--muted); }
 .lb-tag { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--copper); border: 1px solid var(--copper-soft); padding: 3px 7px; border-radius: 2px; }

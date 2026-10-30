@@ -4,9 +4,9 @@ const SITE = {
   downloadUrl: 'https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Setup.exe',
   // Google Apps Script web app that adds each download form to the "Downloads" sheet.
   leadsUrl: 'https://script.google.com/macros/s/AKfycbxdibj8QEd8AEUxKYFFEFeysbT9pHsi_Y2I3DjqTkicfwmxfTK-6hzIMQiOEG9XXszR/exec',
-  // Launch: 12 am India time on 1 November 2026. Before this, downloads are closed and the
+  // Launch: 12 am India time on 10 November 2026. Before this, downloads are closed and the
   // buttons collect a launch list instead. Nothing needs changing on the day; the page opens itself.
-  launchAt: Date.parse('2026-11-01T00:00:00+05:30'),
+  launchAt: Date.parse('2026-11-10T00:00:00+05:30'),
   version: '1.9.6',
   email: 'thepincstudio@gmail.com',
 };
@@ -66,7 +66,7 @@ const submitBtn = $('#get-submit'), submitLabel = submitBtn.innerHTML;
 function openGet(mode) {
   const soon = !launched();
   getDlg.classList.toggle('soon', soon);
-  $('#get-title').textContent = soon ? 'Launching 1 November' : 'Get Studio Ledger';
+  $('#get-title').textContent = soon ? 'Launching 10 November' : 'Get Studio Ledger';
   submitBtn.innerHTML = soon ? 'Tell me when it’s out' : submitLabel;
   getDlg.dataset.mode = mode;
   getErr.hidden = true;
@@ -713,7 +713,7 @@ onScroll();
   if (!card) return;
   const now = Date.now(), ends = Date.parse('2027-01-31T23:59:59+05:30');
   if (now > ends) { card.hidden = true; return; }
-  if (now < SITE.launchAt) { when.textContent = 'Opens 1 November 2026 · until 31 January 2027'; return; }
+  if (now < SITE.launchAt) { when.textContent = 'Opens with the launch · until 31 January 2027'; return; }
   const left = Math.ceil((ends - now) / 864e5);
   when.textContent = `Open until 31 Jan 2027 · ${left} day${left === 1 ? '' : 's'} left`;
 })();
