@@ -1,16 +1,16 @@
-# Launch: publish the newest draft release just before 12 am IST on 10 November 2026.
+# Launch: publish the newest draft release just before 12 am IST on 15 November 2026.
 # Until then the releases stay drafts, so the download links on the site and on GitHub lead nowhere.
-# GitHub can start scheduled jobs late, so it tries from 11:30 pm IST on 9 November and again until 12:30 am; once one
+# GitHub can start scheduled jobs late, so it tries from 11:30 pm IST on 14 November and again until 12:30 am; once one
 # run has published the release, the later runs find no draft and do nothing.
 # If it ever fails, open Actions → Launch release → Run workflow.
 name: Launch release
 
 on:
   schedule:
-    - cron: '0 18 9 11 *'     # 11:30 pm IST, 9 November
-    - cron: '20 18 9 11 *'    # 11:50 pm IST
-    - cron: '35 18 9 11 *'    # 12:05 am IST
-    - cron: '0 19 9 11 *'     # 12:30 am IST
+    - cron: '0 18 14 11 *'    # 11:30 pm IST, 14 November
+    - cron: '20 18 14 11 *'   # 11:50 pm IST
+    - cron: '35 18 14 11 *'   # 12:05 am IST
+    - cron: '0 19 14 11 *'    # 12:30 am IST
   workflow_dispatch:
     inputs:
       dry_run:

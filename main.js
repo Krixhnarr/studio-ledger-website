@@ -4,9 +4,9 @@ const SITE = {
   downloadUrl: 'https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Setup.exe',
   // Google Apps Script web app that adds each download form to the "Downloads" sheet.
   leadsUrl: 'https://script.google.com/macros/s/AKfycbxdibj8QEd8AEUxKYFFEFeysbT9pHsi_Y2I3DjqTkicfwmxfTK-6hzIMQiOEG9XXszR/exec',
-  // Launch: 12 am India time on 10 November 2026. Before this, downloads are closed and the
+  // Launch: 12 am India time on 15 November 2026. Before this, downloads are closed and the
   // buttons collect a launch list instead. Nothing needs changing on the day; the page opens itself.
-  launchAt: Date.parse('2026-11-10T00:00:00+05:30'),
+  launchAt: Date.parse('2026-11-15T00:00:00+05:30'),
   version: '1.9.6',
   email: 'thepincstudio@gmail.com',
 };
@@ -66,7 +66,7 @@ const submitBtn = $('#get-submit'), submitLabel = submitBtn.innerHTML;
 function openGet(mode) {
   const soon = !launched();
   getDlg.classList.toggle('soon', soon);
-  $('#get-title').textContent = soon ? 'Launching 10 November' : 'Get Studio Ledger';
+  $('#get-title').textContent = soon ? 'Launching 15 November' : 'Get Studio Ledger';
   submitBtn.innerHTML = soon ? 'Tell me when it’s out' : submitLabel;
   getDlg.dataset.mode = mode;
   getErr.hidden = true;
