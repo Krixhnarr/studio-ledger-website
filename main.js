@@ -44,38 +44,8 @@ function countUp(el, to, ms = 1100) {
   });
 }
 
-// ---- Links: download, demo, contact ----
+// ---- Links: download, contact ----
 const mail = (subject, body) => `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-const demoLink = mail('Studio Ledger demo request',
-  'Hi,\n\nWe would like a demo of Studio Ledger.\n\nStudio name:\nCity:\nNumber of people:\nPreferred days and times:\n\nThanks');
-$$('[data-demo]').forEach(a => { a.href = demoLink; });
-(() => {
-  const dlg = $('#demo-dlg'), form = $('#demo-form'), err = $('#demo-err');
-  if (!dlg || typeof dlg.showModal !== 'function') return;   // very old browsers keep the email link
-  document.addEventListener('click', e => {
-    if (!e.target.closest('[data-demo]')) return;
-    e.preventDefault();
-    dlg.dataset.mode = 'ask'; err.hidden = true;
-    const v = visitor.get();
-    if (v) { form.name.value ||= v.name || ''; form.email.value ||= v.email || ''; form.firm.value ||= v.firm || ''; }
-    dlg.showModal();
-  });
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const f = Object.fromEntries(['name', 'email', 'firm', 'city', 'people', 'when'].map(k => [k, (form[k].value || '').trim()]));
-    const problem = !f.name ? 'Enter your name.'
-      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email) ? 'Enter a valid email address.'
-      : !f.firm ? 'Enter your studio name.' : '';
-    if (problem) { err.textContent = problem; err.hidden = false; return; }
-    // same sheet as the download form: the "Solo / Firm" column reads Demo, and the details go in the Page column
-    const page = ['Demo request', f.city, f.people && `${f.people} people`, f.when].filter(Boolean).join(' · ');
-    if (SITE.leadsUrl) fetch(SITE.leadsUrl, { method: 'POST', mode: 'no-cors', keepalive: true, body: new URLSearchParams({ name: f.name, email: f.email, type: 'Demo', firm: f.firm, page }) }).catch(() => {});
-    dlg.dataset.mode = 'done';
-  });
-  $('#demo-close').addEventListener('click', () => dlg.close());
-  $('#demo-ok').addEventListener('click', () => dlg.close());
-  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
-})();
 $$('[data-contact], [data-contact-text]').forEach(a => { a.href = mail('Studio Ledger', ''); });
 $$('[data-contact-text]').forEach(a => { a.textContent = SITE.email; });
 $$('[data-version]').forEach(el => { el.textContent = SITE.version; });

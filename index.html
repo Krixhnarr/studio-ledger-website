@@ -38,7 +38,6 @@
       <a href="#pricing">Pricing</a>
       <a href="#setup">Set up</a>
       <a href="#faq">FAQ</a>
-      <a class="links-demo" data-demo href="#">Book a demo</a>
     </nav>
     <div class="nav-cta">
       <a class="btn sm" data-download href="#start">Download</a>
@@ -80,7 +79,6 @@
       <p class="hero-lede">Studio Ledger is practice software for architecture studios. Projects, drawing reviews, the register, attendance, timesheets and fees sit in one place, and every sheet is checked against your own standards.</p>
       <div class="hero-cta">
         <a class="btn lg" data-download href="#start">Start your 30-day free trial <span aria-hidden="true">→</span></a>
-        <a class="textlink" data-demo href="#">or book a demo with us</a>
       </div>
     </div>
   </div>
@@ -444,7 +442,7 @@
       </div>
     </div>
     <div class="plans" id="plans"></div>
-    <div class="ent"><div><b>Enterprise</b><span class="fine">40+ people, multiple offices, custom terms and onboarding.</span></div><a href="#" data-demo class="btn ghost sm">Talk to us</a></div>
+    <div class="ent"><div><b>Enterprise</b><span class="fine">40+ people, multiple offices, custom terms and onboarding.</span></div><a href="#" data-contact class="btn ghost sm">Talk to us</a></div>
     <p class="fine price-note">Prices in rupees, plus GST. Studios outside India pay in US dollars with no GST. Every new studio starts with a 30-day trial, no card needed; after that a principal pays in the app by UPI, card or netbanking. AI reviews run on your studio’s own Anthropic key. Launch and referral offers are under <a class="link" href="#offers">Offers</a>.</p>
   </div>
 </section>
@@ -588,7 +586,6 @@
     <p class="fine su-more"><a href="#setup" class="link">Full install &amp; setup guide</a></p>
     <div class="final-cta">
       <a class="btn lg" data-download href="#">Download for Windows <span aria-hidden="true">↓</span></a>
-      <a class="textlink" data-demo href="#">or book a demo with us</a>
     </div>
     <p class="fine">Version <span data-version></span> · Windows 10 &amp; 11 · 64-bit</p>
     <p class="fine phone-line" style="max-width:420px;margin:14px auto 0;text-align:center">Principal or senior architect? <a class="link" data-app href="https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Android.apk">Get the Android app</a> for your phone. A principal switches it on for you first (<a class="link" href="#setup">how it works</a>).</p>
@@ -652,33 +649,6 @@
   </div>
 </dialog>
 
-<dialog class="get-dlg" id="demo-dlg" aria-labelledby="demo-title" data-mode="ask">
-  <div class="get-in">
-    <div class="get-h">
-      <span>Book a demo</span>
-      <button type="button" class="x" id="demo-close" aria-label="Close">×</button>
-    </div>
-    <h2 id="demo-title">See it with your own studio in mind</h2>
-    <form id="demo-form" class="get-form" novalidate>
-      <p class="get-sub">A video call where we walk through Studio Ledger and answer your questions. Tell us when suits you and we’ll email you to fix the time.</p>
-      <label>Your name<input name="name" autocomplete="name" maxlength="80" required></label>
-      <label>Email<input name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required></label>
-      <label>Studio name<input name="firm" autocomplete="organization" maxlength="80" required></label>
-      <div class="get-two">
-        <label>City<input name="city" autocomplete="address-level2" maxlength="40"></label>
-        <label>People in the studio<input name="people" type="number" inputmode="numeric" min="1" max="500"></label>
-      </div>
-      <label>Days and times that suit you<input name="when" maxlength="80" placeholder="Weekdays after 4 pm"></label>
-      <p class="get-err" id="demo-err" role="alert" hidden></p>
-      <button type="submit" class="btn">Request a demo</button>
-      <p class="fine get-fine">Prefer email? Write to <a class="link" data-contact-text href="#"></a>.</p>
-    </form>
-    <div class="get-done">
-      <p role="status">Thank you. Your request is with us, and we’ll email you to fix a time.</p>
-      <div class="get-done-cta"><button type="button" class="btn ghost" id="demo-ok">Close</button></div>
-    </div>
-  </div>
-</dialog>
 
 <script src="main.js"></script>
 </body>
