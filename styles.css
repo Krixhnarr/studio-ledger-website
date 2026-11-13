@@ -1285,3 +1285,109 @@ html:has(.launch-bar:not([hidden])) .hero-in { min-height: calc(100svh - 104px);
 .aw-table.perf th:nth-child(1) { width: 16%; } .aw-table.perf th:nth-child(2) { width: 6.5%; } .aw-table.perf th:nth-child(3) { width: 9%; }
 .aw-table.perf th:nth-child(4) { width: 6.5%; } .aw-table.perf th:nth-child(5) { width: 7.5%; } .aw-table.perf th:nth-child(6) { width: 7.5%; }
 .aw-table.perf th:nth-child(7) { width: 9%; } .aw-table.perf th:nth-child(8) { width: 14%; } .aw-table.perf th:nth-child(9) { width: 6%; } .aw-table.perf th:nth-child(10) { width: 18%; }
+
+/* =====================================================================
+   Two quiet colours and one loud one.
+   Paper and ink carry the page. The reviewer's red pen is the only accent, and it is
+   kept for three things: the button you press, the pointer on the hero drawing, and
+   the marks the review leaves on a sheet. Everything that used to be terracotta
+   outside the product screens is ink or stone now. The screens keep the app's own colour.
+   ===================================================================== */
+:root {
+  --accent: #d9301a; --accent-hi: #b9230f;
+  --copper: #4a453d; --copper-hi: #1d1b18; --copper-soft: #cfc6b8; --copper-wash: rgb(29 27 24 / .05);
+  --cyan: #5f5950; --bp: rgb(29 27 24 / .3);
+  --mono: var(--sans);
+}
+.nav, .chs, .shot, .tour-dlg { --copper: #cfc9bd; --copper-hi: #f1ede5; --copper-soft: #4a4d4b; --copper-wash: rgb(241 237 229 / .07); --cyan: #b3ada2; }
+.aw, #app, .ai-panel, .jn .mock { --copper: #d47549; --copper-hi: #e0875c; --copper-soft: #7e4b34; --copper-wash: rgb(212 117 73 / .13); --cyan: #93b6b0; }
+.mono, .aw, #app, .mock, .tb-price b, .cd-big b, .lb-count { font-variant-numeric: tabular-nums; }
+
+/* the accent: the action */
+.btn { background: var(--accent); border-color: var(--accent); color: #fff; font-size: 14px; letter-spacing: 0; }
+.btn:hover { background: var(--accent-hi); border-color: var(--accent-hi); }
+.btn:active { transform: translateY(1px) scale(.985); }
+.btn.sm { font-size: 13px; }
+.btn.lg { font-size: 15px; padding: 16px 24px; }
+.btn.ghost, .hero .btn.ghost { background: transparent; color: var(--fg); border-color: var(--border); }
+.btn.ghost:hover { background: var(--card); border-color: var(--muted); }
+:focus-visible, .hero :focus-visible { outline-color: var(--accent); }
+.skip { background: var(--accent); }
+.textlink { align-self: center; font-size: 15px; color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; padding: 10px 4px; transition: color var(--t-micro); }
+.textlink:hover { color: var(--accent); }
+/* the accent: the pointer on the drawing */
+.plate-cursor::after { left: -5px; top: -5px; width: 10px; height: 10px; border: 0; background: var(--accent); }
+.plate-eras button::after { height: 2px; background: var(--accent); }
+/* the accent: the marks a review leaves on the sheet */
+.bbx rect { fill: rgb(217 48 26 / .06); stroke: var(--accent); stroke-width: 1.8; }
+.bbx text { fill: var(--accent); font-size: 9.5px; font-weight: 600; }
+.cloud-note path { stroke: var(--accent); }
+.cloud-note b { color: var(--accent); }
+.sheet-bar .live.warn { color: var(--accent); }
+
+/* ---- ornaments removed: grid paper, fades, glows, resting shadows, hairlines between sections ---- */
+body { background-image: none; }
+.hero { background: var(--paper); }
+.sys, .final, .launch-bar, .offer.feature, .tb.pop { background-image: none; }
+.offer.feature { border: 0; background: var(--raised); }
+.offer { border: 0; }
+.tb.pop { background: var(--raised); box-shadow: none; }
+.app, #app, .ai-panel, .jn .mock, .shot, .ch-frame, .ai-sheet { box-shadow: none; }
+.sec, .final, .foot { border-top: 0; }
+.nav::after, .sweep, .ch-shot figcaption::before, .plate-hint::before { display: none; }
+.sys-core { box-shadow: none; border-color: var(--fg); }
+.foot nav a, .link, .sys-info a { background: none; padding-bottom: 0; }
+.link, .foot nav a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---- labels read as words: sentence case, a size you can read, the text face ---- */
+.eyebrow, .plate-hint, .ch-next, .ch-shot figcaption, .su-h, .net-cap, .sheet-bar, .ai-meta b, .ai-meta span, .vs-head span, .sys-links-h, .cd-big small, .tag, .foot .fine {
+  text-transform: none !important; letter-spacing: 0 !important; font-family: var(--sans) !important;
+}
+.eyebrow, .plate-hint, .ch-next, .ch-shot figcaption, .su-h, .net-cap, .sheet-bar, .ai-meta span, .vs-head span, .sys-links-h, .cd-big small, .foot .fine { font-size: 13px !important; line-height: 1.4 !important; }
+.tag { font-size: 13px; padding: 6px 10px; background: var(--fg); color: var(--bg); }
+.ch-next { font-size: 15px !important; color: var(--fg); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.sec h2 .dim, .final h2 .dim { color: inherit; }
+.sys-count, .offer-when, .gift-who { font-size: 14px; color: var(--muted); }
+.sys-core b { letter-spacing: .04em; }
+.sys-node { text-transform: none !important; letter-spacing: 0 !important; font-size: 13.5px !important; }
+#journey { overflow-x: clip; }
+.jn-token { letter-spacing: 0; font-size: 12px; }
+.tb li b { font-size: 13px; color: var(--fg); }
+.tb li.no b { color: var(--dim); opacity: 1; }
+.data-fine { margin-top: 28px; max-width: 60em; }
+.sub, .offer > p:not(.fine), .faq details p { max-width: 62ch; }
+.final h2 { margin-top: 0; }
+
+/* ---- hero: the headline gets the width it needs ---- */
+.hero h1 { font-size: clamp(38px, 3.5vw, 54px); max-width: 13.5em; margin-top: 0; }
+.hero-in { grid-template-columns: minmax(440px, .95fr) minmax(0, 1.35fr); }
+.hero-cta { align-items: center; gap: 12px 22px; }
+@media (max-width: 1080px) { .hero-in { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .hero h1 { font-size: clamp(30px, 8.4vw, 38px); } .hero-cta .textlink { flex: 1 1 100%; text-align: center; } }
+
+/* ---- navigation: five links and one button; the demo link joins the list ---- */
+.links-demo { color: var(--fg) !important; }
+.final-cta { align-items: center; gap: 12px 22px; }
+@media (prefers-reduced-motion: reduce) { .btn:active { transform: none; } }
+
+/* ---- demo request: the same dialog as the download form ---- */
+.get-form { display: grid; gap: 14px; }
+.get-form label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); min-width: 0; }
+.get-form input { font: 16px/1.3 var(--sans); color: var(--fg); background: var(--bg); border: 1px solid var(--border); border-radius: var(--r); padding: 11px 12px; width: 100%; min-width: 0; }
+.get-form input:focus { outline: none; border-color: var(--fg); box-shadow: 0 0 0 3px var(--copper-wash); }
+.get-form .btn { width: 100%; padding-block: 14px; margin-top: 4px; }
+.get-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#demo-dlg { width: min(480px, calc(100vw - 32px)); overflow-y: auto; }
+#demo-dlg h2 { margin-bottom: 4px; }
+#demo-dlg .get-done { display: none; }
+#demo-dlg[data-mode="done"] #demo-form { display: none; }
+#demo-dlg[data-mode="done"] .get-done { display: block; }
+.get-h > span { font-size: 13px; color: var(--muted); }
+.get-fine { font-size: 13px; }
+.get-dlg::backdrop { backdrop-filter: none; background: rgb(20 16 12 / .6); }
+.about { display: grid; gap: 18px; max-width: 34em; }
+.about p:first-child { font: 400 clamp(22px, 2.2vw, 28px)/1.35 var(--display); }
+.about p + p { color: var(--muted); font-size: 17px; }
+.shot-frame { aspect-ratio: 16 / 9; }
+.shot-frame img { object-position: top; }
+@media (max-width: 480px) { .get-two { grid-template-columns: 1fr; } }

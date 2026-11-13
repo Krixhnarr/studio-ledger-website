@@ -7,7 +7,7 @@ const SITE = {
   // Launch: 12 am India time on 15 November 2026. Before this, downloads are closed and the
   // buttons collect a launch list instead. Nothing needs changing on the day; the page opens itself.
   launchAt: Date.parse('2026-11-15T00:00:00+05:30'),
-  version: '1.9.6',
+  version: '3.0.0',
   email: 'thepincstudio@gmail.com',
 };
 
@@ -49,7 +49,35 @@ const mail = (subject, body) => `mailto:${SITE.email}?subject=${encodeURICompone
 const demoLink = mail('Studio Ledger demo request',
   'Hi,\n\nWe would like a demo of Studio Ledger.\n\nStudio name:\nCity:\nNumber of people:\nPreferred days and times:\n\nThanks');
 $$('[data-demo]').forEach(a => { a.href = demoLink; });
-$$('[data-contact]').forEach(a => { a.href = mail('Studio Ledger', ''); });
+(() => {
+  const dlg = $('#demo-dlg'), form = $('#demo-form'), err = $('#demo-err');
+  if (!dlg || typeof dlg.showModal !== 'function') return;   // very old browsers keep the email link
+  document.addEventListener('click', e => {
+    if (!e.target.closest('[data-demo]')) return;
+    e.preventDefault();
+    dlg.dataset.mode = 'ask'; err.hidden = true;
+    const v = visitor.get();
+    if (v) { form.name.value ||= v.name || ''; form.email.value ||= v.email || ''; form.firm.value ||= v.firm || ''; }
+    dlg.showModal();
+  });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const f = Object.fromEntries(['name', 'email', 'firm', 'city', 'people', 'when'].map(k => [k, (form[k].value || '').trim()]));
+    const problem = !f.name ? 'Enter your name.'
+      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email) ? 'Enter a valid email address.'
+      : !f.firm ? 'Enter your studio name.' : '';
+    if (problem) { err.textContent = problem; err.hidden = false; return; }
+    // same sheet as the download form: the "Solo / Firm" column reads Demo, and the details go in the Page column
+    const page = ['Demo request', f.city, f.people && `${f.people} people`, f.when].filter(Boolean).join(' · ');
+    if (SITE.leadsUrl) fetch(SITE.leadsUrl, { method: 'POST', mode: 'no-cors', keepalive: true, body: new URLSearchParams({ name: f.name, email: f.email, type: 'Demo', firm: f.firm, page }) }).catch(() => {});
+    dlg.dataset.mode = 'done';
+  });
+  $('#demo-close').addEventListener('click', () => dlg.close());
+  $('#demo-ok').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+})();
+$$('[data-contact], [data-contact-text]').forEach(a => { a.href = mail('Studio Ledger', ''); });
+$$('[data-contact-text]').forEach(a => { a.textContent = SITE.email; });
 $$('[data-version]').forEach(el => { el.textContent = SITE.version; });
 
 // ---- Download: ask who they are once, then start the installer ----
@@ -305,48 +333,6 @@ onScroll();
   onView(wave, () => setTimeout(play, 300), 0.6);
 })();
 
-// ---- Workspace: the dashboard loads like an application, then hands A-104 to AI review ----
-(() => {
-  const app = $('#app'), overlay = $('#app-review'), row = $('#row-a104');
-  const items = $$('.ar-list li', overlay), boxes = $$('.ar-plan .bb', overlay), score = $('#ar-score');
-  const stats = $$('.app-stats [data-count]', app);
-  $$('.app-stats .stat', app).forEach((s, i) => s.style.setProperty('--i', i));
-  $$('.reg tbody tr', app).forEach((r, i) => r.style.setProperty('--i', i));
-  $$('.reg .chip', app).forEach((c, i) => c.style.setProperty('--i', i));
-  $$('.app-prog li i', app).forEach((b, i) => b.style.setProperty('--i', i));
-  const seen = watch(app);
-  if (!calm) stats.forEach(s => { s.textContent = '0'; });
-  onView(app, async () => {
-    app.classList.add('in');
-    stats.forEach((s, i) => setTimeout(() => countUp(s, +s.dataset.count, 1000), calm ? 0 : 150 + i * 70));
-    setTimeout(() => app.classList.add('rows-in'), calm ? 0 : 1150);
-    if (calm) return;
-    await sleep(3000);
-    // warn items map to boxes: Checked by → title block, Door tags → door, Stair → stair
-    const boxFor = { 'Checked by': 1, 'Door tags': 2, 'Stair annotation': 0 };
-    for (;;) {
-      while (!seen.visible || document.hidden) await sleep(500);
-      row.classList.add('focus');
-      await sleep(1700);
-      items.forEach(li => li.classList.remove('on')); boxes.forEach(b => b.classList.remove('show'));
-      score.textContent = '0';
-      overlay.classList.add('open');
-      await sleep(1100);
-      overlay.classList.remove('scanning'); void overlay.offsetWidth; overlay.classList.add('scanning');
-      for (const li of items) {
-        await sleep(450);
-        li.classList.add('on');
-        if (li.dataset.r === 'warn') boxes[boxFor[li.textContent.trim()]]?.classList.add('show');
-      }
-      await countUp(score, 87, 1500);
-      await sleep(7000);
-      overlay.classList.remove('open', 'scanning');
-      row.classList.remove('focus');
-      await sleep(5000);
-    }
-  }, 0.3);
-})();
-
 // ---- System diagram: built connector by connector, then each node can be explored ----
 (() => {
   const NODES = [
@@ -373,7 +359,7 @@ onScroll();
   NODES.forEach(([id, label], i) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'sys-node' + (id === 'ai' ? ' is-ai' : '');
-    b.innerHTML = `<span>SL-${String(i + 1).padStart(2, '0')}</span>${label}`;
+    b.textContent = label;
     const pick = () => { if (!built) return; auto = false; select(id); };
     b.addEventListener('mouseenter', pick); b.addEventListener('focus', pick); b.addEventListener('click', pick);
     sys.insertBefore(b, core);
@@ -402,7 +388,7 @@ onScroll();
     Object.entries(buttons).forEach(([k, b]) => { b.classList.toggle('on', k === id); b.classList.toggle('near', near.includes(k)); });
     if (quiet && $('#sys-title').textContent === name[id] && $('#sys-text').textContent) return;
     const i = NODES.findIndex(n => n[0] === id);
-    $('#sys-code').textContent = `SL-${String(i + 1).padStart(2, '0')} · ${near.length} connections`;
+    $('#sys-code').textContent = `Connected to ${near.length} other parts`;
     $('#sys-title').textContent = name[id];
     $('#sys-text').textContent = NODES[i][2];
     $('#sys-chips').innerHTML = near.map(n => `<span>${name[n]}</span>`).join('');
@@ -587,17 +573,20 @@ onScroll();
 // ---- Product screens ----
 (() => {
   const SHOTS = [
-    ['overview', 'Dashboard', 'Who is in today, what needs your attention, active projects and upcoming deadlines, on one screen.'],
+    ['overview', 'Overview', 'Who is in today, what is waiting for your review, overdue tasks and the first-pass rate, on the first screen you open.'],
+    ['attendance', 'Attendance', 'Check in, log a site visit or work remotely, and see the whole studio’s month in one register.'],
+    ['leave', 'Leave', 'Requests with the handover note and who else is away, approved or declined in one click, with each person’s balance.'],
+    ['messages', 'Messages', 'A group for every project, sub-groups, personal chats and photos, so studio work stays in the studio.'],
+    ['contacts', 'Contacts', 'The clients, consultants and contractors you work with, by project and role.'],
     ['register', 'Drawing register', 'Every sheet per project with its revision and last issue, and transmittals that export the files with a transmittal sheet.'],
     ['standards', 'Standards', 'Core principles and drawing rules for title blocks, sheet layout, line work, dimensions and naming. Nine are checked automatically.'],
-    ['projects', 'Projects', 'Every project with its phase, lead, team, progress and approved drawings.'],
-    ['team', 'Team', 'Roles, who is in today, open tasks, progress and each person’s first-pass rate.'],
-    ['finances', 'Finance', 'Fee stages, what is ready to invoice, what is overdue and what each project really costs. Principal only.'],
+    ['finances', 'Finance', 'Fee stages, what is ready to invoice, what is overdue and what each project really costs.'],
     ['review', 'AI review', 'The check report beside the drawing board: each standard marked, a score, and the sheet waiting on its reviewer.'],
   ];
+
   const tabs = $('#tabs'), img = $('#shot-img'), wipe = $('.shot-wipe'), fig = $('.shot');
   tabs.innerHTML = SHOTS.map(([id, name], i) =>
-    `<button role="tab" id="tab-${id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-i="${i}"><span>${String(i + 1).padStart(2, '0')}</span>${name}</button>`).join('');
+    `<button role="tab" id="tab-${id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-i="${i}">${name}</button>`).join('');
   img.setAttribute('role', 'tabpanel');
   function show(i, focus) {
     const [id, name, text] = SHOTS[i];
@@ -612,7 +601,6 @@ onScroll();
     };
     next.src = `assets/app/${id}.jpg`;
     img.setAttribute('aria-labelledby', `tab-${id}`);
-    $('#shot-code').textContent = `A-${String(i + 1).padStart(2, '0')}`;
     $('#shot-title').textContent = name;
     $('#shot-cap').innerHTML = `<b>${name}.</b> ${text}`;
   }
@@ -629,12 +617,10 @@ onScroll();
 // ---- Video tour dialog ----
 (() => {
   const CHAPTERS = [
-    ['0:08', 'Overview'], ['0:24', 'Projects'], ['0:42', 'Tasks and notifications'], ['1:14', 'Drawing checks'],
-    ['1:59', 'Review and approval'], ['2:29', 'Drawing register'], ['2:36', 'Studio standards'], ['2:44', 'Schedule'],
-    ['2:52', 'Leave'], ['3:15', 'Timesheets'], ['3:38', 'Attendance'], ['3:46', 'Team'], ['3:54', 'Mentoring'],
-    ['4:04', 'Performance'], ['4:12', 'Meetings'], ['4:22', 'Reflections'], ['4:43', 'Happiness'], ['5:07', 'Finances'],
-    ['5:18', 'Reports'], ['5:30', 'Instagram'], ['5:41', 'Claude'], ['5:52', 'Plans and settings'], ['6:03', 'The companion'],
+    ['0:00', 'What this video covers'], ['0:29', 'Overview'], ['1:30', 'Attendance'], ['2:50', 'Messages'],
+    ['4:49', 'Contacts'], ['5:32', 'Leave'], ['6:46', 'What comes next'],
   ];
+
   const secs = t => { const [m, s] = t.split(':'); return +m * 60 + +s; };
   const dlg = $('#tour-dlg'), video = $('#tour-video'), list = $('#chapters');
   list.innerHTML = CHAPTERS.map(([t, n]) => `<li><button type="button" data-t="${secs(t)}"><span>${t}</span>${n}</button></li>`).join('');
@@ -645,7 +631,7 @@ onScroll();
   });
   $('#open-tour').addEventListener('click', () => {
     if (typeof dlg.showModal === 'function') { dlg.showModal(); video.play().catch(() => {}); }
-    else window.open('assets/demo.mp4', '_blank');
+    else window.open('assets/tour.mp4', '_blank');
   });
   $('#close-tour').addEventListener('click', () => dlg.close());
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
@@ -667,9 +653,10 @@ onScroll();
     ['Custom studio standards', [Y, Y, Y, Y]],
     ['Projects', ['1', 'Unlimited', 'Unlimited', 'Unlimited']],
     ['Team, attendance & leave', [N, Y, Y, Y]],
-    ['Finance & profitability', [N, N, Y, Y]],
-    ['Advanced reports', [N, N, Y, Y]],
-    ['AI studio intelligence', [N, N, N, Y]],
+    ['Messages & meetings', [N, Y, Y, Y]],
+    ['Finance & performance', [N, N, Y, Y]],
+    ['Monthly reports', [N, N, Y, Y]],
+    ['Ask Claude about the studio', [N, N, N, Y]],
   ];
   let yearly = false;
   function render() {
@@ -679,14 +666,12 @@ onScroll();
         : yearly ? `Billed yearly at ${inr(p.y)} · ${p.people} people included · ${inr(p.extraY)}/yr per extra person`
         : `${p.people} people included · ${inr(p.extra)}/mo per extra person`;
       return `<article class="tb ${p.pop ? 'pop' : ''}">
-        ${p.pop ? '<span class="tb-badge">Most popular</span>' : ''}
-        <span class="tb-code">${p.code}</span>
         <h3>${p.name}</h3><p class="tb-who">${p.who}</p>
         <div class="tb-price"><b>${inr(price)}</b><small>/ month</small><p>${sub}</p></div>
         <a class="btn ${p.pop ? '' : 'ghost'}" href="#start" data-download>${p.m ? 'Start 30-day trial' : 'Download free'}</a>
         <ul>${ROWS.map(([label, v]) => {
           const x = v[i];
-          return `<li class="${x === N ? 'no' : ''}"><span>${label}</span><b>${x === Y ? '✓' : x === N ? '—' : x}</b>${x === N ? '<span class="sr">Not included</span>' : x === Y ? '<span class="sr">Included</span>' : ''}</li>`;
+          return `<li class="${x === N ? 'no' : ''}"><span>${label}</span><b>${x === Y ? 'Yes' : x === N ? 'No' : x}</b></li>`;
         }).join('')}</ul>
       </article>`;
     }).join('');
@@ -738,7 +723,7 @@ function drawBorder(el, threshold = 0.25) {
   el.insertAdjacentHTML('beforeend', '<svg class="bp-line" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="4" pathLength="1"/></svg>');
   onView(el, () => el.classList.add('drawn'), threshold);
 }
-['#app', '.ai-sheet', '.ai-panel', '#sys', '#net'].forEach(s => drawBorder($(s)));
+['.ai-sheet', '.ai-panel', '#sys', '#net'].forEach(s => drawBorder($(s)));
 
 // Built for architecture: scattered generic tools settle into one aligned system
 (() => {
