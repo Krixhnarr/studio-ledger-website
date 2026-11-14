@@ -286,6 +286,7 @@ onScroll();
 
   const secs = t => { const [m, s] = t.split(':'); return +m * 60 + +s; };
   const dlg = $('#tour-dlg'), video = $('#tour-video'), list = $('#chapters');
+  if (!dlg) return;
   list.innerHTML = CHAPTERS.map(([t, n]) => `<li><button type="button" data-t="${secs(t)}"><span>${t}</span>${n}</button></li>`).join('');
   list.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; video.currentTime = +b.dataset.t; video.play().catch(() => {}); });
   video.addEventListener('timeupdate', () => {
@@ -303,6 +304,7 @@ onScroll();
 
 // ---- Referral countdown (section hides itself once the offer has ended) ----
 (() => {
+  if (!$('#refer')) return;
   const left = Math.ceil((new Date('2026-12-31T23:59:59') - new Date()) / 864e5);
   if (left < 0) { $('#refer').hidden = true; $$('a[href="#refer"]').forEach(a => a.remove()); return; }
   $('#offer-left').textContent = `Ends 31 Dec 2026 · ${left} day${left === 1 ? '' : 's'} left`;
@@ -317,6 +319,213 @@ onScroll();
   if (now < SITE.launchAt) { when.textContent = 'Opens with the launch · until 31 January 2027'; return; }
   const left = Math.ceil((ends - now) / 864e5);
   when.textContent = `Open until 31 Jan 2027 · ${left} day${left === 1 ? '' : 's'} left`;
+})();
+
+// ---- Restored from the previous site: story chapters, system diagram, journey, built-for-architecture, network ----
+// ---- Story: each chapter plays once as it arrives (number, heading, problems crossed out, answer, screen, note) ----
+// On wide screens the screen drifts a few pixels against the scroll; only chapters on screen are updated.
+// Each chapter screen is a 1600-wide layout scaled to its frame (--k = frame width / 1600).
+(() => {
+  const pics = $$('.ch-pic');
+  const fit = p => p.style.setProperty('--k', (p.clientWidth / 1600).toFixed(4));
+  pics.forEach(fit);
+  if ('ResizeObserver' in window) { const ro = new ResizeObserver(es => es.forEach(e => fit(e.target))); pics.forEach(p => ro.observe(p)); }
+  else addEventListener('resize', () => pics.forEach(fit));
+})();
+(() => {
+  const chs = $$('.ch');
+  if (calm) { chs.forEach(ch => ch.classList.add('in')); return; }
+  chs.forEach(ch => onView(ch, () => ch.classList.add('in'), 0.22));
+  const wide = matchMedia('(min-width: 861px)'), live = new Set();
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? live.add(e.target) : live.delete(e.target)));
+  chs.forEach(ch => io.observe(ch));
+  let ticking = false;
+  const drift = () => {
+    ticking = false;
+    live.forEach(ch => {
+      const r = ch.getBoundingClientRect(), p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight + r.height);
+      $('.ch-shot', ch).style.transform = wide.matches ? `translate3d(0, ${(p * 60).toFixed(1)}px, 0)` : '';
+    });
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(drift); } }, { passive: true });
+})();
+
+// ---- System diagram: built connector by connector, then each node can be explored ----
+(() => {
+  const NODES = [
+    ['projects', 'Projects', 'Phase from Concept to Completed, lead, team, progress, approved drawings and fee stages for every project.'],
+    ['drawings', 'Drawings', 'Every sheet from submission through senior and principal review to Approved, with revisions, redlines and history.'],
+    ['ai', 'AI Review', 'Reads each drawing against your standards, marks where the issues are and scores the sheet before a person opens it.'],
+    ['standards', 'Standards', 'Your studio’s drawing rules and principles, written once and checked on every sheet.'],
+    ['tasks', 'Tasks', 'Work assigned with due dates, priority and progress, filed under its project.'],
+    ['people', 'People', 'Team roles, attendance, leave, mentoring and a weekly check-in that shows who is stretched.'],
+    ['timesheets', 'Timesheets', 'Weekly hours per project with Friday reminders, turned into real project costs.'],
+    ['finance', 'Finance', 'Fee stages, ready-to-invoice reminders when a phase finishes, overdue payments and profitability.'],
+    ['reports', 'Reports', 'Weekly and monthly reports on drawings, people, hours and fees, with an AI summary, saved as PDF.'],
+  ];
+  const LINKS = [
+    ['projects', 'drawings'], ['projects', 'tasks'], ['projects', 'finance'], ['projects', 'reports'], ['projects', 'people'],
+    ['drawings', 'ai'], ['drawings', 'standards'], ['drawings', 'tasks'], ['ai', 'standards'], ['ai', 'people'], ['ai', 'reports'],
+    ['tasks', 'people'], ['people', 'timesheets'], ['timesheets', 'finance'], ['timesheets', 'projects'], ['finance', 'reports'],
+  ];
+  if (!$('#sys')) return;
+  const sys = $('#sys'), svg = $('#sys-lines'), core = $('.sys-core', sys);
+  const name = Object.fromEntries(NODES.map(n => [n[0], n[1]]));
+  const nbrs = id => LINKS.filter(l => l.includes(id)).map(l => l[0] === id ? l[1] : l[0]);
+  let pos = {}, buttons = {}, current = 'drawings', auto = true, built = false;
+
+  NODES.forEach(([id, label], i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'sys-node' + (id === 'ai' ? ' is-ai' : '');
+    b.textContent = label;
+    const pick = () => { if (!built) return; auto = false; select(id); };
+    b.addEventListener('mouseenter', pick); b.addEventListener('focus', pick); b.addEventListener('click', pick);
+    sys.insertBefore(b, core);
+    buttons[id] = b;
+  });
+
+  function layout() {
+    const narrow = sys.clientWidth < 560;
+    const rx = narrow ? 300 : 395, ry = narrow ? 250 : 228;
+    NODES.forEach(([id], i) => {
+      const a = -Math.PI / 2 + i * (2 * Math.PI / NODES.length);
+      pos[id] = [500 + rx * Math.cos(a), 310 + ry * Math.sin(a)];
+      buttons[id].style.left = (pos[id][0] / 10) + '%';
+      buttons[id].style.top = (pos[id][1] / 6.2) + '%';
+    });
+    svg.innerHTML = `<ellipse class="ring" cx="500" cy="310" rx="${rx}" ry="${ry}"/>`
+      + NODES.map(([id]) => `<line class="core" pathLength="1" data-a="core" data-b="${id}" x1="500" y1="310" x2="${pos[id][0]}" y2="${pos[id][1]}"/>`).join('')
+      + LINKS.map(([a, b]) => `<line pathLength="1" data-a="${a}" data-b="${b}" x1="${pos[a][0]}" y1="${pos[a][1]}" x2="${pos[b][0]}" y2="${pos[b][1]}"/>`).join('');
+    if (built) select(current, true);
+  }
+  function select(id, quiet) {
+    current = id;
+    const near = nbrs(id);
+    sys.classList.add('focus');
+    $$('line', svg).forEach(l => l.classList.toggle('hot', l.dataset.a === id || l.dataset.b === id));
+    Object.entries(buttons).forEach(([k, b]) => { b.classList.toggle('on', k === id); b.classList.toggle('near', near.includes(k)); });
+    if (quiet && $('#sys-title').textContent === name[id] && $('#sys-text').textContent) return;
+    const i = NODES.findIndex(n => n[0] === id);
+    $('#sys-code').textContent = `Connected to ${near.length} other parts`;
+    $('#sys-title').textContent = name[id];
+    $('#sys-text').textContent = NODES[i][2];
+    $('#sys-chips').innerHTML = near.map(n => `<span>${name[n]}</span>`).join('');
+  }
+  function finish() { built = true; sys.classList.remove('pre'); sys.classList.add('built'); select(current); }
+
+  sys.classList.add('pre');
+  layout();
+  addEventListener('resize', layout);
+  if (calm || !('IntersectionObserver' in window)) finish();
+  else onView(sys, async () => {
+    // core → (connector, node) × 9 → cross links → the ring
+    sys.classList.remove('pre');
+    await sleep(350);
+    for (const [id] of NODES) {
+      $(`line.core[data-b="${id}"]`, svg)?.classList.add('drawn');
+      await sleep(150);
+      buttons[id].classList.add('lit');
+      await sleep(60);
+    }
+    await sleep(200);
+    $$('line:not(.core)', svg).forEach(l => l.classList.add('drawn'));
+    await sleep(700);
+    Object.values(buttons).forEach(b => b.classList.remove('lit'));
+    finish();
+  }, 0.35);
+
+  sys.addEventListener('mouseleave', () => { auto = true; });
+  const seen = watch(sys);
+  if (!calm) setInterval(() => {
+    if (!built || !auto || !seen.visible || document.hidden) return;
+    const i = NODES.findIndex(n => n[0] === current);
+    select(NODES[(i + 1) % NODES.length][0]);
+  }, 4200);
+})();
+
+// ---- How it works: one project travels through the six stages as you scroll ----
+(() => {
+  if (!$('#jn')) return;
+  const sec = $('#journey'), jn = $('#jn'), tabs = $$('.jn-steps button', jn), cards = $$('.jn-card', jn);
+  const fill = $('#jn-fill'), track = $('.jn-track', jn), strip = $('.jn-steps', jn);
+  const N = tabs.length;
+  const token = document.createElement('span');
+  token.className = 'jn-token'; token.setAttribute('aria-hidden', 'true'); token.textContent = 'CH-24 · A-104';
+  track.appendChild(token);
+  let cur = -1;
+  function show(i) {
+    if (i === cur) return;
+    cur = i;
+    tabs.forEach((t, j) => {
+      t.setAttribute('aria-selected', String(j === i)); t.tabIndex = j === i ? 0 : -1;
+      t.classList.toggle('done', j < i);
+    });
+    cards.forEach((c, j) => c.classList.toggle('on', j === i));
+    if (strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: tabs[i].parentElement.offsetLeft - 16, behavior: calm ? 'auto' : 'smooth' });
+  }
+  const span = () => sec.offsetHeight - (innerHeight - 64);
+  function update() {
+    const r = sec.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const p = Math.max(0, Math.min(1, (64 - r.top) / span()));
+    const at = Math.max(0, Math.min(1, (p * N - 0.5) / (N - 1)));   // stage centres sit at 0, 1/5 … 1 on the line
+    fill.style.width = `${(at * 100).toFixed(2)}%`;
+    token.style.left = `${(at * 100).toFixed(2)}%`;
+    show(Math.min(N - 1, Math.floor(p * N)));
+  }
+  const goTo = i => scrollTo({ top: sec.offsetTop - 64 + ((i + 0.5) / N) * span(), behavior: calm ? 'auto' : 'smooth' });
+  tabs.forEach((t, i) => t.addEventListener('click', () => goTo(i)));
+  strip.addEventListener('keydown', e => {
+    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (step) { e.preventDefault(); const i = Math.max(0, Math.min(N - 1, cur + step)); goTo(i); tabs[i].focus(); }
+  });
+  let ticking = false;
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; update(); }); } }, { passive: true });
+  addEventListener('resize', update);
+  show(0); update();
+})();
+
+// Blueprint draw: a drafting line traces the border of a few key panels as they arrive
+function drawBorder(el, threshold = 0.25) {
+  if (!el || calm) return;
+  el.classList.add('bp');
+  el.insertAdjacentHTML('beforeend', '<svg class="bp-line" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="4" pathLength="1"/></svg>');
+  onView(el, () => el.classList.add('drawn'), threshold);
+}
+['.rv-sheet', '.rv-panel', '#sys', '#net'].forEach(s => drawBorder($(s)));
+
+// Built for architecture: scattered generic tools settle into one aligned system
+(() => {
+  const vs = $('.vs');
+  if (!vs || calm) return;
+  const OFF = [[-14, -5, -2.5], [10, 4, 2], [-8, 6, 1.5], [14, -4, -2], [-10, 3, 2.5]];   // fixed, so it never looks random
+  $$('.vs-row:not(.vs-head)', vs).forEach((r, i) => {
+    const [x, y, a] = OFF[i % OFF.length];
+    r.style.setProperty('--i', i);
+    r.style.setProperty('--fx', `${x}px`); r.style.setProperty('--fy', `${y}px`); r.style.setProperty('--fr', `${a}deg`);
+  });
+  vs.classList.add('pre');
+  onView(vs, () => setTimeout(() => vs.classList.remove('pre'), 250), 0.35);
+})();
+
+// Data: the studio network draws itself; the internet indicator only pulses while on screen
+(() => {
+  const net = $('#net');
+  if (!net) return;
+  if (calm || !('IntersectionObserver' in window)) { net.classList.add('in'); return; }
+  onView(net, () => net.classList.add('in'), 0.3);
+  new IntersectionObserver(es => es.forEach(e => net.classList.toggle('vis', e.isIntersecting))).observe(net);
+})();
+
+// Showcase: a drafting wipe crosses each new screen as it arrives
+(() => {
+  const frame = $('#sc-frame'), img = $('#sc-img');
+  if (!frame || !img || calm) return;
+  const wipe = document.createElement('i');
+  wipe.className = 'shot-wipe'; wipe.setAttribute('aria-hidden', 'true');
+  frame.appendChild(wipe);
+  let first = true;
+  new MutationObserver(() => { if (first) { first = false; return; } wipe.classList.remove('go'); void wipe.offsetWidth; wipe.classList.add('go'); }).observe(img, { attributes: true, attributeFilter: ['src'] });
 })();
 
 // =====================================================================
@@ -560,70 +769,143 @@ onScroll();
 })();
 
 // ---- Pricing (same plans and prices as backend/src/billing/plans.ts) ----
+// Four ways to pay (1, 3, 6 or 12 months), rupees or dollars, and the early bird: the first ten studios to pay get 30% off
+// every payment for twelve months. The places left come from the server; if it can't be reached the offer is still shown.
 (() => {
+  if (!$('#plans')) return;
   const PLANS = [
     { name: 'Solo', who: 'For one architect', people: 1 },
-    { name: 'Studio', who: 'For studios of 2–5 people', people: 5, pop: true, inr: [2999, 29990, 499, 4990], usd: [35, 350, 6, 60] },
-    { name: 'Practice', who: 'For practices of 6–15 people', people: 15, inr: [6999, 69990, 449, 4490], usd: [79, 790, 5, 50] },
-    { name: 'Firm', who: 'For firms of 16–40 people', people: 30, inr: [12999, 129990, 399, 3990], usd: [149, 1490, 5, 50] },
+    { name: 'Studio', who: 'For studios of 2–5 people', people: 5, pop: true, inr: [2999, 29990, 499, 4990], usd: [69, 690, 12, 120], all: { inr: [1999, 19990], usd: [45, 450] } },
+    { name: 'Practice', who: 'For practices of 6–15 people', people: 15, inr: [6999, 69990, 449, 4490], usd: [149, 1490, 10, 100] },
+    { name: 'Firm', who: 'For firms of 16–40 people', people: 30, inr: [12999, 129990, 399, 3990], usd: [279, 2790, 9, 90] },
   ];
-  const Y = true, N = false;
-  // [label, values for Solo / Studio / Practice / Firm, footnote]; a function gets the extra-person price
+  const PERIOD = {
+    month: { months: 1, off: 0, per: '/mo', every: 'every month' },
+    quarter: { months: 3, off: 5, per: '/3 mo', every: 'every 3 months' },
+    half: { months: 6, off: 10, per: '/6 mo', every: 'every 6 months' },
+    year: { months: 12, off: 0, per: '/yr', every: 'every year' },
+  };
+  const EB = { places: 10, percent: 30, months: 12, left: null, open: true };
+  // what one payment costs for this period, from a [monthly, yearly] pair (3 and 6 months: monthly less 5% / 10%)
+  const forPeriod = (m, y, period) => period === 'year' ? y : period === 'month' ? m : Math.round(m * PERIOD[period].months * (100 - PERIOD[period].off) / 100);
+  const ebPrice = n => Math.round(n * (100 - EB.percent) / 100);
+
+  const Y = true, N = false, X = 'extra';
+  // [label, values for Solo / Studio / Practice / Firm, footnote]; a function gets the period's prices; [title] starts a group
   const ROWS = [
     ['People included', ['1', '5', '15', '30']],
-    ['Each extra person', f => ['—', f(1), f(2), f(3)]],
+    ['Each extra person', f => ['—', f.extra(1), f.extra(2), f.extra(3)]],
     ['Active projects', ['1', 'Unlimited', 'Unlimited', 'Unlimited']],
     ['AI drawing reviews', ['10 a month', 'No cap', 'No cap', 'No cap'], true],
-    ['Drawing register', [Y, Y, Y, Y]],
+    ['Every feature unlocked', f => ['—', f.all(), 'Included', 'Included']],
+    ['Drawings and standards'],
+    ['Drawing review and approvals', [Y, Y, Y, Y]],
+    ['Automatic sheet checks', [Y, Y, Y, Y]],
+    ['Drawing register and transmittals', [Y, Y, Y, Y]],
     ['Custom studio standards', [Y, Y, Y, Y]],
-    ['Team, attendance & leave', [N, Y, Y, Y]],
-    ['Messages & meetings', [N, Y, Y, Y]],
-    ['Mentoring, reflections & happiness', [N, Y, Y, Y]],
-    ['Finance & performance', [N, N, Y, Y]],
-    ['Monthly reports', [N, N, Y, Y]],
-    ['Instagram growth analysis', [N, N, Y, Y]],
-    ['Ask Claude about the studio', [N, N, N, Y]],
+    ['Project guidelines and office layouts', [Y, Y, Y, Y]],
+    ['Everyday work'],
+    ['Tasks, schedule and timesheets', [Y, Y, Y, Y]],
+    ['Weekly reports', [Y, Y, Y, Y]],
+    ['Studio companion: Andrew, help on every screen', [Y, Y, Y, Y]],
+    ['Android app for principals and seniors', [Y, Y, Y, Y]],
+    ['Google Drive for files from site', [Y, Y, Y, Y]],
+    ['People and the studio'],
+    ['Team, attendance and leave', [N, Y, Y, Y]],
+    ['Messages and meetings', [N, Y, Y, Y]],
+    ['Mentoring, reflections and happiness', [N, Y, Y, Y]],
+    ['Hiring and the studio mailbox', [N, Y, Y, Y]],
+    ['Office events', [N, Y, Y, Y]],
+    ['Office refunds', [N, Y, Y, Y]],
+    ['Feedback and complaints box', [N, Y, Y, Y]],
+    ['Running the business'],
+    ['Finances: fees, invoices and project costs', [N, X, Y, Y]],
+    ['Performance', [N, X, Y, Y]],
+    ['Monthly reports', [N, X, Y, Y]],
+    ['Instagram growth analysis', [N, X, Y, Y]],
+    ['Studio assistant: Ask Claude and weekly client updates', [N, X, Y, Y]],
   ];
+
   const fine = $('#pr-fine');
+  if (!fine) return;
   const FINE = {
     inr: 'Prices in rupees, plus GST. Studios outside India pay in US dollars with no GST.',
     usd: 'Prices in US dollars, with no GST, for studios outside India, paid by card. Studios in India pay in rupees plus GST.',
   };
-  const fineRest = fine.textContent.replace(FINE.inr, '');
-  let yearly = false, usd = false;
-  const money = n => usd ? '$' + n.toLocaleString('en-US') : inr(n);
+  const fineRest = fine ? fine.textContent.replace(FINE.inr, '') : '';
+  let period = 'month', usd = false;
+  const money = n => usd ? '$' + n.toLocaleString('en-US', { maximumFractionDigits: 2 }) : inr(n);
+
   function render() {
-    const per = yearly ? '/yr' : '/mo';
+    const P = PERIOD[period], gstNote = usd ? '' : ' + GST';
+    const ebOn = EB.open && EB.left !== 0;
     $('#plans').innerHTML = PLANS.map(p => {
       const t = usd ? p.usd : p.inr;
-      const price = !t ? 0 : yearly ? t[1] / 12 : t[0];
-      const shown = usd ? '$' + price.toLocaleString('en-US', { maximumFractionDigits: 2 }) : inr(price);
-      const sub = !t ? 'Free, for as long as you like · 1 person, 1 active project'
-        : yearly ? `Billed yearly at ${money(t[1])}${usd ? '' : ' + GST'} · ${p.people} people included`
-        : `Billed monthly${usd ? '' : ' + GST'} · ${p.people} people included`;
+      if (!t) return `<article class="pr-plan">
+        <h3>${p.name}</h3><p class="pr-who">${p.who}</p>
+        <p class="pr-price"><b>${money(0)}</b><small>/ month</small></p>
+        <p class="pr-sub">Free, for as long as you like · 1 person, 1 active project</p>
+        <a class="v2-btn v2-btn-ghost" href="#start" data-download>Download free</a>
+      </article>`;
+      const pay = forPeriod(t[0], t[1], period);
+      const perMonth = pay / P.months;
+      const sub = period === 'month' ? `Billed monthly${gstNote} · ${p.people} people included` : `Billed ${money(pay)} ${P.every}${gstNote} · ${p.people} people included`;
+      const ebLine = ebOn ? `<p class="pr-eb">Early bird: <b>${money(ebPrice(pay))}${P.per}</b>${period === 'month' ? '' : ` (${money(Math.round(ebPrice(pay) / P.months))}/mo)`}</p>` : '';
+      const allNote = p.all ? (() => { const a = usd ? p.all.usd : p.all.inr; return `<p class="pr-all">Unlock every feature for <b>${money(forPeriod(a[0], a[1], period))}${P.per}</b> more</p>`; })() : '<p class="pr-all pr-all-in">Every feature included</p>';
       return `<article class="pr-plan ${p.pop ? 'pop' : ''}">
         <h3>${p.name}</h3><p class="pr-who">${p.who}</p>
-        <p class="pr-price"><b>${shown}</b><small>/ month</small></p>
+        <p class="pr-price"><b>${money(Math.round(perMonth))}</b><small>/ month</small></p>
         <p class="pr-sub">${sub}</p>
-        <a class="v2-btn ${p.pop ? '' : 'v2-btn-ghost'}" href="#start" data-download>${t ? 'Start 30-day trial' : 'Download free'}</a>
+        ${ebLine}
+        ${allNote}
+        <a class="v2-btn ${p.pop ? '' : 'v2-btn-ghost'}" href="#start" data-download>Start 30-day trial</a>
       </article>`;
     }).join('');
-    const extra = i => { const t = usd ? PLANS[i].usd : PLANS[i].inr; return `${money(yearly ? t[3] : t[2])}${per}`; };
+
+    const f = {
+      extra: i => { const t = usd ? PLANS[i].usd : PLANS[i].inr; return `${money(forPeriod(t[2], t[3], period))}${P.per}`; },
+      all: () => { const a = usd ? PLANS[1].all.usd : PLANS[1].all.inr; return `Optional, +${money(forPeriod(a[0], a[1], period))}${P.per}`; },
+    };
     const tbl = $('#pr-table');
     $('thead', tbl).innerHTML = `<tr><th scope="col">Plan</th>${PLANS.map(p => `<th scope="col" class="${p.pop ? 'pop' : ''}">${p.name}</th>`).join('')}</tr>`;
     $('tbody', tbl).innerHTML = ROWS.map(([label, v, note]) => {
-      const vals = typeof v === 'function' ? v(extra) : v;
+      if (!v) return `<tr class="pr-group"><th scope="rowgroup" colspan="5">${label}</th></tr>`;
+      const vals = typeof v === 'function' ? v(f) : v;
       return `<tr><th scope="row">${label}${note ? '<sup><a href="#pricing-ai" aria-label="How AI reviews are counted">*</a></sup>' : ''}</th>${vals.map((x, i) =>
-        `<td class="${x === Y ? 'y' : x === N ? 'n' : ''}${PLANS[i].pop ? ' pop' : ''}">${x === Y ? 'Included' : x === N ? '—' : x}</td>`).join('')}</tr>`;
+        `<td class="${x === Y ? 'y' : x === N ? 'n' : x === X ? 'x' : ''}${PLANS[i].pop ? ' pop' : ''}">${x === Y ? 'Included' : x === N ? '—' : x === X ? 'With the extra' : x}</td>`).join('')}</tr>`;
     }).join('');
-    fine.textContent = (usd ? FINE.usd : FINE.inr) + fineRest;
+    if (fine) fine.textContent = (usd ? FINE.usd : FINE.inr) + fineRest;
+
+    const banner = $('#pr-eb');
+    if (banner) {
+      banner.hidden = !ebOn;
+      const left = $('#pr-eb-left');
+      if (left) left.textContent = EB.left == null ? `First ${EB.places} studios` : `${EB.left} of ${EB.places} places left`;
+    }
   }
+
+  const periods = { 'b-month': 'month', 'b-quarter': 'quarter', 'b-half': 'half', 'b-year': 'year' };
+  for (const [id, p] of Object.entries(periods)) $('#' + id)?.addEventListener('click', () => {
+    period = p;
+    for (const k of Object.keys(periods)) $('#' + k)?.setAttribute('aria-pressed', String(k === id));
+    render();
+  });
   const press = (on, off) => { $('#' + on).setAttribute('aria-pressed', 'true'); $('#' + off).setAttribute('aria-pressed', 'false'); };
-  $('#b-month').addEventListener('click', () => { yearly = false; press('b-month', 'b-year'); render(); });
-  $('#b-year').addEventListener('click', () => { yearly = true; press('b-year', 'b-month'); render(); });
   $('#c-inr').addEventListener('click', () => { usd = false; press('c-inr', 'c-usd'); render(); });
   $('#c-usd').addEventListener('click', () => { usd = true; press('c-usd', 'c-inr'); render(); });
   render();
+
+  // places left: counted on the server only when a studio pays
+  fetch('https://api.studioledger.in/v1/public/early-bird', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d || typeof d.left !== 'number') return;
+      Object.assign(EB, { places: d.places, percent: d.percent, months: d.months, left: d.left, open: d.places > 0 });
+      render();
+      $$('[data-eb-left]').forEach(el => { el.textContent = d.left > 0 ? `${d.left} of ${d.places} places left` : 'All places taken'; });
+      if (d.left === 0 || d.places === 0) $$('[data-eb-card]').forEach(el => { el.hidden = true; });
+    })
+    .catch(() => {});
 })();
 
 // ---- FAQ: answers open and close with a short height animation; the topic in view is marked ----
@@ -663,3 +945,42 @@ onScroll();
   }), { rootMargin: '-45% 0px -50% 0px' });
   map.forEach((_, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
 })();
+
+// ---- Contact: a mailto link does nothing on a PC with no mail app set up, so Contact opens a small panel
+// with the address, a copy button, Gmail in the browser, and the mail app ----
+(() => {
+  const dlg = $('#ct-dlg');
+  if (!dlg || typeof dlg.showModal !== 'function') return;   // old browsers keep the plain mailto link
+  const subject = 'Studio Ledger';
+  $('#ct-addr').textContent = SITE.email;
+  $('#ct-gmail').href = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(SITE.email)}&su=${encodeURIComponent(subject)}`;
+  $('#ct-app').href = mail(subject, '');
+  const copy = $('#ct-copy');
+  copy.addEventListener('click', async () => {
+    let ok = false;
+    try { await navigator.clipboard.writeText(SITE.email); ok = true; } catch {
+      const r = document.createRange(); r.selectNodeContents($('#ct-addr'));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      try { ok = document.execCommand('copy'); } catch {}
+    }
+    copy.textContent = ok ? 'Copied' : 'Select and copy';
+    setTimeout(() => { copy.textContent = 'Copy'; }, 1800);
+  });
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-contact], [data-contact-text]');
+    if (!a || dlg.contains(a)) return;
+    e.preventDefault();
+    dlg.showModal();
+  });
+  $('#ct-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+})();
+
+// ---- Back to top: the logo links to #top, which is the sticky header itself, so the browser never scrolls ----
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href="#top"]');
+  if (!a) return;
+  e.preventDefault();
+  scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+});
