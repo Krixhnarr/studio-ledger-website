@@ -15,6 +15,8 @@ const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// below the hero, hidden starting states for animations apply only once this script runs (see site.css)
+document.documentElement.classList.add('js');
 const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
 
 // Run cb once when el scrolls into view
@@ -248,34 +250,6 @@ onScroll();
   measure(); paint();
 })();
 
-// ---- Story: each chapter plays once as it arrives (number, heading, problems crossed out, answer, screen, note) ----
-// On wide screens the screen drifts a few pixels against the scroll; only chapters on screen are updated.
-// Each chapter screen is a 1600-wide layout scaled to its frame (--k = frame width / 1600).
-(() => {
-  const pics = $$('.ch-pic');
-  const fit = p => p.style.setProperty('--k', (p.clientWidth / 1600).toFixed(4));
-  pics.forEach(fit);
-  if ('ResizeObserver' in window) { const ro = new ResizeObserver(es => es.forEach(e => fit(e.target))); pics.forEach(p => ro.observe(p)); }
-  else addEventListener('resize', () => pics.forEach(fit));
-})();
-(() => {
-  const chs = $$('.ch');
-  if (calm) { chs.forEach(ch => ch.classList.add('in')); return; }
-  chs.forEach(ch => onView(ch, () => ch.classList.add('in'), 0.22));
-  const wide = matchMedia('(min-width: 861px)'), live = new Set();
-  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? live.add(e.target) : live.delete(e.target)));
-  chs.forEach(ch => io.observe(ch));
-  let ticking = false;
-  const drift = () => {
-    ticking = false;
-    live.forEach(ch => {
-      const r = ch.getBoundingClientRect(), p = (r.top + r.height / 2 - innerHeight / 2) / (innerHeight + r.height);
-      $('.ch-shot', ch).style.transform = wide.matches ? `translate3d(0, ${(p * 60).toFixed(1)}px, 0)` : '';
-    });
-  };
-  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(drift); } }, { passive: true });
-})();
-
 // ---- Ledger waves from the closing section: once on arrival, again on hover ----
 // The sprite rises (0–12), waves (13–28), then sinks back by replaying the rise in reverse (12–0).
 // Frames 29–47 (a long still stand, then a hard cut) are skipped, so he never stalls or pops.
@@ -303,287 +277,6 @@ onScroll();
   onView(wave, () => setTimeout(play, 300), 0.6);
 })();
 
-// ---- System diagram: built connector by connector, then each node can be explored ----
-(() => {
-  const NODES = [
-    ['projects', 'Projects', 'Phase from Concept to Completed, lead, team, progress, approved drawings and fee stages for every project.'],
-    ['drawings', 'Drawings', 'Every sheet from submission through senior and principal review to Approved, with revisions, redlines and history.'],
-    ['ai', 'AI Review', 'Reads each drawing against your standards, marks where the issues are and scores the sheet before a person opens it.'],
-    ['standards', 'Standards', 'Your studio’s drawing rules and principles, written once and checked on every sheet.'],
-    ['tasks', 'Tasks', 'Work assigned with due dates, priority and progress, filed under its project.'],
-    ['people', 'People', 'Team roles, attendance, leave, mentoring and a weekly check-in that shows who is stretched.'],
-    ['timesheets', 'Timesheets', 'Weekly hours per project with Friday reminders, turned into real project costs.'],
-    ['finance', 'Finance', 'Fee stages, ready-to-invoice reminders when a phase finishes, overdue payments and profitability.'],
-    ['reports', 'Reports', 'Weekly and monthly reports on drawings, people, hours and fees, with an AI summary, saved as PDF.'],
-  ];
-  const LINKS = [
-    ['projects', 'drawings'], ['projects', 'tasks'], ['projects', 'finance'], ['projects', 'reports'], ['projects', 'people'],
-    ['drawings', 'ai'], ['drawings', 'standards'], ['drawings', 'tasks'], ['ai', 'standards'], ['ai', 'people'], ['ai', 'reports'],
-    ['tasks', 'people'], ['people', 'timesheets'], ['timesheets', 'finance'], ['timesheets', 'projects'], ['finance', 'reports'],
-  ];
-  const sys = $('#sys'), svg = $('#sys-lines'), core = $('.sys-core', sys);
-  const name = Object.fromEntries(NODES.map(n => [n[0], n[1]]));
-  const nbrs = id => LINKS.filter(l => l.includes(id)).map(l => l[0] === id ? l[1] : l[0]);
-  let pos = {}, buttons = {}, current = 'drawings', auto = true, built = false;
-
-  NODES.forEach(([id, label], i) => {
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'sys-node' + (id === 'ai' ? ' is-ai' : '');
-    b.textContent = label;
-    const pick = () => { if (!built) return; auto = false; select(id); };
-    b.addEventListener('mouseenter', pick); b.addEventListener('focus', pick); b.addEventListener('click', pick);
-    sys.insertBefore(b, core);
-    buttons[id] = b;
-  });
-
-  function layout() {
-    const narrow = sys.clientWidth < 560;
-    const rx = narrow ? 300 : 395, ry = narrow ? 250 : 228;
-    NODES.forEach(([id], i) => {
-      const a = -Math.PI / 2 + i * (2 * Math.PI / NODES.length);
-      pos[id] = [500 + rx * Math.cos(a), 310 + ry * Math.sin(a)];
-      buttons[id].style.left = (pos[id][0] / 10) + '%';
-      buttons[id].style.top = (pos[id][1] / 6.2) + '%';
-    });
-    svg.innerHTML = `<ellipse class="ring" cx="500" cy="310" rx="${rx}" ry="${ry}"/>`
-      + NODES.map(([id]) => `<line class="core" pathLength="1" data-a="core" data-b="${id}" x1="500" y1="310" x2="${pos[id][0]}" y2="${pos[id][1]}"/>`).join('')
-      + LINKS.map(([a, b]) => `<line pathLength="1" data-a="${a}" data-b="${b}" x1="${pos[a][0]}" y1="${pos[a][1]}" x2="${pos[b][0]}" y2="${pos[b][1]}"/>`).join('');
-    if (built) select(current, true);
-  }
-  function select(id, quiet) {
-    current = id;
-    const near = nbrs(id);
-    sys.classList.add('focus');
-    $$('line', svg).forEach(l => l.classList.toggle('hot', l.dataset.a === id || l.dataset.b === id));
-    Object.entries(buttons).forEach(([k, b]) => { b.classList.toggle('on', k === id); b.classList.toggle('near', near.includes(k)); });
-    if (quiet && $('#sys-title').textContent === name[id] && $('#sys-text').textContent) return;
-    const i = NODES.findIndex(n => n[0] === id);
-    $('#sys-code').textContent = `Connected to ${near.length} other parts`;
-    $('#sys-title').textContent = name[id];
-    $('#sys-text').textContent = NODES[i][2];
-    $('#sys-chips').innerHTML = near.map(n => `<span>${name[n]}</span>`).join('');
-  }
-  function finish() { built = true; sys.classList.remove('pre'); sys.classList.add('built'); select(current); }
-
-  sys.classList.add('pre');
-  layout();
-  addEventListener('resize', layout);
-  if (calm || !('IntersectionObserver' in window)) finish();
-  else onView(sys, async () => {
-    // core → (connector, node) × 9 → cross links → the ring
-    sys.classList.remove('pre');
-    await sleep(350);
-    for (const [id] of NODES) {
-      $(`line.core[data-b="${id}"]`, svg)?.classList.add('drawn');
-      await sleep(150);
-      buttons[id].classList.add('lit');
-      await sleep(60);
-    }
-    await sleep(200);
-    $$('line:not(.core)', svg).forEach(l => l.classList.add('drawn'));
-    await sleep(700);
-    Object.values(buttons).forEach(b => b.classList.remove('lit'));
-    finish();
-  }, 0.35);
-
-  sys.addEventListener('mouseleave', () => { auto = true; });
-  const seen = watch(sys);
-  if (!calm) setInterval(() => {
-    if (!built || !auto || !seen.visible || document.hidden) return;
-    const i = NODES.findIndex(n => n[0] === current);
-    select(NODES[(i + 1) % NODES.length][0]);
-  }, 4200);
-})();
-
-// ---- AI drawing review: draw the sheet, scan it, detect its parts, then report ----
-(() => {
-  const ai = $('#ai'), status = $('#ai-status'), score = $('#ai-score');
-  const plan = $('.plan', ai), dets = $('#ai-dets'), scan = $('#ai-scan');
-  const items = $$('.checks li', ai), issues = Object.fromEntries($$('.bbx', ai).map(b => [b.dataset.issue, b]));
-  const W = 640;
-
-  // a soft trailing gradient behind the scan line
-  const NS = 'http://www.w3.org/2000/svg';
-  plan.insertAdjacentHTML('afterbegin', '<defs><linearGradient id="scanfade" x1="0" x2="1"><stop offset="0" stop-color="#a9d6e2" stop-opacity="0"/><stop offset="1" stop-color="#a9d6e2" stop-opacity=".14"/></linearGradient></defs>');
-
-  // What the scan detects, keyed to the checklist: [x, y, w, h, label]
-  const DETECT = {
-    dims: [[66, 3, 508, 18, 'DIMENSIONS']],
-    project: [[70, 432, 100, 34, 'PROJECT CODE']],
-    sheet: [[170, 432, 100, 34, 'SHEET NO.']],
-    scale: [[270, 432, 80, 34, 'SCALE']],
-    revision: [[350, 432, 70, 34, 'REV']],
-    title: [[70, 398, 160, 30, 'DRAWING TITLE']],
-    doors: [[260, 184, 34, 18, ''], [164, 280, 34, 18, ''], [456, 266, 34, 18, '']],
-    rooms: [[130, 144, 60, 32, ''], [306, 144, 58, 32, ''], [470, 189, 50, 32, ''], [130, 304, 60, 32, ''], [466, 334, 58, 32, '']],
-  };
-  const byKey = {};
-  for (const [k, list] of Object.entries(DETECT)) byKey[k] = list.map(([x, y, w, h, label]) => {
-    const g = document.createElementNS(NS, 'g');
-    g.setAttribute('class', 'det');
-    g.dataset.x = x;
-    const ly = y > 430 ? y + h + 8 : y - 3;   // title-block cells are labelled underneath, so labels never collide
-    g.innerHTML = `<rect x="${x}" y="${y}" width="${w}" height="${h}"/>${label ? `<text x="${x + 2}" y="${ly}">${label}</text>` : ''}`;
-    dets.appendChild(g);
-    return g;
-  });
-  const allDets = Object.values(byKey).flat();
-  const issueX = Object.fromEntries(Object.entries(issues).map(([k, g]) => [k, +g.querySelector('rect').getAttribute('x')]));
-
-  let run = 0;
-  const alive = me => me === run;
-  function reset() {
-    ai.classList.remove('drawn', 'scanning', 'done');
-    items.forEach(li => li.classList.remove('on'));
-    allDets.forEach(d => d.classList.remove('hit', 'settled', 'focus'));
-    Object.values(issues).forEach(b => b.classList.remove('show', 'pulse'));
-    score.textContent = '0';
-    status.classList.remove('warn');
-    scan.setAttribute('transform', 'translate(0 0)');
-  }
-  function finalState() {
-    ai.classList.add('drawn', 'done');
-    items.forEach(li => li.classList.add('on'));
-    allDets.forEach(d => d.classList.add('settled'));
-    Object.values(issues).forEach(b => b.classList.add('show'));
-    score.textContent = '87';
-    status.textContent = '3 issues'; status.classList.add('warn');
-  }
-  // one sweep across the sheet; anything the line passes is detected
-  function sweep(me, ms) {
-    return new Promise(res => {
-      const t0 = performance.now();
-      const step = t => {
-        if (!alive(me)) return res();
-        const k = Math.min(1, (t - t0) / ms), x = k * W;
-        scan.setAttribute('transform', `translate(${x.toFixed(1)} 0)`);
-        status.textContent = `Analysing A-104 · ${Math.round(k * 100)}%`;
-        allDets.forEach(d => {
-          if (!d.classList.contains('hit') && x >= +d.dataset.x) {
-            d.classList.add('hit');
-            setTimeout(() => { if (alive(me)) d.classList.add('settled'); }, 650);
-          }
-        });
-        for (const [key, ix] of Object.entries(issueX)) if (x >= ix) issues[key].classList.add('show');
-        k < 1 ? requestAnimationFrame(step) : res();
-      };
-      requestAnimationFrame(step);
-    });
-  }
-  async function review() {
-    const me = ++run;
-    reset();
-    if (calm) return finalState();
-    status.textContent = 'Loading A-104';
-    await sleep(60); if (!alive(me)) return;
-    ai.classList.add('drawn');                       // 1 · the drawing is drafted
-    await sleep(1500); if (!alive(me)) return;
-    ai.classList.add('scanning');                    // 2-4 · scan, highlight, detect
-    await sweep(me, 2600); if (!alive(me)) return;
-    ai.classList.remove('scanning');
-    status.textContent = 'Checking standards v3.4';  // 5-6 · checklist resolves, each line re-lighting what it checked
-    for (const li of items) {
-      await sleep(190); if (!alive(me)) return;
-      li.classList.add('on');
-      const lit = byKey[li.dataset.k] || [];
-      lit.forEach(d => d.classList.add('focus'));
-      setTimeout(() => lit.forEach(d => d.classList.remove('focus')), 420);
-      if (li.dataset.issue) issues[li.dataset.issue].classList.add('pulse');
-    }
-    await sleep(250); if (!alive(me)) return;
-    await countUp(score, 87, 1100); if (!alive(me)) return;  // 7 · the score, then the issues
-    ai.classList.add('done');
-    status.textContent = '3 issues'; status.classList.add('warn');
-  }
-  onView($('.ai-sheet', ai), review, 0.3);
-  $('#ai-replay').addEventListener('click', review);
-})();
-
-// ---- How it works: one project travels through the six stages as you scroll ----
-(() => {
-  const sec = $('#journey'), jn = $('#jn'), tabs = $$('.jn-steps button', jn), cards = $$('.jn-card', jn);
-  const fill = $('#jn-fill'), track = $('.jn-track', jn), strip = $('.jn-steps', jn);
-  const N = tabs.length;
-  const token = document.createElement('span');
-  token.className = 'jn-token'; token.setAttribute('aria-hidden', 'true'); token.textContent = 'CH-24 · A-104';
-  track.appendChild(token);
-  let cur = -1;
-  function show(i) {
-    if (i === cur) return;
-    cur = i;
-    tabs.forEach((t, j) => {
-      t.setAttribute('aria-selected', String(j === i)); t.tabIndex = j === i ? 0 : -1;
-      t.classList.toggle('done', j < i);
-    });
-    cards.forEach((c, j) => c.classList.toggle('on', j === i));
-    if (strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: tabs[i].parentElement.offsetLeft - 16, behavior: calm ? 'auto' : 'smooth' });
-  }
-  const span = () => sec.offsetHeight - (innerHeight - 64);
-  function update() {
-    const r = sec.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > innerHeight) return;
-    const p = Math.max(0, Math.min(1, (64 - r.top) / span()));
-    const at = Math.max(0, Math.min(1, (p * N - 0.5) / (N - 1)));   // stage centres sit at 0, 1/5 … 1 on the line
-    fill.style.width = `${(at * 100).toFixed(2)}%`;
-    token.style.left = `${(at * 100).toFixed(2)}%`;
-    show(Math.min(N - 1, Math.floor(p * N)));
-  }
-  const goTo = i => scrollTo({ top: sec.offsetTop - 64 + ((i + 0.5) / N) * span(), behavior: calm ? 'auto' : 'smooth' });
-  tabs.forEach((t, i) => t.addEventListener('click', () => goTo(i)));
-  strip.addEventListener('keydown', e => {
-    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-    if (step) { e.preventDefault(); const i = Math.max(0, Math.min(N - 1, cur + step)); goTo(i); tabs[i].focus(); }
-  });
-  let ticking = false;
-  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; update(); }); } }, { passive: true });
-  addEventListener('resize', update);
-  show(0); update();
-})();
-
-// ---- Product screens ----
-(() => {
-  const SHOTS = [
-    ['overview', 'Overview', 'Who is in today, what is waiting for your review, overdue tasks and the first-pass rate, on the first screen you open.'],
-    ['attendance', 'Attendance', 'Check in, log a site visit or work remotely, and see the whole studio’s month in one register.'],
-    ['leave', 'Leave', 'Requests with the handover note and who else is away, approved or declined in one click, with each person’s balance.'],
-    ['messages', 'Messages', 'A group for every project, sub-groups, personal chats and photos, so studio work stays in the studio.'],
-    ['contacts', 'Contacts', 'The clients, consultants and contractors you work with, by project and role.'],
-    ['register', 'Drawing register', 'Every sheet per project with its revision and last issue, and transmittals that export the files with a transmittal sheet.'],
-    ['standards', 'Standards', 'Core principles and drawing rules for title blocks, sheet layout, line work, dimensions and naming. Nine are checked automatically.'],
-    ['finances', 'Finance', 'Fee stages, what is ready to invoice, what is overdue and what each project really costs.'],
-    ['review', 'AI review', 'The check report beside the drawing board: each standard marked, a score, and the sheet waiting on its reviewer.'],
-  ];
-
-  const tabs = $('#tabs'), img = $('#shot-img'), wipe = $('.shot-wipe'), fig = $('.shot');
-  tabs.innerHTML = SHOTS.map(([id, name], i) =>
-    `<button role="tab" id="tab-${id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-i="${i}">${name}</button>`).join('');
-  img.setAttribute('role', 'tabpanel');
-  function show(i, focus) {
-    const [id, name, text] = SHOTS[i];
-    $$('button', tabs).forEach((b, j) => { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; });
-    if (focus) tabs.children[i].focus();
-    const next = new Image();
-    next.onload = () => {
-      img.src = next.src; img.alt = `Studio Ledger ${name} screen`;
-      if (!calm) {
-        wipe.classList.remove('go'); void wipe.offsetWidth; wipe.classList.add('go');
-      }
-    };
-    next.src = `assets/app/${id}.jpg`;
-    img.setAttribute('aria-labelledby', `tab-${id}`);
-    $('#shot-title').textContent = name;
-    $('#shot-cap').innerHTML = `<b>${name}.</b> ${text}`;
-  }
-  tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(+b.dataset.i); });
-  tabs.addEventListener('keydown', e => {
-    const cur = $$('button', tabs).findIndex(b => b.getAttribute('aria-selected') === 'true');
-    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-    if (step) { e.preventDefault(); show((cur + step + SHOTS.length) % SHOTS.length, true); }
-  });
-  show(0);
-  onView(fig, () => SHOTS.forEach(([id]) => { new Image().src = `assets/app/${id}.jpg`; }), 0.01);
-})();
-
 // ---- Video tour dialog ----
 (() => {
   const CHAPTERS = [
@@ -608,53 +301,6 @@ onScroll();
   dlg.addEventListener('close', () => video.pause());
 })();
 
-// ---- Pricing (same plans as src/main/license.js and docs/pricing.html) ----
-(() => {
-  const PLANS = [
-    { code: 'P-00', name: 'Solo', who: 'For one architect', m: 0, y: 0, note: 'Free forever · 1 person, 1 active project' },
-    { code: 'P-01', name: 'Studio', who: 'For studios of 2–5 people', m: 2999, y: 29990, people: 5, extra: 499, extraY: 4990, pop: true },
-    { code: 'P-02', name: 'Practice', who: 'For practices of 6–15 people', m: 6999, y: 69990, people: 15, extra: 449, extraY: 4490 },
-    { code: 'P-03', name: 'Firm', who: 'For firms of 16–40 people', m: 12999, y: 129990, people: 30, extra: 399, extraY: 3990 },
-  ];
-  const Y = true, N = false;
-  const ROWS = [
-    ['AI drawing reviews', ['10 / mo', 'Unlimited', 'Unlimited', 'Unlimited']],
-    ['Drawing register', [Y, Y, Y, Y]],
-    ['Custom studio standards', [Y, Y, Y, Y]],
-    ['Projects', ['1', 'Unlimited', 'Unlimited', 'Unlimited']],
-    ['Team, attendance & leave', [N, Y, Y, Y]],
-    ['Messages & meetings', [N, Y, Y, Y]],
-    ['Finance & performance', [N, N, Y, Y]],
-    ['Monthly reports', [N, N, Y, Y]],
-    ['Ask Claude about the studio', [N, N, N, Y]],
-  ];
-  let yearly = false;
-  function render() {
-    $('#plans').innerHTML = PLANS.map((p, i) => {
-      const price = p.m ? (yearly ? p.y / 12 : p.m) : 0;
-      const sub = !p.m ? p.note
-        : yearly ? `Billed yearly at ${inr(p.y)} · ${p.people} people included · ${inr(p.extraY)}/yr per extra person`
-        : `${p.people} people included · ${inr(p.extra)}/mo per extra person`;
-      return `<article class="tb ${p.pop ? 'pop' : ''}">
-        <h3>${p.name}</h3><p class="tb-who">${p.who}</p>
-        <div class="tb-price"><b>${inr(price)}</b><small>/ month</small><p>${sub}</p></div>
-        <a class="btn ${p.pop ? '' : 'ghost'}" href="#start" data-download>${p.m ? 'Start 30-day trial' : 'Download free'}</a>
-        <ul>${ROWS.map(([label, v]) => {
-          const x = v[i];
-          return `<li class="${x === N ? 'no' : ''}"><span>${label}</span><b>${x === Y ? 'Yes' : x === N ? 'No' : x}</b></li>`;
-        }).join('')}</ul>
-      </article>`;
-    }).join('');
-  }
-  for (const [id, y] of [['b-month', false], ['b-year', true]]) $('#' + id).addEventListener('click', () => {
-    yearly = y;
-    $('#b-month').setAttribute('aria-pressed', String(!y));
-    $('#b-year').setAttribute('aria-pressed', String(y));
-    render();
-  });
-  render();
-})();
-
 // ---- Referral countdown (section hides itself once the offer has ended) ----
 (() => {
   const left = Math.ceil((new Date('2026-12-31T23:59:59') - new Date()) / 864e5);
@@ -673,52 +319,338 @@ onScroll();
   when.textContent = `Open until 31 Jan 2027 · ${left} day${left === 1 ? '' : 's'} left`;
 })();
 
-// ---- Motion utilities: reveals, blueprint borders and small sequences ----
+// =====================================================================
+// Below the hero (index.html .v2, styles in site.css)
+// =====================================================================
 
-// Reveal: each section's blocks rise 12px in order (heading, copy, then the piece)
-if ('IntersectionObserver' in window && !calm) {
-  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
-  const skip = el => el.closest('.flow') || el.id === 'ai' || el.id === 'net' || el.matches('.built, .faq-wrap, .flow-wrap');
-  $$('.sec .wrap, .sec .built > div, .sec .flow-intro, .sec .faq-wrap > div, .final .wrap, .story-intro, .story-end').forEach(group => {
-    [...group.children].filter(el => !skip(el)).forEach((el, i) => {
-      el.classList.add('reveal'); el.style.setProperty('--rd', Math.min(i, 5)); io.observe(el);
+// ---- Reveals: blocks rise in once, headings arrive word by word, drawings draw themselves ----
+(() => {
+  const v2 = $('#v2');
+  if (!v2) return;
+  // headings: wrap each word so it can be staggered (the text itself is unchanged for screen readers)
+  $$('[data-split]', v2).forEach(h => {
+    const words = h.textContent.trim().split(/\s+/);
+    h.setAttribute('aria-label', h.textContent.trim());
+    h.innerHTML = words.map((w, i) => `<span class="w" aria-hidden="true" style="--wi:${i}">${w}</span>`).join(' ');
+  });
+  // siblings that reveal together are staggered in order
+  const groups = new Map();
+  $$('[data-rv]', v2).forEach(el => {
+    const p = el.parentElement;
+    const i = groups.get(p) || 0;
+    groups.set(p, i + 1);
+    el.style.setProperty('--d', Math.min(i, 6));
+  });
+  const targets = $$('[data-rv], [data-split], .v2-draw, [data-zoom], .hub, .tr-map, .v2-final', v2);
+  if (calm || !('IntersectionObserver' in window)) { targets.forEach(el => el.classList.add('in')); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('in');
+    io.unobserve(e.target);
+  }), { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
+  targets.forEach(el => io.observe(el));
+})();
+
+// ---- One workspace: the parts of the practice, each with what it does and what it connects to ----
+(() => {
+  const hub = $('#hub');
+  if (!hub) return;
+  const NODES = {
+    projects: ['Projects', 'Phase from Concept to Completed, lead, team, progress, approved drawings and fee stages for every project.'],
+    drawings: ['Drawings', 'Every sheet from submission through senior and principal review to Approved, with revisions, redlines and history.'],
+    ai: ['AI review', 'Reads each drawing against your standards, marks where the issues are and scores the sheet before a person opens it.'],
+    standards: ['Standards', 'Your studio’s drawing rules and principles, written once and checked on every sheet.'],
+    tasks: ['Tasks', 'Work assigned with due dates, priority and progress, filed under its project.'],
+    people: ['People', 'Team roles, attendance, leave, mentoring and a weekly check-in that shows who is stretched.'],
+    timesheets: ['Timesheets', 'Weekly hours per project with Friday reminders, turned into real project costs.'],
+    finance: ['Finance', 'Fee stages, ready-to-invoice reminders when a phase finishes, overdue payments and profitability.'],
+    reports: ['Reports', 'Weekly and monthly reports on drawings, people, hours and fees, with an AI summary, saved as PDF.'],
+  };
+  const LINKS = [
+    ['projects', 'drawings'], ['projects', 'tasks'], ['projects', 'finance'], ['projects', 'reports'], ['projects', 'people'],
+    ['drawings', 'ai'], ['drawings', 'standards'], ['drawings', 'tasks'], ['ai', 'standards'], ['ai', 'people'], ['ai', 'reports'],
+    ['tasks', 'people'], ['people', 'timesheets'], ['timesheets', 'finance'], ['timesheets', 'projects'], ['finance', 'reports'],
+  ];
+  const order = Object.keys(NODES);
+  const btns = $$('[data-node]', hub);
+  btns.forEach((b, i) => b.style.setProperty('--i', i));
+  const nbrs = id => LINKS.filter(l => l.includes(id)).map(l => (l[0] === id ? l[1] : l[0]));
+  let cur = 'drawings', auto = true;
+  function select(id) {
+    cur = id;
+    const near = nbrs(id);
+    btns.forEach(b => { b.classList.toggle('on', b.dataset.node === id); b.classList.toggle('near', near.includes(b.dataset.node)); b.setAttribute('aria-pressed', String(b.dataset.node === id)); });
+    $('#hub-k').textContent = NODES[id][0];
+    $('#hub-t').textContent = NODES[id][1];
+    $('#hub-l').innerHTML = 'Connected to ' + near.map(n => `<span>${NODES[n][0]}</span>`).join(', ');
+  }
+  btns.forEach(b => {
+    const pick = () => { auto = false; select(b.dataset.node); };
+    b.addEventListener('click', pick);
+    b.addEventListener('mouseenter', pick);
+    b.addEventListener('focus', pick);
+  });
+  hub.addEventListener('mouseleave', () => { auto = true; });
+  select(cur);
+  if (calm) return;
+  const seen = watch(hub);
+  setInterval(() => {
+    if (!auto || !seen.visible || document.hidden) return;
+    select(order[(order.indexOf(cur) + 1) % order.length]);
+  }, 4200);
+})();
+
+// ---- AI drawing review: the sheet is drawn, scanned, the issues marked, then the fix list ----
+(() => {
+  const rv = $('#rv');
+  if (!rv) return;
+  const status = $('#rv-status'), score = $('#rv-score'), dets = $('#rv-dets'), scan = $('#rv-scan');
+  const steps = $$('#rv-steps li');
+  const items = $$('.rv-checks li', rv), issues = Object.fromEntries($$('.p-iss', rv).map(g => [g.dataset.issue, g]));
+  const W = 640, NS = 'http://www.w3.org/2000/svg';
+  // what the scan line picks up, keyed to the checklist: [x, y, w, h, label]
+  const DETECT = {
+    dims: [[66, 3, 508, 18, 'DIMENSIONS']],
+    project: [[70, 432, 100, 34, 'PROJECT CODE']],
+    sheet: [[170, 432, 100, 34, 'SHEET NO.']],
+    scale: [[270, 432, 80, 34, 'SCALE']],
+    revision: [[350, 432, 70, 34, 'REV']],
+    title: [[70, 398, 160, 30, 'DRAWING TITLE']],
+    doors: [[260, 184, 34, 18, ''], [164, 280, 34, 18, ''], [456, 266, 34, 18, '']],
+    rooms: [[130, 144, 60, 32, ''], [306, 144, 58, 32, ''], [470, 189, 50, 32, ''], [130, 304, 60, 32, ''], [466, 334, 58, 32, '']],
+  };
+  const byKey = {};
+  for (const [k, list] of Object.entries(DETECT)) byKey[k] = list.map(([x, y, w, h, label]) => {
+    const g = document.createElementNS(NS, 'g');
+    g.dataset.x = x;
+    const ly = y > 430 ? y + h + 8 : y - 3;
+    g.innerHTML = `<rect x="${x}" y="${y}" width="${w}" height="${h}"/>${label ? `<text x="${x + 2}" y="${ly}">${label}</text>` : ''}`;
+    dets.appendChild(g);
+    return g;
+  });
+  const allDets = Object.values(byKey).flat();
+  const issueX = Object.fromEntries(Object.entries(issues).map(([k, g]) => [k, +g.querySelector('rect').getAttribute('x')]));
+  const step = n => steps.forEach((li, i) => li.classList.toggle('on', i <= n));
+
+  let run = 0;
+  const alive = me => me === run;
+  function reset() {
+    rv.classList.remove('drawn', 'scanning', 'done');
+    items.forEach(li => li.classList.remove('on'));
+    allDets.forEach(d => d.classList.remove('hit', 'settled', 'focus'));
+    Object.values(issues).forEach(g => g.classList.remove('show', 'pulse'));
+    score.textContent = '0';
+    status.classList.remove('warn');
+    scan.setAttribute('transform', 'translate(0 0)');
+    step(-1);
+  }
+  function finalState() {
+    rv.classList.add('drawn', 'done');
+    items.forEach(li => li.classList.add('on'));
+    allDets.forEach(d => d.classList.add('settled'));
+    Object.values(issues).forEach(g => g.classList.add('show'));
+    score.textContent = '87';
+    status.textContent = '3 issues'; status.classList.add('warn');
+    step(3);
+  }
+  function sweep(me, ms) {
+    return new Promise(res => {
+      const t0 = performance.now();
+      const frame = t => {
+        if (!alive(me)) return res();
+        const k = Math.min(1, (t - t0) / ms), x = k * W;
+        scan.setAttribute('transform', `translate(${x.toFixed(1)} 0)`);
+        status.textContent = `Analysing · ${Math.round(k * 100)}%`;
+        allDets.forEach(d => {
+          if (!d.classList.contains('hit') && x >= +d.dataset.x) {
+            d.classList.add('hit');
+            setTimeout(() => { if (alive(me)) d.classList.add('settled'); }, 650);
+          }
+        });
+        for (const [key, ix] of Object.entries(issueX)) if (x >= ix && !issues[key].classList.contains('show')) { issues[key].classList.add('show'); step(2); }
+        k < 1 ? requestAnimationFrame(frame) : res();
+      };
+      requestAnimationFrame(frame);
+    });
+  }
+  async function review() {
+    const me = ++run;
+    reset();
+    if (calm) return finalState();
+    step(0);
+    status.textContent = 'Uploaded · A-104.pdf';
+    await sleep(60); if (!alive(me)) return;
+    rv.classList.add('drawn');
+    await sleep(1500); if (!alive(me)) return;
+    step(1);
+    rv.classList.add('scanning');
+    await sweep(me, 2800); if (!alive(me)) return;
+    rv.classList.remove('scanning');
+    status.textContent = 'Checking the standards';
+    for (const li of items) {
+      await sleep(170); if (!alive(me)) return;
+      li.classList.add('on');
+      const lit = byKey[li.dataset.k] || [];
+      lit.forEach(d => d.classList.add('focus'));
+      setTimeout(() => lit.forEach(d => d.classList.remove('focus')), 420);
+      if (li.dataset.issue) issues[li.dataset.issue].classList.add('pulse');
+    }
+    await sleep(250); if (!alive(me)) return;
+    await countUp(score, 87, 1000); if (!alive(me)) return;
+    rv.classList.add('done');
+    step(3);
+    status.textContent = '3 issues'; status.classList.add('warn');
+  }
+  onView($('.rv-sheet', rv), review, 0.35);
+  $('#rv-replay').addEventListener('click', review);
+})();
+
+// ---- Inside Studio Ledger: real screens, with a slow pan across each ----
+(() => {
+  const SHOTS = [
+    ['overview', 'Overview', 'Who is in today, what is waiting for your review, overdue tasks and the first-pass rate, on the first screen you open.', 900],
+    ['projects', 'Projects', 'Every project with its phase, location, lead, open tasks, approved drawings and next milestone.', 813],
+    ['check', 'Tasks & submitting a drawing', 'The task list beside a junior architect submitting a sheet: the file is read, and each visual standard is confirmed before it goes to review.', 813],
+    ['schedule', 'Schedule', 'Meetings, site visits, deadlines and tasks due, week by week, for you or the whole studio.', 813],
+    ['register', 'Drawing register', 'Every sheet per project with its revision and last issue, and transmittals that export the files with a transmittal sheet.', 813],
+    ['review', 'AI review', 'The check report beside the drawing board: each standard marked, a score, and the sheet waiting on its reviewer.', 813],
+    ['standards', 'Standards', 'Core principles and drawing rules for title blocks, sheet layout, line work, dimensions and naming, each MUST or SHOULD.', 813],
+    ['team', 'Team', 'Each person’s role, where they are today, open tasks, progress, approved drawings and first-pass rate.', 813],
+    ['attendance', 'Attendance', 'Check in, log a site visit or work remotely, and see the whole studio’s month in one register.', 900],
+    ['finances', 'Finance', 'Fee stages, what is ready to invoice, what is overdue and what each project really costs.', 813],
+  ];
+  const tabs = $('#sc-tabs'), frame = $('#sc-frame'), img = $('#sc-img'), cap = $('#sc-cap');
+  if (!tabs) return;
+  tabs.innerHTML = SHOTS.map(([id, name], i) =>
+    `<button role="tab" id="sc-tab-${id}" aria-controls="sc-frame" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-i="${i}"><span>${String(i + 1).padStart(2, '0')}</span>${name}</button>`).join('');
+  frame.setAttribute('role', 'tabpanel');
+  let cur = -1, t = 0;
+  function show(i, focus) {
+    if (i === cur) return;
+    cur = i;
+    const [id, name, text, h] = SHOTS[i];
+    $$('button', tabs).forEach((b, j) => { b.setAttribute('aria-selected', String(j === i)); b.tabIndex = j === i ? 0 : -1; });
+    const btn = tabs.children[i];
+    if (focus) btn.focus();
+    if (tabs.scrollWidth > tabs.clientWidth) tabs.scrollTo({ left: btn.offsetLeft - 16, behavior: calm ? 'auto' : 'smooth' });
+    frame.setAttribute('aria-labelledby', `sc-tab-${id}`);
+    cap.innerHTML = `<b>${name}</b><span>${text}</span>`;
+    const next = new Image();
+    next.onload = () => {
+      const me = ++t;
+      if (calm) { img.src = next.src; img.alt = `Studio Ledger ${name} screen`; return; }
+      frame.classList.add('swap');
+      setTimeout(() => {
+        if (me !== t) return;
+        img.src = next.src; img.alt = `Studio Ledger ${name} screen`; img.height = h;
+        frame.classList.remove('pan'); void frame.offsetWidth; frame.classList.add('pan');
+        frame.classList.remove('swap');
+      }, 260);
+    };
+    next.src = `assets/app/${id}.jpg`;
+  }
+  tabs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(+b.dataset.i); });
+  tabs.addEventListener('keydown', e => {
+    const s = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (s) { e.preventDefault(); show((cur + s + SHOTS.length) % SHOTS.length, true); }
+  });
+  show(0);
+  if (!calm) onView(frame, () => frame.classList.add('pan'), 0.2);
+  onView(frame, () => SHOTS.forEach(([id]) => { new Image().src = `assets/app/${id}.jpg`; }), 0.01);
+})();
+
+// ---- Pricing (same plans and prices as backend/src/billing/plans.ts) ----
+(() => {
+  const PLANS = [
+    { name: 'Solo', who: 'For one architect', people: 1 },
+    { name: 'Studio', who: 'For studios of 2–5 people', people: 5, pop: true, inr: [2999, 29990, 499, 4990], usd: [35, 350, 6, 60] },
+    { name: 'Practice', who: 'For practices of 6–15 people', people: 15, inr: [6999, 69990, 449, 4490], usd: [79, 790, 5, 50] },
+    { name: 'Firm', who: 'For firms of 16–40 people', people: 30, inr: [12999, 129990, 399, 3990], usd: [149, 1490, 5, 50] },
+  ];
+  const Y = true, N = false;
+  // [label, values for Solo / Studio / Practice / Firm, footnote]; a function gets the extra-person price
+  const ROWS = [
+    ['People included', ['1', '5', '15', '30']],
+    ['Each extra person', f => ['—', f(1), f(2), f(3)]],
+    ['Active projects', ['1', 'Unlimited', 'Unlimited', 'Unlimited']],
+    ['AI drawing reviews', ['10 a month', 'No cap', 'No cap', 'No cap'], true],
+    ['Drawing register', [Y, Y, Y, Y]],
+    ['Custom studio standards', [Y, Y, Y, Y]],
+    ['Team, attendance & leave', [N, Y, Y, Y]],
+    ['Messages & meetings', [N, Y, Y, Y]],
+    ['Mentoring, reflections & happiness', [N, Y, Y, Y]],
+    ['Finance & performance', [N, N, Y, Y]],
+    ['Monthly reports', [N, N, Y, Y]],
+    ['Instagram growth analysis', [N, N, Y, Y]],
+    ['Ask Claude about the studio', [N, N, N, Y]],
+  ];
+  const fine = $('#pr-fine');
+  const FINE = {
+    inr: 'Prices in rupees, plus GST. Studios outside India pay in US dollars with no GST.',
+    usd: 'Prices in US dollars, with no GST, for studios outside India, paid by card. Studios in India pay in rupees plus GST.',
+  };
+  const fineRest = fine.textContent.replace(FINE.inr, '');
+  let yearly = false, usd = false;
+  const money = n => usd ? '$' + n.toLocaleString('en-US') : inr(n);
+  function render() {
+    const per = yearly ? '/yr' : '/mo';
+    $('#plans').innerHTML = PLANS.map(p => {
+      const t = usd ? p.usd : p.inr;
+      const price = !t ? 0 : yearly ? t[1] / 12 : t[0];
+      const shown = usd ? '$' + price.toLocaleString('en-US', { maximumFractionDigits: 2 }) : inr(price);
+      const sub = !t ? 'Free, for as long as you like · 1 person, 1 active project'
+        : yearly ? `Billed yearly at ${money(t[1])}${usd ? '' : ' + GST'} · ${p.people} people included`
+        : `Billed monthly${usd ? '' : ' + GST'} · ${p.people} people included`;
+      return `<article class="pr-plan ${p.pop ? 'pop' : ''}">
+        <h3>${p.name}</h3><p class="pr-who">${p.who}</p>
+        <p class="pr-price"><b>${shown}</b><small>/ month</small></p>
+        <p class="pr-sub">${sub}</p>
+        <a class="v2-btn ${p.pop ? '' : 'v2-btn-ghost'}" href="#start" data-download>${t ? 'Start 30-day trial' : 'Download free'}</a>
+      </article>`;
+    }).join('');
+    const extra = i => { const t = usd ? PLANS[i].usd : PLANS[i].inr; return `${money(yearly ? t[3] : t[2])}${per}`; };
+    const tbl = $('#pr-table');
+    $('thead', tbl).innerHTML = `<tr><th scope="col">Plan</th>${PLANS.map(p => `<th scope="col" class="${p.pop ? 'pop' : ''}">${p.name}</th>`).join('')}</tr>`;
+    $('tbody', tbl).innerHTML = ROWS.map(([label, v, note]) => {
+      const vals = typeof v === 'function' ? v(extra) : v;
+      return `<tr><th scope="row">${label}${note ? '<sup><a href="#pricing-ai" aria-label="How AI reviews are counted">*</a></sup>' : ''}</th>${vals.map((x, i) =>
+        `<td class="${x === Y ? 'y' : x === N ? 'n' : ''}${PLANS[i].pop ? ' pop' : ''}">${x === Y ? 'Included' : x === N ? '—' : x}</td>`).join('')}</tr>`;
+    }).join('');
+    fine.textContent = (usd ? FINE.usd : FINE.inr) + fineRest;
+  }
+  const press = (on, off) => { $('#' + on).setAttribute('aria-pressed', 'true'); $('#' + off).setAttribute('aria-pressed', 'false'); };
+  $('#b-month').addEventListener('click', () => { yearly = false; press('b-month', 'b-year'); render(); });
+  $('#b-year').addEventListener('click', () => { yearly = true; press('b-year', 'b-month'); render(); });
+  $('#c-inr').addEventListener('click', () => { usd = false; press('c-inr', 'c-usd'); render(); });
+  $('#c-usd').addEventListener('click', () => { usd = true; press('c-usd', 'c-inr'); render(); });
+  render();
+})();
+
+// ---- FAQ: answers open and close with a short height animation; the topic in view is marked ----
+(() => {
+  $$('.fq-g details').forEach(d => {
+    const s = $('summary', d), a = $('.fq-a', d);
+    s.addEventListener('click', e => {
+      if (calm || !a.animate) return;
+      e.preventDefault();
+      if (d.open) {
+        const anim = a.animate([{ height: a.offsetHeight + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 260, easing: 'cubic-bezier(.22,1,.36,1)' });
+        anim.onfinish = () => { d.open = false; };
+      } else {
+        d.open = true;
+        a.animate([{ height: '0px', opacity: 0 }, { height: a.offsetHeight + 'px', opacity: 1 }], { duration: 320, easing: 'cubic-bezier(.22,1,.36,1)' });
+      }
     });
   });
-}
-
-// Blueprint draw: a drafting line traces the border of a few key panels as they arrive
-function drawBorder(el, threshold = 0.25) {
-  if (!el || calm) return;
-  el.classList.add('bp');
-  el.insertAdjacentHTML('beforeend', '<svg class="bp-line" aria-hidden="true"><rect x="0" y="0" width="100%" height="100%" rx="4" pathLength="1"/></svg>');
-  onView(el, () => el.classList.add('drawn'), threshold);
-}
-['.ai-sheet', '.ai-panel', '#sys', '#net'].forEach(s => drawBorder($(s)));
-
-// Built for architecture: scattered generic tools settle into one aligned system
-(() => {
-  const vs = $('.vs');
-  if (!vs || calm) return;
-  const OFF = [[-14, -5, -2.5], [10, 4, 2], [-8, 6, 1.5], [14, -4, -2], [-10, 3, 2.5]];   // fixed, so it never looks random
-  $$('.vs-row:not(.vs-head)', vs).forEach((r, i) => {
-    const [x, y, a] = OFF[i % OFF.length];
-    r.style.setProperty('--i', i);
-    r.style.setProperty('--fx', `${x}px`); r.style.setProperty('--fy', `${y}px`); r.style.setProperty('--fr', `${a}deg`);
-  });
-  vs.classList.add('pre');
-  onView(vs, () => setTimeout(() => vs.classList.remove('pre'), 250), 0.35);
+  const nav = $$('.fq-nav a');
+  if (!nav.length || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) nav.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+  }), { rootMargin: '-40% 0px -55% 0px' });
+  $$('.fq-g').forEach(g => io.observe(g));
 })();
 
-// Data: the studio network draws itself; the internet indicator only pulses while on screen
-(() => {
-  const net = $('#net');
-  if (!net) return;
-  if (calm || !('IntersectionObserver' in window)) { net.classList.add('in'); return; }
-  onView(net, () => net.classList.add('in'), 0.3);
-  new IntersectionObserver(es => es.forEach(e => net.classList.toggle('vis', e.isIntersecting))).observe(net);
-})();
-
-// Navigation: the link for the section in view carries a datum line
+// ---- Navigation: the link for the section in view carries a datum line ----
 (() => {
   const navLinks = $$('#links a[href^="#"]');
   const map = new Map(navLinks.map(a => [a.getAttribute('href').slice(1), a]));
@@ -726,21 +658,8 @@ function drawBorder(el, threshold = 0.25) {
   const io = new IntersectionObserver(es => es.forEach(e => {
     const a = map.get(e.target.id);
     if (!a) return;
-    if (e.isIntersecting) { navLinks.forEach(l => l.classList.toggle('on', l === a)); }
+    if (e.isIntersecting) navLinks.forEach(l => l.classList.toggle('on', l === a));
     else if (a.classList.contains('on')) a.classList.remove('on');
   }), { rootMargin: '-45% 0px -50% 0px' });
   map.forEach((_, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
-})();
-
-// Jumping to a section: a single hairline sweeps under the navigation
-(() => {
-  if (calm) return;
-  const line = document.createElement('i');
-  line.className = 'sweep'; line.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(line);
-  document.addEventListener('click', e => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a || a.getAttribute('href').length < 2) return;
-    line.classList.remove('go'); void line.offsetWidth; line.classList.add('go');
-  });
 })();
