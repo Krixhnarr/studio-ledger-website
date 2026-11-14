@@ -4,9 +4,9 @@ const SITE = {
   downloadUrl: 'https://github.com/Krixhnarr/studio-ledger-website/releases/latest/download/Studio-Ledger-Setup.exe',
   // Google Apps Script web app that adds each download form to the "Downloads" sheet.
   leadsUrl: 'https://script.google.com/macros/s/AKfycbxdibj8QEd8AEUxKYFFEFeysbT9pHsi_Y2I3DjqTkicfwmxfTK-6hzIMQiOEG9XXszR/exec',
-  // Launch: 12 am India time on 15 November 2026. Before this, downloads are closed and the
+  // Launch: 7 pm India time on 15 November 2026. Before this, downloads are closed and the
   // buttons collect a launch list instead. Nothing needs changing on the day; the page opens itself.
-  launchAt: Date.parse('2026-11-15T00:00:00+05:30'),
+  launchAt: Date.parse('2026-11-15T19:00:00+05:30'),
   version: '3.0.0',
   email: 'thepincstudio@gmail.com',
 };
