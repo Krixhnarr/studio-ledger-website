@@ -774,7 +774,8 @@ function drawBorder(el, threshold = 0.25) {
 (() => {
   if (!$('#plans')) return;
   const PLANS = [
-    { name: 'Solo', who: 'For one architect', people: 1 },
+    // Solo is free; its AI review plan (unlimited checks after the 100 free ones) is priced like the others: 3 and 6 months less 5% / 10%, a year is ten months
+    { name: 'Solo', who: 'For one architect', people: 1, ai: { inr: [500, 5000], usd: [12, 120] } },
     { name: 'Studio', who: 'For studios of 2–5 people', people: 5, pop: true, inr: [2999, 29990, 499, 4990], usd: [69, 690, 12, 120], all: { inr: [1999, 19990], usd: [45, 450] } },
     { name: 'Practice', who: 'For practices of 6–15 people', people: 15, inr: [6999, 69990, 449, 4490], usd: [149, 1490, 10, 100] },
     { name: 'Firm', who: 'For firms of 16–40 people', people: 30, inr: [12999, 129990, 399, 3990], usd: [279, 2790, 9, 90] },
@@ -796,11 +797,11 @@ function drawBorder(el, threshold = 0.25) {
     ['People included', ['1', '5', '15', '30']],
     ['Each extra person', f => ['—', f.extra(1), f.extra(2), f.extra(3)]],
     ['Active projects', ['1', 'Unlimited', 'Unlimited', 'Unlimited']],
-    ['AI drawing reviews', ['10 a month', 'No cap', 'No cap', 'No cap'], true],
+    ['Sheet checks, automatic and AI', f => [f.ai(), 'No cap', 'No cap', 'No cap'], true],
     ['Every feature unlocked', f => ['—', f.all(), 'Included', 'Included']],
     ['Drawings and standards'],
     ['Drawing review and approvals', [Y, Y, Y, Y]],
-    ['Automatic sheet checks', [Y, Y, Y, Y]],
+    ['Automatic sheet checks', ['Within the 100', Y, Y, Y]],
     ['Drawing register and transmittals', [Y, Y, Y, Y]],
     ['Custom studio standards', [Y, Y, Y, Y]],
     ['Project guidelines and office layouts', [Y, Y, Y, Y]],
@@ -845,6 +846,7 @@ function drawBorder(el, threshold = 0.25) {
         <h3>${p.name}</h3><p class="pr-who">${p.who}</p>
         <p class="pr-price"><b>${money(0)}</b><small>/ month</small></p>
         <p class="pr-sub">Free, for as long as you like · 1 person, 1 active project</p>
+        <p class="pr-all">100 free sheet checks, then unlimited for <b>${money(forPeriod((usd ? p.ai.usd : p.ai.inr)[0], (usd ? p.ai.usd : p.ai.inr)[1], period))}${P.per}</b>${gstNote}</p>
         <a class="v2-btn v2-btn-ghost" href="#start" data-download>Download free</a>
       </article>`;
       const pay = forPeriod(t[0], t[1], period);
@@ -865,6 +867,7 @@ function drawBorder(el, threshold = 0.25) {
     const f = {
       extra: i => { const t = usd ? PLANS[i].usd : PLANS[i].inr; return `${money(forPeriod(t[2], t[3], period))}${P.per}`; },
       all: () => { const a = usd ? PLANS[1].all.usd : PLANS[1].all.inr; return `Optional, +${money(forPeriod(a[0], a[1], period))}${P.per}`; },
+      ai: () => { const a = usd ? PLANS[0].ai.usd : PLANS[0].ai.inr; return `100 free, then ${money(forPeriod(a[0], a[1], period))}${P.per} unlimited`; },
     };
     const tbl = $('#pr-table');
     $('thead', tbl).innerHTML = `<tr><th scope="col">Plan</th>${PLANS.map(p => `<th scope="col" class="${p.pop ? 'pop' : ''}">${p.name}</th>`).join('')}</tr>`;
