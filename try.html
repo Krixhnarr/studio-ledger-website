@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Try Studio Ledger in your browser</title>
+<meta name="description" content="Try three things an architecture studio does every day in Studio Ledger: check in, check a drawing against studio standards, and work out a month's salary from attendance. No sign-up, nothing to install.">
+<meta name="theme-color" content="#101312">
+<link rel="icon" type="image/png" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Try Studio Ledger in your browser">
+<meta property="og:description" content="Check in, check a drawing and work out a salary, right in your browser. No sign-up, nothing to install.">
+<link rel="canonical" href="https://studioledger.in/try">
+<meta property="og:url" content="https://studioledger.in/try">
+<meta property="og:image" content="https://studioledger.in/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css?v=20261113">
+<link rel="stylesheet" href="site.css?v=20261115b">
+<link rel="stylesheet" href="try.css?v=20261117">
+</head>
+<body class="dl-page vd-page ty-page">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <div class="wrap nav-in">
+    <a class="brand" href="./" aria-label="Studio Ledger home">
+      <img src="assets/icon.png" alt="" width="30" height="30">
+      <span><b>Studio Ledger</b><small>Architecture practice OS</small></span>
+    </a>
+    <nav class="links" id="links" aria-label="Main">
+      <a href="index.html#product">Product</a>
+      <a href="index.html#review">AI review</a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="index.html#offers">Offers</a>
+      <a href="videos.html">Videos</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn sm" data-download href="#start">Download</a>
+      <button class="menu" id="menu" aria-expanded="false" aria-controls="links" aria-label="Menu"><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="launch-bar" id="launch-bar" hidden>
+    <div class="wrap lb-in">
+      <span class="lb-text">Studio Ledger launches <b>15 November</b></span>
+      <span class="lb-count" data-cd="short" aria-label="Time until launch"></span>
+      <button type="button" class="link lb-notify" data-notify>Get notified</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="v2" id="v2">
+
+<!-- Intro and the three tabs -->
+<section class="v2-sec ty-top" aria-labelledby="ty-title">
+  <div class="v2-wrap">
+    <p class="v2-label">Try it</p>
+    <h1 class="v2-h2 vd-h" id="ty-title">Try Studio Ledger in your browser</h1>
+    <p class="v2-lede">Three things a studio does every day: checking in, checking a drawing, and working out the month’s pay. No sign-up and nothing to install. Everything here is sample data.</p>
+
+    <div class="ty-tabs" id="ty-tabs" role="tablist" aria-label="Choose what to try">
+      <button type="button" role="tab" id="tab-checkin" aria-controls="checkin" aria-selected="true"><span class="v2-mono">01</span>Check in</button>
+      <button type="button" role="tab" id="tab-drawing" aria-controls="drawing" aria-selected="false" tabindex="-1"><span class="v2-mono">02</span>Check a drawing</button>
+      <button type="button" role="tab" id="tab-salary" aria-controls="salary" aria-selected="false" tabindex="-1"><span class="v2-mono">03</span>Work out a salary</button>
+    </div>
+  </div>
+</section>
+
+<section class="ty-stage" aria-label="Try it">
+  <div class="v2-wrap">
+
+    <!-- 01 · Check in -->
+    <div class="ty-panel" id="checkin" role="tabpanel" aria-labelledby="tab-checkin">
+      <div class="ty-head">
+        <h2 class="ty-h">Check in, and the studio knows who’s in</h2>
+        <p>Press <b>Check in</b>, move to a site, then check out at the end of the day. The board on the right is what the principal sees.</p>
+      </div>
+      <div class="ty-grid">
+        <div class="ty-card ty-phone" id="ci">
+          <p class="v2-mono ty-k">Mon 17 Nov · Your phone</p>
+          <p class="ty-clock" aria-live="polite"><span id="ci-time">9:24</span><small id="ci-ampm">am</small></p>
+          <p class="ty-msg" id="ci-msg" aria-live="polite">Good morning. Office hours are 9:30 am to 6:30 pm.</p>
+          <button type="button" class="v2-btn v2-btn-lg ty-big" id="ci-btn">Check in</button>
+          <div class="ty-move" id="ci-move" hidden>
+            <p class="v2-mono ty-k">Where are you working?</p>
+            <div class="ty-chips" role="group" aria-label="Where are you working">
+              <button type="button" data-where="office" aria-pressed="true">In the office</button>
+              <button type="button" data-where="site" aria-pressed="false">On site · Villa, Kasauli</button>
+              <button type="button" data-where="remote" aria-pressed="false">From home</button>
+            </div>
+          </div>
+          <div class="ty-done" id="ci-done" hidden>
+            <button type="button" class="v2-link ty-linkbtn" data-goto="salary">See how a month like this is paid →</button>
+            <button type="button" class="v2-link ty-linkbtn ty-dim" id="ci-reset">Start again</button>
+          </div>
+        </div>
+
+        <div class="ty-card ty-board">
+          <div class="ty-board-h"><b>Who’s in today</b><span class="v2-mono" id="ci-count">3 of 6 in</span></div>
+          <ul class="ty-people" id="ci-list">
+            <li class="ty-you" id="ci-you"><span class="ty-av">You</span><span class="ty-who"><b>You</b><small>Project architect</small></span><span class="ty-pill" id="ci-you-pill">Not in yet</span></li>
+            <li><span class="ty-av">FK</span><span class="ty-who"><b>Farah Khan</b><small>Office admin</small></span><span class="ty-pill is-in">In office · 9:05</span></li>
+            <li><span class="ty-av">AR</span><span class="ty-who"><b>Ananya Rao</b><small>Senior architect</small></span><span class="ty-pill is-in">In office · 9:12</span></li>
+            <li><span class="ty-av">KS</span><span class="ty-who"><b>Kabir Shah</b><small>Junior architect</small></span><span class="ty-pill is-site">On site · CH-24 Housing</span></li>
+            <li><span class="ty-av">MI</span><span class="ty-who"><b>Meera Iyer</b><small>Interior designer</small></span><span class="ty-pill is-leave">On leave · half day</span></li>
+            <li><span class="ty-av">RD</span><span class="ty-who"><b>Rohan Das</b><small>Junior architect</small></span><span class="ty-pill">Not in yet</span></li>
+          </ul>
+        </div>
+      </div>
+      <p class="ty-note">In the app, the time comes from your phone or PC, late marks follow your studio’s office hours, and a missed day asks for a reason. Leave, site visits and working from home all show on the same board.</p>
+    </div>
+
+    <!-- 02 · Check a drawing -->
+    <div class="ty-panel" id="drawing" role="tabpanel" aria-labelledby="tab-drawing" hidden>
+      <div class="ty-head">
+        <h2 class="ty-h">Check a drawing against your studio’s standards</h2>
+        <p>Press <b>Check this sheet</b>. Then fix each problem it finds and watch the score climb.</p>
+      </div>
+      <div class="ty-grid ty-grid-dw">
+        <figure class="ty-sheet" id="dw">
+          <div class="ty-sheet-bar"><span class="v2-mono">A-104 · First floor plan</span><span class="v2-mono ty-hide">1:100 @ A1</span><span class="ty-status v2-mono" id="dw-status">Not checked</span></div>
+          <svg class="ty-plan" viewBox="0 0 640 470" role="img" aria-label="Sample first floor plan with a title block. Problems found by the check are outlined on the drawing.">
+            <g class="q-grid">
+              <path d="M70 52V392M250 52V392M420 52V392M570 52V392M40 80H600M40 240H600M40 380H600"/>
+              <g class="q-gb"><circle cx="70" cy="34" r="11"/><text x="70" y="38">A</text><circle cx="250" cy="34" r="11"/><text x="250" y="38">B</text><circle cx="420" cy="34" r="11"/><text x="420" y="38">C</text><circle cx="570" cy="34" r="11"/><text x="570" y="38">D</text>
+              <circle cx="24" cy="80" r="11"/><text x="24" y="84">1</text><circle cx="24" cy="240" r="11"/><text x="24" y="244">2</text><circle cx="24" cy="380" r="11"/><text x="24" y="384">3</text></g>
+            </g>
+            <path class="q-wall" d="M70 80H570V380H70Z"/>
+            <path class="q-wall2" d="M250 80V140M250 182V240M70 240H160M200 240H420M420 80V120M420 162V380M300 240V380M420 300H570"/>
+            <path class="q-thin" d="M110 77h90M110 83h90M300 77h80M300 83h80M460 77h80M460 83h80M567 130v70M573 130v70M110 377h90M110 383h90"/>
+            <path class="q-thin" d="M250 140a42 42 0 0 1 42 42M160 240a40 40 0 0 0 40 40M420 120a42 42 0 0 1 42 42M420 300a36 36 0 0 0 36 -36"/>
+            <path class="q-thin" d="M310 252H410M310 268H410M310 284H410M310 300H410M310 316H410M310 332H410M310 348H410M310 364H410M360 252V372"/>
+            <g class="q-tag"><rect x="262" y="186" width="30" height="14" rx="7"/><text x="277" y="196">D-01</text></g>
+            <g class="q-tag"><rect x="166" y="282" width="30" height="14" rx="7"/><text x="181" y="292">D-02</text></g>
+            <g class="q-tag"><rect x="458" y="268" width="30" height="14" rx="7"/><text x="473" y="278">D-04</text></g>
+            <g class="q-tag q-fix" data-fixed="door"><rect x="432" y="128" width="30" height="14" rx="7"/><text x="447" y="138">D-03</text></g>
+            <g class="q-fix" data-fixed="stair"><path class="q-arrow" d="M360 366V258M352 270l8-12 8 12"/><text class="q-up" x="372" y="262">UP · 16 R</text></g>
+            <g class="q-rooms">
+              <text x="160" y="155">LIVING</text><text x="160" y="170" class="q-sm">01 · 26.4 m²</text>
+              <text x="335" y="155">KITCHEN</text><text x="335" y="170" class="q-sm">02 · 18.2 m²</text>
+              <text x="495" y="200">BED</text><text x="495" y="215" class="q-sm">03 · 14.8 m²</text>
+              <text x="160" y="315">DINING</text><text x="160" y="330" class="q-sm">04 · 19.6 m²</text>
+              <text x="495" y="345">STUDIO</text><text x="495" y="360" class="q-sm">05 · 12.1 m²</text>
+            </g>
+            <g class="q-north"><circle cx="605" cy="420" r="13"/><path d="M605 405l6 22-6-5-6 5z"/><text x="605" y="452">N</text></g>
+            <g class="q-tb">
+              <rect x="70" y="402" width="500" height="34"/>
+              <path d="M170 402v34M270 402v34M350 402v34M420 402v34M490 402v34"/>
+              <text x="78" y="414" class="q-k">PROJECT</text><text x="78" y="429">CH-24</text>
+              <text x="178" y="414" class="q-k">SHEET</text><text x="178" y="429">A-104</text>
+              <text x="278" y="414" class="q-k">SCALE</text><text x="278" y="429">1:100</text>
+              <text x="358" y="414" class="q-k">REV</text><text x="358" y="429">04</text>
+              <text x="428" y="414" class="q-k">DRAWN</text><text x="428" y="429">PN</text>
+              <text x="498" y="414" class="q-k">CHECKED</text><text x="498" y="429" class="q-empty">—</text><text x="498" y="429" class="q-fix q-filled" data-fixed="checked">AR</text>
+            </g>
+            <g class="q-iss" data-issue="checked"><rect x="486" y="398" width="88" height="42"/><text x="574" y="393" style="text-anchor:end">01 · Checked by is empty</text></g>
+            <g class="q-iss" data-issue="door"><rect x="410" y="110" width="62" height="62"/><text x="472" y="104" style="text-anchor:end">02 · Door has no tag</text></g>
+            <g class="q-iss" data-issue="stair"><rect x="302" y="246" width="116" height="128"/><text x="296" y="372" style="text-anchor:end">03 · No UP arrow or risers</text></g>
+            <g class="q-scan" id="dw-scan"><rect x="-40" y="0" width="40" height="470"/><rect class="q-scanline" x="0" y="0" width="1.5" height="470"/></g>
+          </svg>
+          <figcaption class="ty-cap v2-mono">Sample sheet. In the app, your own PDF is checked when it’s submitted.</figcaption>
+        </figure>
+
+        <div class="ty-card ty-checks" id="dw-panel">
+          <div class="ty-checks-h">
+            <div><b class="v2-mono">A-104 / Rev 04</b><span>Checked against your studio standards</span></div>
+            <button type="button" class="v2-btn" id="dw-run">Check this sheet</button>
+          </div>
+          <div class="ty-grp">
+            <h3 class="v2-mono">Title block &amp; file</h3>
+            <ul class="ty-rules">
+              <li data-ok><span class="ty-ic"></span>Sheet number <small>A-104</small></li>
+              <li data-ok><span class="ty-ic"></span>Project code <small>CH-24</small></li>
+              <li data-ok><span class="ty-ic"></span>Scale <small>1:100</small></li>
+              <li data-ok><span class="ty-ic"></span>Revision <small>04</small></li>
+              <li data-issue="checked" data-level="MUST"><span class="ty-ic"></span>Checked by <small>empty</small><button type="button" class="ty-fix" data-fix="checked">Fix</button></li>
+              <li data-ok><span class="ty-ic"></span>File name <small>CH-24_A-104_R04.pdf</small></li>
+            </ul>
+          </div>
+          <div class="ty-grp">
+            <h3 class="v2-mono">Drawing</h3>
+            <ul class="ty-rules">
+              <li data-ok><span class="ty-ic"></span>Room names and areas</li>
+              <li data-ok><span class="ty-ic"></span>North point</li>
+              <li data-issue="door" data-level="SHOULD"><span class="ty-ic"></span>Door tags <small>1 missing</small><button type="button" class="ty-fix" data-fix="door">Fix</button></li>
+              <li data-issue="stair" data-level="SHOULD"><span class="ty-ic"></span>Stair annotation <small>no UP arrow</small><button type="button" class="ty-fix" data-fix="stair">Fix</button></li>
+            </ul>
+          </div>
+          <div class="ty-out" id="dw-out" hidden>
+            <div class="ty-score"><span class="v2-mono">Score</span><p><b id="dw-score">0</b><span>/ 100</span></p></div>
+            <p class="ty-verdict" id="dw-verdict" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+      <p class="ty-note">Your studio writes the rules, as MUST or SHOULD. The title block and file name are read straight from the PDF; AI review looks at the drawing itself. A sheet that fails a MUST rule goes back to its author with a fix list, and people still approve every sheet.</p>
+    </div>
+
+    <!-- 03 · Salary -->
+    <div class="ty-panel" id="salary" role="tabpanel" aria-labelledby="tab-salary" hidden>
+      <div class="ty-head">
+        <h2 class="ty-h">Work out the month’s pay from attendance</h2>
+        <p>Move the sliders. The pay, the breakdown and the calendar update as you go.</p>
+      </div>
+      <div class="ty-grid ty-grid-sal">
+        <form class="ty-card ty-inputs" id="sal" onsubmit="return false">
+          <div class="ty-person"><span class="ty-av">KS</span><span class="ty-who"><b>Kabir Shah</b><small>Junior architect · November 2026</small></span></div>
+          <label class="ty-range"><span>Monthly salary <output id="o-base">₹45,000</output></span>
+            <input type="range" id="s-base" min="15000" max="150000" step="1000" value="45000"></label>
+          <label class="ty-range"><span>Unpaid leave <output id="o-leave">1½ days</output></span>
+            <input type="range" id="s-leave" min="0" max="6" step="0.5" value="1.5"></label>
+          <label class="ty-range"><span>Days with no check-in and no leave <output id="o-absent">1 day</output></span>
+            <input type="range" id="s-absent" min="0" max="4" step="1" value="1"></label>
+          <label class="ty-range"><span>Overtime, past the 8-hour day <output id="o-ot">6 hours</output></span>
+            <input type="range" id="s-ot" min="0" max="30" step="1" value="6"></label>
+          <label class="ty-switch"><input type="checkbox" id="s-sat" checked><span class="ty-sw" aria-hidden="true"></span><span>Saturdays are working days</span></label>
+        </form>
+
+        <div class="ty-card ty-pay">
+          <p class="v2-mono ty-k">Pay for November 2026</p>
+          <p class="ty-total" aria-live="polite" id="p-total">₹0</p>
+          <dl class="ty-break" id="p-break"></dl>
+          <div class="ty-cal" id="p-cal" aria-hidden="true"></div>
+          <ul class="ty-legend" aria-hidden="true">
+            <li><i class="c-work"></i>Paid</li><li><i class="c-leave"></i>Unpaid leave</li><li><i class="c-absent"></i>No check-in</li><li><i class="c-off"></i>Day off</li>
+          </ul>
+        </div>
+      </div>
+      <p class="ty-note">This is the rule the Salary panel on the Finances page uses: monthly salary ÷ working days × days payable. Site, remote and late days are paid. Your studio decides whether overtime is paid and at what rate (1.5× here), what happens on a holiday worked, and whether unused leave carries over. Salaries are sealed: only the principal and people given the finances power can see them.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Next steps -->
+<section class="v2-sec vd-sec vd-end" aria-labelledby="ty-more-h">
+  <div class="v2-wrap">
+    <div class="vd-more">
+      <div>
+        <p class="v2-mono vd-kicker">That was a small part of it</p>
+        <h2 class="vd-more-h" id="ty-more-h">Run your whole studio in one app</h2>
+        <p>Projects, drawings, the register, leave, meetings, finances and messages, for the whole team, on Windows and Android. Every new studio gets a 30-day free trial of every feature, with no card needed.</p>
+      </div>
+      <div class="vd-more-act">
+        <a class="v2-btn v2-btn-lg" data-download href="download.html">Download for Windows <span aria-hidden="true">↓</span></a>
+        <a class="v2-link" href="videos.html">Watch the demo videos</a>
+        <a class="v2-link" href="./">See everything on the website</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer class="v2 v2-foot">
+  <div class="v2-wrap v2-foot-in">
+    <a class="v2-foot-brand" href="./" aria-label="Studio Ledger, back to top"><img src="assets/icon.png" alt="" width="28" height="28"><span><b>Studio Ledger</b><small>Architecture practice OS</small></span></a>
+    <nav class="v2-foot-cols" aria-label="Footer">
+      <div><p class="v2-mono">Product</p><a href="index.html#product">Overview</a><a href="index.html#review">AI drawing review</a><a href="index.html#p-standards">Studio standards</a><a href="index.html#screens">Screens</a><a href="index.html#pricing">Pricing</a><a href="index.html#offers">Offers</a></div>
+      <div><p class="v2-mono">Get started</p><a href="index.html#setup">How it works</a><a href="index.html#setup-guide">Setup guide</a><a href="videos.html">Videos</a><a href="try.html">Try it</a><a href="index.html#faq">FAQ</a><a href="download.html">Downloads</a></div>
+      <div><p class="v2-mono">Studio Ledger</p><a href="index.html#data">Data &amp; privacy</a><a href="index.html#about">About</a><a href="https://www.youtube.com/@studio_ledger" target="_blank" rel="noopener">YouTube</a><a href="https://www.instagram.com/studioledger.in/" target="_blank" rel="noopener">Instagram</a><a data-contact href="#">Contact</a></div>
+    </nav>
+    <p class="v2-foot-legal"><span>© 2026 Studio Ledger · made by The Pinc Studio</span><a data-contact-text href="#"></a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></p>
+  </div>
+  <dialog class="ct-dlg" id="ct-dlg" aria-labelledby="ct-title">
+    <div class="ct-in">
+      <div class="ct-h"><p class="v2-mono">Contact</p><button type="button" class="ct-x" id="ct-close" aria-label="Close">×</button></div>
+      <h2 id="ct-title">Write to us</h2>
+      <p class="ct-sub">We read every message ourselves.</p>
+      <div class="ct-mail"><span id="ct-addr" class="v2-mono"></span><button type="button" class="v2-btn v2-btn-ghost v2-btn-sm" id="ct-copy">Copy</button></div>
+      <div class="ct-acts">
+        <a class="v2-btn" id="ct-gmail" href="#" target="_blank" rel="noopener">Open in Gmail</a>
+        <a class="v2-btn v2-btn-ghost" id="ct-app" href="#">Open mail app</a>
+      </div>
+    </div>
+  </dialog>
+</footer>
+
+<dialog class="get-dlg" id="get-dlg" aria-labelledby="get-title" data-mode="ask">
+  <div class="get-in">
+    <div class="get-h">
+      <span>Download for Windows</span>
+      <button type="button" class="x" id="get-close" aria-label="Close">×</button>
+    </div>
+    <h2 id="get-title">Get Studio Ledger</h2>
+    <div class="get-soon">
+      <p class="get-sub">Downloads for Windows and Android open at <b>7 pm on 15 November</b>. Leave your details and we’ll tell you the moment it’s out.</p>
+      <div class="cd-big mono" data-cd="big" role="timer" aria-label="Time until launch"></div>
+    </div>
+    <form id="get-form" novalidate>
+      <p class="get-sub get-now">Tell us who you are and the download starts right away.</p>
+      <label>Your name<input name="name" autocomplete="name" maxlength="80" required></label>
+      <label>Email<input name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required></label>
+      <fieldset class="get-type">
+        <legend>Are you a solo architect or a firm?</legend>
+        <label><input type="radio" name="type" value="Solo" required><span>Solo</span></label>
+        <label><input type="radio" name="type" value="Firm"><span>Firm</span></label>
+      </fieldset>
+      <label class="get-firm">Firm name<input name="firm" autocomplete="organization" maxlength="120"></label>
+      <p class="get-err" id="get-err" role="alert" hidden></p>
+      <button type="submit" class="btn" id="get-submit">Download for Windows <span aria-hidden="true">↓</span></button>
+      <p class="fine get-fine">We’ll only use these details to help you with Studio Ledger. No spam.</p>
+    </form>
+    <div class="get-done">
+      <p role="status" class="get-now">Your download has started. Run the installer once it finishes; the setup guide walks you through the rest.</p>
+      <p class="fine get-now"><a class="link" data-direct href="#">Download didn’t start? Click here.</a></p>
+      <p role="status" class="get-soon">You’re on the list. We’ll email you on 15 November when Studio Ledger is ready to download.</p>
+      <div class="get-done-cta"><a class="btn ghost" href="index.html#setup-guide" id="get-ok">Open the setup guide</a></div>
+    </div>
+  </div>
+</dialog>
+
+<script src="main.js?v=20261115j"></script>
+<script src="try.js?v=20261117"></script>
+</body>
+</html>
