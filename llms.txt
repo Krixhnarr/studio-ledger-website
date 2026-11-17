@@ -1,0 +1,45 @@
+# Studio Ledger
+
+> Studio Ledger is practice management software for architecture studios. One Windows app for the whole practice keeps projects, drawings, studio standards, people, time and finance in one place, with AI drawing review that checks each PDF sheet against the studio's own drawing standards. Made in India by The Pinc Studio. 30-day free trial for the whole team, no card needed.
+
+## What it does
+
+- Projects and tasks: each project has its phase, lead architect, team, milestones and fee stages. Every task has an owner, a due date and a priority. Schedule, meetings, site visits and timesheets sit against the project.
+- Drawings: upload a PDF sheet and its paper size, sheet number, scale and title block are read from the file and filed in the drawing register. Every sheet keeps its history.
+- AI drawing review: each sheet is checked against the studio's written standards. Issues are marked on the drawing, and a failed MUST rule sends the sheet back with a fix list. The AI never approves a drawing: senior architects and the principal approve every sheet.
+- Studio standards: write drawing rules once (including the office's standard sheet layout per paper size) and they are checked on every sheet.
+- People: attendance with check-in, leave, positions and titles, mentoring, performance and reflections, project and personal chats, office events.
+- Finance: fees by stage, invoices, payments received, costs per project, refunds, bill splits and salary from attendance. Finances are visible only to principals unless they share them.
+- Reports: weekly and monthly project reports with drawings, first-pass rate, hours, costs and fees ready to invoice.
+- Android app for principals, senior architects and the office admin: who is in or late, leave and drawings waiting for approval, tasks, schedule and chats. No iPhone or Mac app yet.
+
+## Plans and prices (India, plus GST)
+
+- Solo: free, for one architect. Includes 100 free sheet checks in total; after that an AI review plan gives unlimited checks for ₹500 a month (₹5,000 a year).
+- Studio: ₹2,999 a month, for studios of 2–5 people.
+- Practice: ₹6,999 a month, for practices of 6–15 people.
+- Firm: ₹12,999 a month, for firms of 16–40 people (30 included, extra people charged per person).
+- Enterprise: 40+ people or several offices, custom terms.
+- Pay monthly, for 3 months (5% off), 6 months (10% off) or a year (two months free). Studios outside India pay in US dollars with no GST: $69, $149 or $279 a month for Studio, Practice or Firm.
+- AI review on paid plans runs on the studio's own Anthropic API key; Anthropic bills the studio directly per check, with a monthly budget set in the app.
+- If a plan lapses there are 14 days to renew; after that the studio is read-only and nothing is deleted.
+
+## Data
+
+- Records (projects, tasks, attendance, reviews, fees) are kept on the Studio Ledger server in Mumbai, India.
+- Drawing files, PDFs, photos and videos stay in a shared folder in the studio's own office and are never stored on Studio Ledger's servers.
+- Needs Windows 10 or 11 (64-bit), an internet connection and a shared office folder (NAS or shared drive).
+
+## Pages
+
+- [Home](https://studioledger.in/): product overview, AI review, pricing, offers and FAQ
+- [Download](https://studioledger.in/download): Windows installer and Android app
+- [Videos](https://studioledger.in/videos): setup guide and demo walkthroughs
+- [Privacy policy](https://studioledger.in/privacy.html)
+- [Terms of service](https://studioledger.in/terms.html)
+
+## Contact
+
+- Email: thepincstudio@gmail.com
+- YouTube: https://www.youtube.com/@studio_ledger
+- Instagram: https://www.instagram.com/studioledger.in/

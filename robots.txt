@@ -1,0 +1,5 @@
+# Every search engine and AI assistant may read the whole site.
+User-agent: *
+Allow: /
+
+Sitemap: https://studioledger.in/sitemap.xml
